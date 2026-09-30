@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S K Ismail | Functional Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ===== DASHBOARD THEME VARIABLES ===== */
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --primary-light: #8b9df0;
+            --secondary: #764ba2;
+            --accent: #38bdf8;
+            
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: #1e293b;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== DASHBOARD LAYOUT ===== */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            width: 280px;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform var(--transition-normal);
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .sidebar-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transform: scaleY(0);
+            transition: transform var(--transition-normal);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+            transition: transform var(--transition-normal);
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: var(--radius-md);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-info h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            background: var(--bg-primary);
+        }
+
+        /* ===== HEADER ===== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-title h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform var(--transition-normal);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-icon.primary {
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--primary);
+        }
+
+        .stat-icon.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .stat-icon.info {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.positive {
+            color: var(--success);
+        }
+
+        .stat-trend.negative {
+            color: var(--error);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* ===== CHARTS SECTION ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 0.875rem;
+        }
+
+        .chart-btn:hover,
+        .chart-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* ===== ACTIVITY SECTION ===== */
+        .activity-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .activity-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: all var(--transition-fast);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            padding-left: 0.5rem;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .activity-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .activity-status.completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .activity-status.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        /* ===== SKILLS PROGRESS ===== */
+        .skills-list {
+            list-style: none;
+        }
+
+        .skill-item {
+            margin-bottom: 1.25rem;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            font-weight: 600;
+        }
+
+        .skill-percentage {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+            position: relative;
+        }
+
+        .skill-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* ===== NOTIFICATION SYSTEM ===== */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            color: white;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease-out;
+            min-width: 300px;
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.info {
+            background: var(--info);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .activity-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        /* ===== MENU TOGGLE ===== */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-logo">Dashboard</h2>
+                <p class="sidebar-subtitle">S K Ismail Analytics</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="overview">
+                        <i class="fas fa-home"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="analytics">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="projects">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Projects</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="skills">
+                        <i class="fas fa-code"></i>
+                        <span>Skills</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">SK</div>
+                    <div class="user-info">
+                        <h4>S K Ismail</h4>
+                        <p>AIML Engineer</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-title">
+                    <h1 id="pageTitle">Overview</h1>
+                    <p id="currentDate">Loading date...</p>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn btn-secondary" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                    <button class="action-btn btn-primary" onclick="resetData()">
+                        <i class="fas fa-sync"></i>
+                        Reset Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section class="dashboard-section active" id="overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="viewsTrend">+12.5%</span>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalViews">0</div>
+                        <div class="stat-label">Total Views</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="projectsTrend">+8.2%</span>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalProjects">0</div>
+                        <div class="stat-label">Projects Completed</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-trend negative">
+                                <i class="fas fa-arrow-down"></i>
+                                <span id="hoursTrend">-3.1%</span>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalHours">0</div>
+                        <div class="stat-label">Hours This Month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon info">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="ratingTrend">+15.7%</span>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="avgRating">0</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Portfolio Performance</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active" data-period="week">Week</button>
+                                <button class="chart-btn" data-period="month">Month</button>
+                                <button class="chart-btn" data-period="year">Year</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Skills Distribution</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="skillsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Recent Activity</h3>
+                            <button class="action-btn btn-secondary" onclick="clearActivity()">
+                                <i class="fas fa-trash"></i>
+                                Clear
+                            </button>
+                        </div>
+                        <ul class="activity-list" id="activityList">
+                            <!-- Activities will be loaded here -->
+                        </ul>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Technical Skills</h3>
+                            <button class="action-btn btn-primary" onclick="addSkill()">
+                                <i class="fas fa-plus"></i>
+                                Add Skill
+                            </button>
+                        </div>
+                        <ul class="skills-list" id="skillsList">
+                            <!-- Skills will be loaded here -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section class="dashboard-section" id="analytics">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="uniqueVisitors">0</div>
+                        <div class="stat-label">Unique Visitors</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon success">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="avgSessionDuration">0:00</div>
+                        <div class="stat-label">Avg. Session Duration</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="bounceRate">0%</div>
+                        <div class="stat-label">Bounce Rate</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon info">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="countriesReached">0</div>
+                        <div class="stat-label">Countries Reached</div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Traffic Analytics</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section class="dashboard-section" id="projects">
+                <div class="chart-header">
+                    <h3 class="chart-title">Projects Management</h3>
+                    <button class="action-btn btn-primary" onclick="addProject()">
+                        <i class="fas fa-plus"></i>
+                        Add Project
+                    </button>
+                </div>
+                <div class="activity-card">
+                    <ul class="activity-list" id="projectsList">
+                        <!-- Projects will be loaded here -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section class="dashboard-section" id="skills">
+                <div class="chart-header">
+                    <h3 class="chart-title">Skills Management</h3>
+                    <button class="action-btn btn-primary" onclick="addSkill()">
+                        <i class="fas fa-plus"></i>
+                        Add Skill
+                    </button>
+                </div>
+                <div class="activity-card">
+                    <ul class="skills-list" id="skillsManagementList">
+                        <!-- Skills will be loaded here -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="dashboard-section" id="settings">
+                <div class="activity-card">
+                    <h3 class="chart-title" style="margin-bottom: 1.5rem;">Dashboard Settings</h3>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Auto-refresh data</span>
+                            <input type="checkbox" id="autoRefresh" checked onchange="toggleAutoRefresh()">
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Show notifications</span>
+                            <input type="checkbox" id="showNotifications" checked onchange="toggleNotifications()">
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Chart animations</span>
+                            <input type="checkbox" id="chartAnimations" checked onchange="toggleAnimations()">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <button class="action-btn btn-primary" onclick="exportData()">
+                            <i class="fas fa-download"></i>
+                            Export All Data
+                        </button>
+                        <button class="action-btn btn-secondary" onclick="importData()">
+                            <i class="fas fa-upload"></i>
+                            Import Data
+                        </button>
+                        <button class="action-btn btn-secondary" style="background: var(--error);" onclick="resetData()">
+                            <i class="fas fa-trash"></i>
+                            Reset All Data
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script>
+        // ===== BACKEND API INTEGRATION =====
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Fetch real analytics from backend
+        async function fetchRealAnalytics() {
+            try {
+                const response = await fetch(`${API_BASE}/analytics`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboardWithRealData(data);
+                    showNotification('Real-time analytics loaded', 'success');
+                } else {
+                    console.log('Backend not responding, using local data');
+                }
+            } catch (error) {
+                console.log('Backend connection failed:', error);
+                showNotification('Using local data (backend offline)', 'warning');
+            }
+        }
+
+        // Update dashboard with real backend data
+        function updateDashboardWithRealData(data) {
+            // Update stats with real data
+            if (data.totalVisits) {
+                dashboardData.stats.totalViews = data.totalVisits;
+            }
+            if (data.todayVisits) {
+                dashboardData.stats.uniqueVisitors = data.todayVisits;
+            }
+            if (data.totalContacts) {
+                dashboardData.stats.totalProjects = data.totalContacts;
+            }
+            
+            updateStats();
+            
+            // Update recent visitors as activities
+            if (data.recentVisitors && data.recentVisitors.length > 0) {
+                dashboardData.activities = data.recentVisitors.map(visitor => ({
+                    icon: 'fa-user',
+                    title: `Visitor from ${visitor.location?.country || 'Unknown'}`,
+                    time: new Date(visitor.timestamp).toLocaleString(),
+                    status: 'completed'
+                }));
+                updateActivities();
+            }
+        }
+
+        // ===== ADD BACKEND LOGIN =====
+        function addBackendLogin() {
+            const loginSection = document.createElement('div');
+            loginSection.id = 'backendLoginSection';
+            loginSection.className = 'settings-card';
+            loginSection.style.cssText = 'max-width: 400px; margin: 2rem auto;';
+            loginSection.innerHTML = `
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Dashboard Login</h3>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="dashUsername" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="dashPassword" placeholder="Enter password">
+                </div>
+                <button class="action-btn btn-primary" onclick="handleDashboardLogin()" style="width: 100%;">Login</button>
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.875rem; text-align: center;">
+                    Default: admin / admin123
+                </p>
+            `;
+            
+            // Insert before main content
+            const mainContent = document.querySelector('.main-content');
+            mainContent.insertBefore(loginSection, mainContent.firstChild);
+            
+            // Hide main content until logged in
+            document.querySelector('.dashboard-header').style.display = 'none';
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+
+        async function handleDashboardLogin() {
+            const username = document.getElementById('dashUsername').value;
+            const password = document.getElementById('dashPassword').value;
+            
+            if (!username || !password) {
+                showNotification('Please enter username and password', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showNotification('Login successful!', 'success');
+                    
+                    // Remove login form and show main content
+                    document.getElementById('backendLoginSection').remove();
+                    document.querySelector('.dashboard-header').style.display = 'flex';
+                    document.getElementById('overview').style.display = 'block';
+                    document.getElementById('overview').classList.add('active');
+                    
+                    // Load real data
+                    fetchRealAnalytics();
+                } else {
+                    showNotification('Login failed: ' + (data.error || 'Invalid credentials'), 'error');
+                }
+            } catch (error) {
+                showNotification('Login failed: Backend not responding', 'error');
+            }
+        }
+
+        // ===== DATA MANAGEMENT WITH LOCALSTORAGE =====
+        
+        // Default data structure
+        const defaultData = {
+            stats: {
+                totalViews: 24589,
+                totalProjects: 12,
+                totalHours: 342,
+                avgRating: 4.8,
+                uniqueVisitors: 8427,
+                avgSessionDuration: '4:32',
+                bounceRate: 32.8,
+                countriesReached: 45
+            },
+            activities: [
+                { icon: 'fa-code', title: 'New project deployed', time: '2 hours ago', status: 'completed' },
+                { icon: 'fa-certificate', title: 'AWS Certification earned', time: '1 day ago', status: 'completed' },
+                { icon: 'fa-bug', title: 'Bug fix in ML model', time: '3 days ago', status: 'pending' },
+                { icon: 'fa-users', title: 'New collaboration request', time: '5 days ago', status: 'pending' }
+            ],
+            skills: [
+                { name: 'Python', percentage: 95 },
+                { name: 'Machine Learning', percentage: 90 },
+                { name: 'JavaScript', percentage: 85 },
+                { name: 'React', percentage: 80 },
+                { name: 'Docker', percentage: 75 }
+            ],
+            projects: [
+                { name: 'UPI Fraud Detection', category: 'Machine Learning', status: 'completed' },
+                { name: 'Health-Stack-System', category: 'Web Development', status: 'in-progress' },
+                { name: 'BLOCKELECT Voting', category: 'Blockchain', status: 'completed' }
+            ],
+            chartData: {
+                week: [1200, 1900, 3000, 5000, 4200, 6000, 7500],
+                month: [5000, 7000, 9000, 12000, 15000, 18000, 21000],
+                year: [50000, 70000, 90000, 120000, 150000, 180000, 210000]
+            }
+        };
+
+        // Load data from localStorage or use defaults
+        let dashboardData = JSON.parse(localStorage.getItem('dashboardData')) || JSON.parse(JSON.stringify(defaultData));
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('dashboardData', JSON.stringify(dashboardData));
+        }
+
+        // ===== NOTIFICATION SYSTEM =====
+        function showNotification(message, type = 'success') {
+            if (!document.getElementById('showNotifications').checked) return;
+            
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // ===== UPDATE UI WITH DATA =====
+        function updateStats() {
+            document.getElementById('totalViews').textContent = dashboardData.stats.totalViews.toLocaleString();
+            document.getElementById('totalProjects').textContent = dashboardData.stats.totalProjects;
+            document.getElementById('totalHours').textContent = dashboardData.stats.totalHours;
+            document.getElementById('avgRating').textContent = dashboardData.stats.avgRating;
+            document.getElementById('uniqueVisitors').textContent = dashboardData.stats.uniqueVisitors.toLocaleString();
+            document.getElementById('avgSessionDuration').textContent = dashboardData.stats.avgSessionDuration;
+            document.getElementById('bounceRate').textContent = dashboardData.stats.bounceRate + '%';
+            document.getElementById('countriesReached').textContent = dashboardData.stats.countriesReached;
+        }
+
+        function updateActivities() {
+            const activityList = document.getElementById('activityList');
+            activityList.innerHTML = '';
+            
+            dashboardData.activities.forEach(activity => {
+                const li = document.createElement('li');
+                li.className = 'activity-item';
+                li.innerHTML = `
+                    <div class="activity-icon primary">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                    <span class="activity-status ${activity.status}">${activity.status}</span>
+                `;
+                activityList.appendChild(li);
+            });
+        }
+
+        function updateSkills() {
+            const skillsList = document.getElementById('skillsList');
+            const skillsManagementList = document.getElementById('skillsManagementList');
+            
+            [skillsList, skillsManagementList].forEach(list => {
+                if (list) {
+                    list.innerHTML = '';
+                    dashboardData.skills.forEach(skill => {
+                        const li = document.createElement('li');
+                        li.className = 'skill-item';
+                        li.innerHTML = `
+                            <div class="skill-header">
+                                <span class="skill-name">${skill.name}</span>
+                                <span class="skill-percentage">${skill.percentage}%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: ${skill.percentage}%"></div>
+                            </div>
+                        `;
+                        list.appendChild(li);
+                    });
+                }
+            });
+        }
+
+        function updateProjects() {
+            const projectsList = document.getElementById('projectsList');
+            if (projectsList) {
+                projectsList.innerHTML = '';
+                dashboardData.projects.forEach(project => {
+                    const li = document.createElement('li');
+                    li.className = 'activity-item';
+                    li.innerHTML = `
+                        <div class="activity-icon success">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${project.name}</div>
+                            <div class="activity-time">${project.category}</div>
+                        </div>
+                        <span class="activity-status ${project.status === 'completed' ? 'completed' : 'pending'}">${project.status}</span>
+                    `;
+                    projectsList.appendChild(li);
+                });
+            }
+        }
+
+        // ===== CHART CONFIGURATION =====
+        let performanceChart, skillsChart, trafficChart;
+
+        function initCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#94a3b8'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#94a3b8'
+                        }
+                    }
+                }
+            };
+
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            performanceChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Views',
+                        data: dashboardData.chartData.week,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
+                },
+                options: chartOptions
+            });
+
+            // Skills Chart
+            const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+            skillsChart = new Chart(skillsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: dashboardData.skills.map(s => s.name),
+                    datasets: [{
+                        data: dashboardData.skills.map(s => s.percentage),
+                        backgroundColor: [
+                            '#667eea',
+                            '#764ba2',
+                            '#4facfe',
+                            '#00f2fe',
+                            '#43e97b'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#94a3b8',
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Traffic Chart
+            const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+            trafficChart = new Chart(trafficCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Visitors',
+                        data: [12000, 19000, 30000, 50000, 42000, 60000],
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ===== NAVIGATION =====
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.dashboard-section');
+        const pageTitle = document.getElementById('pageTitle');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.getAttribute('data-section');
+                
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    }
+                });
+                
+                pageTitle.textContent = link.querySelector('span').textContent;
+            });
+        });
+
+        // ===== MENU TOGGLE =====
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // ===== CHART PERIOD SWITCHING =====
+        const chartBtns = document.querySelectorAll('.chart-btn');
+        chartBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                chartBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const period = btn.getAttribute('data-period');
+                performanceChart.data.datasets[0].data = dashboardData.chartData[period];
+                performanceChart.update();
+                
+                showNotification(`Chart updated to ${period} view`, 'info');
+            });
+        });
+
+        // ===== ADD ACTIVITY =====
+        function addActivity() {
+            const activities = [
+                { icon: 'fa-code', title: 'Code commit pushed', status: 'completed' },
+                { icon: 'fa-star', title: 'New project starred', status: 'completed' },
+                { icon: 'fa-user', title: 'New follower', status: 'completed' },
+                { icon: 'fa-eye', title: 'Profile viewed', status: 'completed' },
+                { icon: 'fa-comment', title: 'New comment', status: 'pending' }
+            ];
+            
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            randomActivity.time = 'Just now';
+            
+            dashboardData.activities.unshift(randomActivity);
+            if (dashboardData.activities.length > 10) {
+                dashboardData.activities.pop();
+            }
+            
+            saveData();
+            updateActivities();
+            showNotification('New activity added', 'success');
+        }
+
+        // ===== ADD SKILL =====
+        function addSkill() {
+            const skillName = prompt('Enter skill name:');
+            if (skillName) {
+                const skillPercentage = prompt('Enter skill percentage (0-100):');
+                if (skillPercentage && !isNaN(skillPercentage)) {
+                    dashboardData.skills.push({
+                        name: skillName,
+                        percentage: Math.min(100, Math.max(0, parseInt(skillPercentage)))
+                    });
+                    
+                    saveData();
+                    updateSkills();
+                    
+                    // Update skills chart
+                    skillsChart.data.labels = dashboardData.skills.map(s => s.name);
+                    skillsChart.data.datasets[0].data = dashboardData.skills.map(s => s.percentage);
+                    skillsChart.update();
+                    
+                    showNotification(`Skill "${skillName}" added successfully`, 'success');
+                }
+            }
+        }
+
+        // ===== ADD PROJECT =====
+        function addProject() {
+            const projectName = prompt('Enter project name:');
+            if (projectName) {
+                const projectCategory = prompt('Enter project category:');
+                if (projectCategory) {
+                    dashboardData.projects.push({
+                        name: projectName,
+                        category: projectCategory,
+                        status: 'in-progress'
+                    });
+                    
+                    dashboardData.stats.totalProjects++;
+                    saveData();
+                    updateStats();
+                    updateProjects();
+                    
+                    showNotification(`Project "${projectName}" added successfully`, 'success');
+                }
+            }
+        }
+
+        // ===== CLEAR ACTIVITY =====
+        function clearActivity() {
+            if (confirm('Are you sure you want to clear all activities?')) {
+                dashboardData.activities = [];
+                saveData();
+                updateActivities();
+                showNotification('All activities cleared', 'info');
+            }
+        }
+
+        // ===== EXPORT DATA =====
+        function exportData() {
+            const dataStr = JSON.stringify(dashboardData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'dashboard-data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('Data exported successfully', 'success');
+        }
+
+        // ===== IMPORT DATA =====
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        dashboardData = importedData;
+                        saveData();
+                        loadAllData();
+                        showNotification('Data imported successfully', 'success');
+                    } catch (error) {
+                        showNotification('Invalid data file', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ===== RESET DATA =====
+        function resetData() {
+            if (confirm('Are you sure you want to reset all data to defaults?')) {
+                dashboardData = JSON.parse(JSON.stringify(defaultData));
+                saveData();
+                loadAllData();
+                showNotification('Data reset to defaults', 'info');
+            }
+        }
+
+        // ===== SETTINGS TOGGLES =====
+        function toggleAutoRefresh() {
+            showNotification('Auto-refresh ' + (document.getElementById('autoRefresh').checked ? 'enabled' : 'disabled'), 'info');
+        }
+
+        function toggleNotifications() {
+            showNotification('Notifications ' + (document.getElementById('showNotifications').checked ? 'enabled' : 'disabled'), 'info');
+        }
+
+        function toggleAnimations() {
+            showNotification('Animations ' + (document.getElementById('chartAnimations').checked ? 'enabled' : 'disabled'), 'info');
+        }
+
+        // ===== UPDATE DATE =====
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // ===== SIMULATE LIVE DATA =====
+        function simulateLiveData() {
+            if (!document.getElementById('autoRefresh').checked) return;
+            
+            // Randomly update stats
+            dashboardData.stats.totalViews += Math.floor(Math.random() * 10) - 3;
+            dashboardData.stats.uniqueVisitors += Math.floor(Math.random() * 5) - 2;
+            
+            saveData();
+            updateStats();
+        }
+
+        // ===== LOAD ALL DATA =====
+        function loadAllData() {
+            updateStats();
+            updateActivities();
+            updateSkills();
+            updateProjects();
+            updateDate();
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add backend login form
+            addBackendLogin();
+            
+            loadAllData();
+            initCharts();
+            
+            // Try to connect to backend for real data
+            fetchRealAnalytics();
+            
+            // Add live activity periodically
+            setInterval(addActivity, 15000);
+            
+            // Simulate live data
+            setInterval(simulateLiveData, 5000);
+            
+            showNotification('Dashboard loaded successfully!', 'success');
+        });
+    </script>
+</body>
+</html>

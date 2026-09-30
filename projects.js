@@ -3,78 +3,70 @@ document.addEventListener('DOMContentLoaded', function() {
   // Project filtering functionality
   const projectTabs = document.querySelectorAll('.projects-tab');
   const projectBoxes = document.querySelectorAll('.project-box');
+  const projectSection = document.getElementById('projects');
   
   // Initialize projects with hidden state
   projectBoxes.forEach(box => {
     box.style.opacity = '0';
-    box.style.transform = 'translateY(50px)';
-    box.style.transition = 'all 0.6s ease';
+    box.style.transform = 'translateY(50px) scale(0.95)';
+    box.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
   });
   
-  // Gagan-style project animations - continuous hover effects
-  function initGaganStyleAnimations() {
+  // One-by-one project entrance animation with alternating slide effects
+  function animateProjectsOneByOne() {
     const visibleProjects = Array.from(projectBoxes).filter(box => 
       box.style.display !== 'none' && getComputedStyle(box).display !== 'none'
     );
     
     visibleProjects.forEach((project, index) => {
-      // Initial state
-      project.style.transform = 'translateY(0) scale(1)';
-      project.style.opacity = '1';
-      project.style.transition = 'all 0.3s ease';
-      project.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
-      
-      // Add continuous subtle animation
-      project.addEventListener('mouseenter', () => {
-        project.style.transform = 'translateY(-10px) scale(1.02)';
-        project.style.boxShadow = '0 15px 35px rgba(0,0,0,0.2)';
-      });
-      
-      project.addEventListener('mouseleave', () => {
-        project.style.transform = 'translateY(0) scale(1)';
-        project.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
-      });
-      
-      // Staggered entrance animation
+      // Reset to hidden state
       project.style.opacity = '0';
-      project.style.transform = 'translateY(50px)';
+      project.style.transform = 'translateY(50px) scale(0.95)';
       
+      // Animate one by one with staggered delay
       setTimeout(() => {
         project.style.opacity = '1';
-        project.style.transform = 'translateY(0)';
-      }, index * 150);
-    });
-  }
-  
-  // Initialize Gagan-style animations
-  setTimeout(initGaganStyleAnimations, 500);
-  
-  // Animate projects one by one
-  function animateProjectsSequentially() {
-    const visibleProjects = Array.from(projectBoxes).filter(box => 
-      box.style.display !== 'none' && getComputedStyle(box).display !== 'none'
-    );
-    
-    visibleProjects.forEach((box, index) => {
-      setTimeout(() => {
-        box.style.opacity = '1';
-        box.style.transform = 'translateY(0)';
+        project.style.transform = 'translateY(0) scale(1)';
         
-        // Add alternating slide effects
+        // Add alternating slide effects for visual interest
         if (index % 2 === 0) {
-          box.style.transform = 'translateX(-30px) translateY(0)';
+          project.style.transform = 'translateX(-15px) translateY(0) scale(1)';
           setTimeout(() => {
-            box.style.transform = 'translateY(0)';
+            project.style.transform = 'translateY(0) scale(1)';
           }, 100);
         } else {
-          box.style.transform = 'translateX(30px) translateY(0)';
+          project.style.transform = 'translateX(15px) translateY(0) scale(1)';
           setTimeout(() => {
-            box.style.transform = 'translateY(0)';
+            project.style.transform = 'translateY(0) scale(1)';
           }, 100);
         }
-      }, index * 200); // 200ms delay between each project
+      }, index * 150); // 150ms delay between each card
     });
   }
+  
+  // Trigger animation when project section comes into view
+  const projectSectionObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Reset all projects to hidden state
+        projectBoxes.forEach(box => {
+          box.style.opacity = '0';
+          box.style.transform = 'translateY(50px) scale(0.95)';
+        });
+        
+        // Start one-by-one animation
+        setTimeout(() => {
+          animateProjectsOneByOne();
+        }, 200);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+  
+  if (projectSection) {
+    projectSectionObserver.observe(projectSection);
+  }
+  
+
   
   // Add click event to each tab
   projectTabs.forEach(tab => {
@@ -88,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
       // Get filter value
       const filterValue = tab.getAttribute('data-filter');
       
-      // Filter projects
+      // Filter projects with animation
       projectBoxes.forEach(box => {
         // Reset animations
         box.style.opacity = '0';
-        box.style.transform = 'translateY(50px)';
+        box.style.transform = 'translateY(50px) scale(0.95)';
         
         if (filterValue === 'all' || box.getAttribute('data-category') === filterValue) {
           box.style.display = 'flex';
@@ -101,13 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
       
-      // Reset and re-animate projects after filtering
-      projectBoxes.forEach(box => {
-        box.style.opacity = '0';
-        box.style.transform = 'translateY(50px)';
-      });
+      // Re-animate visible projects after filtering
       setTimeout(() => {
-        animateProjectsSequentially();
+        animateProjectsOneByOne();
       }, 100);
     });
   });
@@ -115,11 +103,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // Project hover effects
   projectBoxes.forEach(box => {
     box.addEventListener('mouseenter', () => {
-      box.classList.add('hovered');
+      box.style.transform = 'translateY(-10px) scale(1.02)';
+      box.style.boxShadow = '0 15px 35px rgba(0,0,0,0.2)';
+      box.style.transition = 'all 0.3s ease';
     });
     
     box.addEventListener('mouseleave', () => {
-      box.classList.remove('hovered');
+      box.style.transform = 'translateY(0) scale(1)';
+      box.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+      box.style.transition = 'all 0.3s ease';
     });
   });
 });

@@ -19,6 +19,10 @@ const contactSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  attachment: {
+    type: String,
+    default: null
+  },
   ip: {
     type: String
   },

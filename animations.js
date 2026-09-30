@@ -100,19 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             observer.observe(card);
         });
 
-        // Project section animations
-        const projectBoxes = document.querySelectorAll('.project-box');
-        projectBoxes.forEach((box, index) => {
-            // Always alternate left-right for desktop and mobile
-            if (index % 2 === 0) {
-                box.classList.add('slide-in-left');
-            } else {
-                box.classList.add('slide-in-right');
-            }
-            // Add staggered delay for better visual effect
-            box.style.transitionDelay = `${index * 0.1}s`;
-            observer.observe(box);
-        });
+        // Project section animations - handled in projects.js
 
         // Qualification section animations
         const qualificationData = document.querySelectorAll('.qualification-data');
@@ -158,12 +146,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
-// Enhanced scroll effects for navbar
-window.addEventListener('scroll', function() {
-    const nav = document.querySelector('nav');
-    if (window.scrollY > 50) {
-        nav.classList.add('scrolled');
-    } else {
-        nav.classList.remove('scrolled');
-    }
-});
+// Enhanced scroll effects for navbar - DISABLED (handled in index.html)
+// window.addEventListener('scroll', function() {
+//     const nav = document.querySelector('nav');
+//     if (window.scrollY > 50) {
+//         nav.classList.add('scrolled');
+//     } else {
+//         nav.classList.remove('scrolled');
+//     }
+// });

@@ -1,97 +1,127 @@
-// Circular Progress Indicator - Gagan Style
-document.addEventListener('DOMContentLoaded', function() {
-    const progressCircle = document.querySelector('.progress-circle');
-    const progressBar = document.querySelector('.progress-bar');
-    const percentageText = document.querySelector('.percentage');
-    
-    if (!progressCircle || !progressBar || !percentageText) return;
-    
-    let currentProgress = 0;
-    let targetProgress = 0;
-    let animationId;
-    
-    // Calculate scroll progress from home to contact section
-    function updateScrollProgress() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const documentHeight = document.documentElement.scrollHeight;
-        const windowHeight = window.innerHeight;
-        const scrollableHeight = documentHeight - windowHeight;
-        
-        // Calculate progress from 0% at top to 100% at bottom
-        const scrollProgress = Math.min(Math.max(scrollTop / scrollableHeight, 0), 1);
-        targetProgress = Math.round(scrollProgress * 100);
-        
-        if (!animationId) {
-            animateProgress();
-        }
+(function() {
+    function getAnyScrollTop() {
+        return Math.max(
+            window.pageYOffset || 0,
+            document.documentElement.scrollTop || 0,
+            document.body.scrollTop || 0
+        );
     }
-    
-    // Animate progress smoothly
-    function animateProgress() {
-        const diff = targetProgress - currentProgress;
-        
-        if (Math.abs(diff) > 0.5) {
-            currentProgress += diff * 0.1;
-            
-            // Update percentage text
-            percentageText.textContent = Math.round(currentProgress);
-            
-            // Update circular progress bar
-            const circumference = 2 * Math.PI * 32; // radius = 32
-            const offset = circumference - (currentProgress / 100) * circumference;
-            progressBar.style.strokeDashoffset = offset;
-            
-            animationId = requestAnimationFrame(animateProgress);
-        } else {
-            currentProgress = targetProgress;
-            percentageText.textContent = currentProgress;
-            
-            const circumference = 2 * Math.PI * 32;
-            const offset = circumference - (currentProgress / 100) * circumference;
-            progressBar.style.strokeDashoffset = offset;
-            
-            animationId = null;
-        }
+
+    function getDocumentHeight() {
+        return Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.offsetHeight,
+            document.body.clientHeight,
+            document.documentElement.clientHeight
+        );
     }
-    
-    // Scroll to top when clicked
-    progressCircle.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+
+    function getWindowHeight() {
+        return window.innerHeight || document.documentElement.clientHeight || 0;
+    }
+
+    function getBestScrollTarget() {
+        if (document.body.scrollTop > 0 || getComputedStyle(document.body).overflowY === 'auto' || getComputedStyle(document.body).overflowY === 'scroll') {
+            return document.body;
+        }
+        if (document.documentElement.scrollTop > 0 || getComputedStyle(document.documentElement).overflowY === 'auto' || getComputedStyle(document.documentElement).overflowY === 'scroll') {
+            return document.documentElement;
+        }
+        return window;
+    }
+
+    function addMultiScrollListener(fn) {
+        const targets = [window, document.documentElement, document.body];
+        targets.forEach(function(t) {
+            if (t && t.addEventListener) {
+                t.addEventListener('scroll', fn, { passive: true });
+            }
         });
-    });
-    
-    // Show progress indicator on all pages - always visible like Gagan's site
-    function toggleVisibility() {
-        // Always show the progress indicator on all sections
+    }
+
+    function initProgressIndicator() {
+        const progressCircle = document.querySelector('.progress-circle');
+        const progressBar = document.querySelector('.progress-bar');
+        const percentageText = document.querySelector('.scroll-percentage');
+
+        if (!progressCircle || !progressBar || !percentageText) {
+            setTimeout(initProgressIndicator, 200);
+            return;
+        }
+
+        const radius = 32;
+        const circumference = 2 * Math.PI * radius;
+        progressBar.style.strokeDasharray = circumference;
+        progressBar.style.strokeDashoffset = circumference;
+        percentageText.textContent = '0';
+
+        let ticking = false;
+
+        function updateScrollProgress() {
+            const scrollTop = getAnyScrollTop();
+            const documentHeight = getDocumentHeight();
+            const windowHeight = getWindowHeight();
+            const scrollableHeight = documentHeight - windowHeight;
+
+            let progress = 0;
+            if (scrollableHeight > 0) {
+                progress = Math.min(Math.max(scrollTop / scrollableHeight, 0), 1);
+            }
+
+            const percentage = Math.round(progress * 100);
+            percentageText.textContent = percentage;
+
+            const offset = circumference - (progress * circumference);
+            progressBar.style.strokeDashoffset = offset;
+
+            ticking = false;
+        }
+
+        function onScroll() {
+            if (!ticking) {
+                ticking = true;
+                window.requestAnimationFrame(updateScrollProgress);
+            }
+        }
+
+        progressCircle.addEventListener('click', function() {
+            const target = getBestScrollTarget();
+            if (target === window) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                target.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
         progressCircle.style.opacity = '1';
         progressCircle.style.visibility = 'visible';
-        progressCircle.style.transform = 'scale(1)';
-    }
-    
-    // Initial setup - ensure it's always visible
-    progressCircle.style.transition = 'opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease';
-    progressCircle.style.opacity = '1';
-    progressCircle.style.visibility = 'visible';
-    progressCircle.style.transform = 'scale(1)';
-    
-    // Event listeners
-    window.addEventListener('scroll', function() {
+
+        addMultiScrollListener(onScroll);
+        window.addEventListener('resize', onScroll);
+
         updateScrollProgress();
-        toggleVisibility();
+
+        progressCircle.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+        });
+
+        progressCircle.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+
+        setTimeout(updateScrollProgress, 500);
+        setTimeout(updateScrollProgress, 2000);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initProgressIndicator);
+    } else {
+        initProgressIndicator();
+    }
+
+    window.addEventListener('load', function() {
+        setTimeout(initProgressIndicator, 100);
     });
-    
-    // Initial call
-    updateScrollProgress();
-    toggleVisibility();
-    
-    // Add hover effect
-    progressCircle.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.1)';
-    });
-    
-    progressCircle.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1)';
-    });
-});
+})();

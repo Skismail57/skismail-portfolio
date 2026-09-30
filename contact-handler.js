@@ -2,27 +2,30 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactForm');
     const messageDiv = document.getElementById('formMessage');
+    const fileInput = document.getElementById('attachment');
     
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const formData = {
-            username: document.getElementById('username').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            message: document.getElementById('message').value
-        };
+        const formData = new FormData();
+        formData.append('username', document.getElementById('username').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('phone', document.getElementById('phone').value);
+        formData.append('message', document.getElementById('message').value);
+        
+        // Add file if selected
+        const file = fileInput.files[0];
+        if (file) {
+            formData.append('attachment', file);
+        }
         
         // Show loading
         messageDiv.innerHTML = '<p style="color: #0a66c2;">Sending message...</p>';
         
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch('http://localhost:3000/api/contact', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+                body: formData
             });
             
             const result = await response.json();
@@ -31,10 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageDiv.innerHTML = '<p style="color: white; font-weight: bold;">Message sent successfully! Thank you for contacting me.</p>';
                 form.reset();
             } else {
-                messageDiv.innerHTML = '<p style="color: #dc3545;">Failed to send message. Please try again.</p>';
+                messageDiv.innerHTML = '<p style="color: #dc3545;">Failed to send message: ' + (result.message || 'Please try again.') + '</p>';
             }
         } catch (error) {
-            messageDiv.innerHTML = '<p style="color: #dc3545;">Error sending message. Please try again later.</p>';
+            console.error('Contact form error:', error);
+            messageDiv.innerHTML = '<p style="color: #dc3545;">Error sending message. Make sure the backend server is running on localhost:3000</p>';
         }
     });
 });

@@ -39,7 +39,7 @@ const limiter = rateLimit({
 // File upload configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, '_images');
+    const uploadPath = path.join(__dirname, 'uploads');
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
@@ -57,14 +57,17 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
   fileFilter: function (req, file, cb) {
-    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const allowedTypes = /jpeg|jpg|png|gif|webp|pdf|doc|docx|txt/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
+    const mimetype = allowedTypes.test(file.mimetype) || 
+                     ['application/pdf', 'application/msword', 
+                      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                      'text/plain'].includes(file.mimetype);
     
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'));
+      cb(new Error('Only PDF, DOC, DOCX, TXT, and image files are allowed'));
     }
   }
 });
@@ -138,11 +141,13 @@ const transporter = nodemailer.createTransport({
 });
 
 // Contact form endpoint
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', upload.single('attachment'), async (req, res) => {
   try {
     const { username, email, phone, message } = req.body;
+    const attachment = req.file;
     
     console.log('Contact form data received:', { username, email, phone, message });
+    console.log('Attachment:', attachment ? attachment.filename : 'None');
     
     // Validate required fields
     if (!username || !email || !message) {
@@ -161,31 +166,22 @@ app.post('/api/contact', async (req, res) => {
       email: email,
       phone: phone,
       message: message,
+      attachment: attachment ? attachment.filename : null,
       ip,
       location: geo ? { country: geo.country, city: geo.city } : null,
       userAgent: req.get('User-Agent')
     });
     
     await contact.save();
-    console.log('New contact message saved:', contact._id);
+    console.log('New contact message saved to database:', contact._id);
 
-    // Test transporter connection first
-    try {
-      await transporter.verify();
-      console.log('SMTP connection verified successfully');
-    } catch (verifyError) {
-      console.error('SMTP verification failed:', verifyError);
-    }
-
-    // Send email if credentials are configured
+    // Send email if credentials are configured (optional)
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS && 
         process.env.EMAIL_USER !== 'your-email@gmail.com' &&
         process.env.EMAIL_PASS !== 'your-app-password') {
       
       try {
-        console.log('Attempting to send email with credentials:');
-        console.log('From:', process.env.EMAIL_USER);
-        console.log('To: skportfolio57@gmail.com');
+        console.log('Attempting to send email...');
         
         // Email to you
         const mailOptions = {
@@ -199,33 +195,35 @@ app.post('/api/contact', async (req, res) => {
             <p><strong>Phone:</strong> ${phone}</p>
             <p><strong>Message:</strong></p>
             <p>${message}</p>
-          `
+            ${attachment ? `<p><strong>Attachment:</strong> ${attachment.filename}</p>` : ''}
+          `,
+          attachments: attachment ? [{
+            filename: attachment.originalname,
+            path: attachment.path
+          }] : []
         };
         
         const info = await transporter.sendMail(mailOptions);
         console.log('Email sent successfully!');
         console.log('Message ID:', info.messageId);
-        console.log('Response:', info.response);
         
         res.json({ 
           success: true, 
           message: 'Message sent successfully! Thank you for contacting me.' 
         });
       } catch (emailError) {
-        console.error('Email sending failed with error:', emailError.message);
-        console.error('Full error:', emailError);
+        console.error('Email sending failed (message still saved to database):', emailError.message);
+        // Return success anyway since message is saved to database
         res.json({ 
-          success: false, 
-          message: `Email delivery failed: ${emailError.message}` 
+          success: true, 
+          message: 'Message saved successfully! (Email notification not configured)' 
         });
       }
     } else {
-      console.log('Email credentials missing or invalid:');
-      console.log('EMAIL_USER:', process.env.EMAIL_USER);
-      console.log('EMAIL_PASS length:', process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 'undefined');
+      console.log('Email not configured - message saved to database only');
       res.json({ 
-        success: false, 
-        message: 'Email not configured properly. Check server logs.' 
+        success: true, 
+        message: 'Message saved successfully! Thank you for contacting me.' 
       });
     }
     
@@ -680,6 +678,31 @@ app.get('/admin/forgot-password', (req, res) => {
   res.sendFile(__dirname + '/forgot-password.html');
 });
 
+app.get('/admin/otp-verification', (req, res) => {
+  res.sendFile(__dirname + '/otp-verification.html');
+});
+
+app.get('/admin/set-new-password', (req, res) => {
+  res.sendFile(__dirname + '/set-new-password.html');
+});
+
+app.get('/admin/forgot-password-success', (req, res) => {
+  res.sendFile(__dirname + '/forgot-password-success.html');
+});
+
+app.get('/admin/test-otp', (req, res) => {
+  res.sendFile(__dirname + '/test-otp.html');
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
+app.get('/admin/forgot-password', (req, res) => {
+  res.sendFile(__dirname + '/forgot-password.html');
+});
+
 app.get('/test-otp', (req, res) => {
   res.sendFile(__dirname + '/test-otp.html');
 });
@@ -840,10 +863,12 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         await sendSMSOTP(user.phone, otp, user.username);
       }
       
+      // Return JSON response with email for redirect
       res.json({ 
         success: true, 
         message: `OTP sent to your ${method}`,
         method: method,
+        email: user.email,
         maskedContact: method === 'email' 
           ? user.email.replace(/(.{2})(.*)(@.*)/, '$1***$3')
           : user.phone.replace(/(\+\d{2})(\d{4})(\d{4})/, '$1****$3')
@@ -855,6 +880,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         success: true, 
         message: `OTP displayed in server console (${method} service not configured)`,
         method: method,
+        email: user.email,
         maskedContact: method === 'email' 
           ? user.email.replace(/(.{2})(.*)(@.*)/, '$1***$3')
           : user.phone.replace(/(\+\d{2})(\d{4})(\d{4})/, '$1****$3')
@@ -863,6 +889,54 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({ error: 'Password reset failed' });
+  }
+});
+
+// Verify OTP endpoint
+app.post('/api/auth/verify-otp', async (req, res) => {
+  try {
+    const { identifier, otp } = req.body;
+    
+    if (!identifier || !otp) {
+      return res.status(400).json({ error: 'Identifier and OTP are required' });
+    }
+    
+    let user = null;
+    
+    try {
+      // Try MongoDB first
+      user = await User.findOne({
+        $or: [
+          { username: identifier },
+          { email: identifier },
+          { phone: identifier }
+        ],
+        resetOTP: otp,
+        resetOTPExpiry: { $gt: new Date() }
+      });
+      
+      if (user) {
+        return res.json({ success: true, message: 'OTP verified successfully' });
+      }
+    } catch (dbError) {
+      console.log('MongoDB OTP verification failed, trying in-memory');
+    }
+    
+    // Fallback to in-memory
+    const userIndex = inMemoryUsers.findIndex(u => 
+      (u.username === identifier || u.email === identifier || u.phone === identifier) &&
+      u.resetOTP === otp &&
+      u.resetOTPExpiry && new Date(u.resetOTPExpiry) > new Date()
+    );
+    
+    if (userIndex !== -1) {
+      return res.json({ success: true, message: 'OTP verified successfully' });
+    }
+    
+    res.status(400).json({ error: 'Invalid or expired OTP' });
+  } catch (error) {
+    console.error('OTP verification error:', error);
+    res.status(500).json({ error: 'OTP verification failed' });
   }
 });
 

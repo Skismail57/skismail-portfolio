@@ -3,148 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Portfolio</title>
+    <title>Admin Login - S K Ismail Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #fff;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
-        
+
         .login-container {
-            background: rgba(45, 45, 45, 0.9);
-            padding: 40px;
-            border-radius: 15px;
-            border: 1px solid #444;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
-        
+
         .login-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
-        
+
         .login-header h1 {
-            color: #0a66c2;
             font-size: 2rem;
-            margin-bottom: 10px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
         }
-        
+
         .login-header p {
-            color: #ccc;
-            font-size: 0.9rem;
+            color: #666;
+            font-size: 0.875rem;
         }
-        
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #ccc;
-            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
         }
-        
+
         .form-group input {
             width: 100%;
-            padding: 15px;
-            background: #1a1a1a;
-            border: 2px solid #444;
+            padding: 0.875rem;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
-        
+
         .form-group input:focus {
             outline: none;
-            border-color: #0a66c2;
-            box-shadow: 0 0 10px rgba(10, 102, 194, 0.3);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
-        
-        .login-btn {
+
+        .btn {
             width: 100%;
-            background: linear-gradient(135deg, #0a66c2 0%, #085a9e 100%);
-            color: white;
-            padding: 15px;
+            padding: 1rem;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
         }
-        
-        .login-btn:hover {
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(10, 102, 194, 0.4);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
-        
-        .login-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            margin-top: 1rem;
         }
-        
-        .error-message {
-            background: rgba(220, 53, 69, 0.1);
-            border: 1px solid #dc3545;
-            color: #dc3545;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
         }
-        
-        .success-message {
-            background: rgba(40, 167, 69, 0.1);
-            border: 1px solid #28a745;
-            color: #28a745;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .back-link {
+
+        .login-links {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 1.5rem;
         }
-        
-        .back-link a {
-            color: #0a66c2;
+
+        .login-links a {
+            color: #667eea;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
+            font-weight: 500;
         }
-        
-        .back-link a:hover {
-            color: #085a9e;
+
+        .login-links a:hover {
+            text-decoration: underline;
         }
-        
-        .default-credentials {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid #ffc107;
-            color: #ffc107;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 0.85rem;
+
+        .notification {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-forgot label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .remember-forgot a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -152,102 +203,94 @@
     <div class="login-container">
         <div class="login-header">
             <h1>Admin Login</h1>
-            <p>Access your portfolio dashboard</p>
+            <p>S K Ismail Portfolio Management</p>
         </div>
-        
-        <div class="default-credentials">
-            <strong>Default Login:</strong><br>
-            Username: admin<br>
-            Password: admin123
-        </div>
-        
-        <div id="errorMessage" class="error-message"></div>
-        <div id="successMessage" class="success-message"></div>
-        
+
+        <div class="notification" id="notification"></div>
+
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
-            
-            <button type="submit" class="login-btn" id="loginBtn">
-                Login to Dashboard
-            </button>
+
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox" id="remember">
+                    Remember me
+                </label>
+                <a href="forgot-password.html">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
-        
-        <div class="back-link">
-            <a href="/admin/forgot-password">Forgot Password?</a> | 
-            <a href="/">← Back to Portfolio</a>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Logging in...</p>
+        </div>
+
+        <div class="login-links">
+            <p>Don't have an account? <a href="index.html">Back to Portfolio</a></p>
         </div>
     </div>
 
     <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
+            const loading = document.getElementById('loading');
             
-            // Hide previous messages
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-            
-            // Disable button and show loading
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Logging in...';
-            
+            if (!username || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+
+            loading.classList.add('show');
+
             try {
-                const response = await fetch('/api/auth/login', {
+                const response = await fetch(`${API_BASE}/auth/login`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-                
+
                 const data = await response.json();
-                
+
+                loading.classList.remove('show');
+
                 if (data.success) {
-                    successMessage.textContent = 'Login successful! Redirecting...';
-                    successMessage.style.display = 'block';
-                    
+                    showNotification('Login successful! Redirecting...', 'success');
                     setTimeout(() => {
-                        window.location.href = '/admin';
-                    }, 1000);
+                        window.location.href = 'admin-panel.html';
+                    }, 1500);
                 } else {
-                    errorMessage.textContent = data.error || 'Login failed';
-                    errorMessage.style.display = 'block';
+                    showNotification(data.error || 'Login failed', 'error');
                 }
             } catch (error) {
-                errorMessage.textContent = 'Network error. Please try again.';
-                errorMessage.style.display = 'block';
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Login to Dashboard';
+                loading.classList.remove('show');
+                showNotification('Connection error. Is the server running?', 'error');
             }
         });
-        
-        // Check if already logged in
-        async function checkAuth() {
-            try {
-                const response = await fetch('/api/auth/me');
-                if (response.ok) {
-                    window.location.href = '/admin';
-                }
-            } catch (error) {
-                // Not logged in, stay on login page
-            }
-        }
-        
-        checkAuth();
     </script>
 </body>
 </html>

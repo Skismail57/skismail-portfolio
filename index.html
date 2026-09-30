@@ -17,10 +17,14 @@
 
   <!-- Google Font (Poppins for Gagan style) -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Variable Fonts for modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 
   <!-- Main CSS -->
-  <link rel="stylesheet" href="style.css?v=3">
-  <link rel="stylesheet" href="gallery.css?v=3">
+  <link rel="stylesheet" href="style.css?v=37">
+  <link rel="stylesheet" href="gallery.css?v=25">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -59,6 +63,8 @@
         <li><a href="#expertise">Expertise</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#gallery">Gallery</a></li>
+        <li><a href="dashboard-functional.html" target="_blank">Dashboard</a></li>
+        <li><a href="http://localhost:3000/admin/login" target="_blank">Admin Panel</a></li>
         <li><a href="#contact">Contact</a></li>
     </ul>
 </nav>
@@ -71,19 +77,15 @@
 <!-- Home Section -->
 <section id="home" class="hero">
   <div class="hero-bg" aria-hidden="true">
-    <img src="_images/bg.jpg" alt="hero background" loading="eager" />
+    <img src="_images/bg.png" loading="eager" decoding="async" fetchpriority="high" alt="hero background" width="1909" height="994" />
   </div>
   <div class="overlay">
     <div class="intro-text">
       <p>Hello, I am</p>
-      <h1>S K Ismail</h1>
+      <h1 class="gradient-text">S K Ismail</h1>
       <h3>And I am a <span class="animated-role">Full Stack Web Developer!</span></h3>
       <div class="hero-buttons">
         <a href="#about" class="about-btn">About Me</a>
-        <button id="aiVideoBtn" class="ai-video-btn">
-          <i class="fas fa-play-circle"></i>
-          Watch AI Ismail
-        </button>
       </div>
     </div>
   </div>
@@ -96,7 +98,7 @@
     <circle cx="35" cy="35" r="32" class="progress-bar"/>
   </svg>
   <div class="progress-text">
-    <span class="percentage">0</span>
+    <span class="scroll-percentage">0</span>
   </div>
 </div>
 
@@ -105,7 +107,7 @@
   <h2>About Me</h2>
   <p class="sub">— who am I —</p>
   <div class="about-container">
-    <img src="_images/your-photo.jpg" alt="Profile Photo" />
+    <img src="_images/your-photo.png" loading="eager" decoding="async" alt="Profile Photo" width="1254" height="1254" />
     <div class="about-text">
       <h3>I'm S K Ismail and I am a <span class="animated-role">Machine Learning Engineer</span></h3>
       <p>
@@ -126,37 +128,37 @@
 
 <!-- Skills Section -->
 <section id="services">
-  <h2>My Skills</h2>
+  <h2 class="gradient-text">My Skills</h2>
   <p class="sub">— What I Can Do For You —</p>
   
   <div class="services-grid">
     <div class="service-card">
-      <i class="fas fa-robot"></i>
+      <i class="fas fa-robot animated-icon icon-bounce"></i>
       <h3>Machine Learning Solutions</h3>
       <p>End-to-end ML solutions including data preprocessing, model training, evaluation, and deployment using Python, TensorFlow, and Scikit-learn.</p>
     </div>
     <div class="service-card">
-      <i class="fas fa-globe"></i>
+      <i class="fas fa-globe animated-icon icon-pulse"></i>
       <h3>Web Development</h3>
       <p>Modern, responsive web applications using HTML, CSS, JavaScript, React, Django, and PHP, with seamless user experiences.</p>
     </div>
     <div class="service-card">
-      <i class="fas fa-server"></i>
+      <i class="fas fa-server animated-icon icon-spin"></i>
       <h3>Backend Development</h3>
       <p>Scalable backend APIs and services using Node.js, Flask, and Django, with database integration (MySQL, PostgreSQL, MongoDB).</p>
     </div>
     <div class="service-card">
-      <i class="fas fa-database"></i>
+      <i class="fas fa-database animated-icon icon-float"></i>
       <h3>Database Design</h3>
       <p>Optimal database design, normalization, optimization, and management for efficient data storage and retrieval.</p>
     </div>
     <div class="service-card">
-      <i class="fas fa-brain"></i>
+      <i class="fas fa-brain animated-icon icon-glow"></i>
       <h3>AI Applications</h3>
       <p>AI-powered solutions including chatbots, recommendation systems, image recognition, and natural language processing.</p>
     </div>
     <div class="service-card">
-      <i class="fas fa-chart-bar"></i>
+      <i class="fas fa-chart-bar animated-icon icon-shake"></i>
       <h3>Data Analysis</h3>
       <p>Comprehensive data analysis, visualization, and reporting using Pandas, NumPy, Excel, Tableau, and matplotlib.</p>
     </div>
@@ -169,71 +171,71 @@
 
     <div class="expertise-grid"> 
         <div class="icon-box" data-skill="HTML 5">
-            <img src="public/icons/html5-original.svg" alt="Html 5">
+            <img src="public/icons/html5-original.svg" alt="Html 5" class="animated-icon icon-bounce">
             <span class="skill-name">HTML 5</span>
         </div> 
         <div class="icon-box" data-skill="JavaScript">
-            <img src="public/icons/javascript-original.svg" alt="Java Script">
+            <img src="public/icons/javascript-original.svg" alt="Java Script" class="animated-icon icon-pulse">
             <span class="skill-name">JavaScript</span>
         </div> 
         <div class="icon-box" data-skill="React">
-            <img src="public/icons/react-original.svg" alt="React">
+            <img src="public/icons/react-original.svg" alt="React" class="animated-icon icon-spin">
             <span class="skill-name">React</span>
         </div> 
         <div class="icon-box" data-skill="AngularJS">
-            <img src="public/icons/angularjs-original.svg" alt="AngularJS">
+            <img src="public/icons/angularjs-original.svg" alt="AngularJS" class="animated-icon icon-float">
             <span class="skill-name">AngularJS</span>
         </div> 
         <div class="icon-box" data-skill="Next.js">
-            <img src="public/icons/nextjs-original.svg" alt="Next js 13">
+            <img src="public/icons/nextjs-original.svg" alt="Next js 13" class="animated-icon icon-glow">
             <span class="skill-name">Next.js</span>
         </div> 
         <div class="icon-box" data-skill="Node.js">
-            <img src="public/icons/nodejs-original.svg" alt="Node js">
+            <img src="public/icons/nodejs-original.svg" alt="Node js" class="animated-icon icon-shake">
             <span class="skill-name">Node.js</span>
         </div> 
         <div class="icon-box" data-skill="PHP">
-            <img src="public/icons/php-original.svg" alt="PHP">
+            <img src="public/icons/php-original.svg" alt="PHP" class="animated-icon icon-zoom">
             <span class="skill-name">PHP</span>
         </div> 
         <div class="icon-box" data-skill="Python">
-            <img src="public/icons/python-original.svg" alt="Python">
+            <img src="public/icons/python-original.svg" alt="Python" class="animated-icon icon-spin">
             <span class="skill-name">Python</span>
         </div> 
         <div class="icon-box" data-skill="Java">
-            <img src="public/icons/java-original.svg" alt="Java">
+            <img src="public/icons/java-original.svg" alt="Java" class="animated-icon icon-bounce">
             <span class="skill-name">Java</span>
         </div> 
         <div class="icon-box" data-skill="PostgreSQL">
-            <img src="public/icons/postgresql-original.svg" alt="Postger SQL">
+            <img src="public/icons/postgresql-original.svg" alt="Postger SQL" class="animated-icon icon-spin">
             <span class="skill-name">PostgreSQL</span>
         </div> 
         <div class="icon-box" data-skill="MySQL">
-            <img src="public/icons/mysql-original.svg" alt="My SQL">
+            <img src="public/icons/mysql-original.svg" alt="My SQL" class="animated-icon icon-float">
             <span class="skill-name">MySQL</span>
         </div> 
         <div class="icon-box" data-skill="MongoDB">
-            <img src="public/icons/database-file.png" alt="Mongo db">
+            <img src="public/icons/database-file.png" alt="Mongo db" class="animated-icon icon-glow">
             <span class="skill-name">MongoDB</span>
         </div> 
         <div class="icon-box" data-skill="GitHub">
-            <img src="public/icons/github-original.svg" alt="GitHub">
+            <img src="public/icons/github-original.svg" alt="GitHub" class="animated-icon icon-shake">
             <span class="skill-name">GitHub</span>
         </div> 
         <div class="icon-box" data-skill="Netlify">
-            <img src="public/icons/netlify-original.svg" alt="Netlify">
+            <img src="public/icons/netlify-original.svg" alt="Netlify" class="animated-icon icon-zoom">
             <span class="skill-name">Netlify</span>
         </div> 
         <div class="icon-box" data-skill="VS Code">
-            <img src="public/icons/visualstudio-original.svg" alt="VS Code">
+            <img src="public/icons/visualstudio-original.svg" alt="VS Code" class="animated-icon icon-bounce">
             <span class="skill-name">VS Code</span>
         </div> 
         <div class="icon-box" data-skill="ChatGPT">
-            <img src="public/icons/chatgpt.png" alt="ChatGPT">
+            <img src="public/icons/chatgpt.png" alt="ChatGPT" class="animated-icon icon-pulse">
             <span class="skill-name">ChatGPT</span>
         </div> 
         <div class="icon-box" data-skill="AI/ML">
-            <img src="public/icons/brain.png" alt="AI/ML">
+            <img src="public/icons/brain.png" alt="AI/ML" class="animated-icon icon-spin">
             <span class="skill-name">AI/ML</span>
         </div> 
     </div> 
@@ -290,7 +292,7 @@
           <div>
             <h3 class="qualification-title">B.E in AI & ML</h3>
             <span class="qualification-subtitle">City Engineering College, Bengaluru</span>
-            <div class="qualification-calendar">📅 2025</div>
+            <div class="qualification-calendar">📅 2026</div>
           </div>
           <div>
             <span class="qualification-rounder"></span>
@@ -356,7 +358,7 @@
 
 <!-- Projects Section -->
 <section id="projects">
-  <h2>My Projects</h2>
+  <h2 class="gradient-text">My Projects</h2>
   <p class="sub">— My creative works & experiences —</p>
   
   <div class="projects-intro">
@@ -370,85 +372,232 @@
         <div class="projects-tab" data-filter="ml">Machine Learning</div>
         <div class="projects-tab" data-filter="data">Data Analysis</div>
         <div class="projects-tab" data-filter="web">Web Development</div>
-        <div class="projects-tab" data-filter="arduino">Arduino Microcontroller</div>
+        <div class="projects-tab" data-filter="android">Android</div>
       </div>
       <div class="projects-search">
         <input type="text" id="projectSearch" placeholder="Search projects..." />
+        <button id="advancedFiltersToggle" class="advanced-filters-toggle" title="Advanced Filters">
+          <i class="fas fa-sliders-h"></i>
+        </button>
       </div>
     </div>
     
+    <!-- Advanced Filters Panel -->
+    <div id="advancedFiltersPanel" class="advanced-filters-panel">
+      <div class="filter-group">
+        <h4>Technology Stack</h4>
+        <div class="filter-options">
+          <label><input type="checkbox" class="tech-filter" value="python"> Python</label>
+          <label><input type="checkbox" class="tech-filter" value="javascript"> JavaScript</label>
+          <label><input type="checkbox" class="tech-filter" value="react"> React</label>
+          <label><input type="checkbox" class="tech-filter" value="nodejs"> Node.js</label>
+          <label><input type="checkbox" class="tech-filter" value="django"> Django</label>
+          <label><input type="checkbox" class="tech-filter" value="flask"> Flask</label>
+          <label><input type="checkbox" class="tech-filter" value="fastapi"> FastAPI</label>
+          <label><input type="checkbox" class="tech-filter" value="java"> Java</label>
+        </div>
+      </div>
+      <div class="filter-group">
+        <h4>Project Type</h4>
+        <div class="filter-options">
+          <label><input type="checkbox" class="type-filter" value="web"> Web App</label>
+          <label><input type="checkbox" class="type-filter" value="mobile"> Mobile App</label>
+          <label><input type="checkbox" class="type-filter" value="ml"> ML Model</label>
+          <label><input type="checkbox" class="type-filter" value="api"> API</label>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button id="saveFilters" class="save-filters-btn">Save Filters</button>
+        <button id="clearAllFilters" class="clear-filters-btn">Clear All Filters</button>
+        <button id="showAnalytics" class="show-analytics-btn">Search Analytics</button>
+      </div>
+      <div id="savedFilters" class="saved-filters"></div>
+      <div id="searchAnalytics" class="search-analytics"></div>
+    </div>
+
     <div class="project-container">
       <!-- UPI Fraud Detection Using Machine Learning -->
-      <div class="project-box" data-category="ml">
+      <div class="project-box" data-category="ml" data-tech="python,flask,sklearn" data-type="ml,api">
         <div class="project-image">
-          <img src="_images/upi-project.jpg" alt="UPI Fraud Detection Using Machine Learning" />
+          <img src="_images/upi-project.png" loading="lazy" decoding="async" alt="UPI Fraud Detection Using Machine Learning" width="1672" height="941" />
         </div>
         <div class="project-content">
           <h3>UPI Fraud Detection Using Machine Learning</h3>
-          <p>ML-based system using Flask API, Random Forest, SVM, and Logistic Regression algorithms to identify fraudulent transactions in real-time.</p>
+          <p>Advanced UPI Fraud Detection System using machine learning and deep learning techniques. Features real-time transaction monitoring, multi-model ensemble detection, ML-based system using Flask API, Random Forest, SVM, and Logistic Regression algorithms to identify fraudulent transactions in real-time.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="flask" title="Flask"><i class="fas fa-flask"></i></span>
+            <span class="tech-icon" data-tech="sklearn" title="Scikit-learn"><i class="fas fa-brain"></i></span>
+          </div>
           <div class="project-links">
-            <a href="https://github.com/Skismail57/UPI_Fraud_Detection_Using_Machine_Learning" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
             <a href="https://github.com/Skismail57/UPI_Fraud_Detection_Using_Machine_Learning" target="_blank" class="project-btn">View Project</a>
           </div>
         </div>
       </div>
 
       <!-- AI-Powered Student Management System -->
-      <div class="project-box" data-category="web">
+      <div class="project-box" data-category="web" data-tech="python,django,react" data-type="web">
         <div class="project-image">
-          <img src="_images/AI-Powered-Student-Management-System.jpg" alt="AI-Powered Student Management System" />
+          <img src="_images/AI-Powered-Student-Management-System.png" loading="lazy" decoding="async" alt="AI-Powered Student Management System" width="1672" height="941" />
         </div>
         <div class="project-content">
           <h3>AI-Powered Student Management System</h3>
-          <p>Comprehensive student management system with AI features for attendance tracking, performance analytics, and automated report generation.</p>
+          <p>A full-stack AI-powered student management platform with role-based portals for admin, faculty, students, and parents, featuring attendance, analytics, GPA tracking, curriculum management, reports, notifications, and academic support tools..</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="django" title="Django"><i class="fas fa-database"></i></span>
+            <span class="tech-icon" data-tech="react" title="React"><i class="fab fa-react"></i></span>
+          </div>
           <div class="project-links">
-            <a href="https://github.com/Skismail57/AI-Powered-Student-Management-System" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
             <a href="https://github.com/Skismail57/AI-Powered-Student-Management-System" target="_blank" class="project-btn">View Project</a>
           </div>
         </div>
       </div>
 
-      <!-- Health Stack System -->
-      <div class="project-box" data-category="web">
+      <!-- Health-Stack-System -->
+      <div class="project-box" data-category="web" data-tech="python,django" data-type="web">
         <div class="project-image">
-          <img src="_images/hospital-project.jpg" alt="Health Stack System" />
+          <img src="_images/hospital-project.png" loading="lazy" decoding="async" alt="Health-Stack-System" width="1672" height="941" />
         </div>
         <div class="project-content">
-          <h3>Health Stack System</h3>
-          <p>Modern healthcare management system for patient records, appointment scheduling, and medical inventory tracking with secure data handling.</p>
+          <h3>Health-Stack-System</h3>
+          <p>Comprehensive Django-based hospital and clinic management platform. Manages patients, appointments, admissions, EHR, prescriptions/PDFs, pharmacy and billing. Includes role-based dashboards, real-time chat, Celery tasks, DRF APIs documented with drf‑spectacular, and SSLCommerz payments.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="django" title="Django"><i class="fas fa-database"></i></span>
+          </div>
           <div class="project-links">
-            <a href="https://github.com/Skismail57/Health-Stack-System" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
             <a href="https://github.com/Skismail57/Health-Stack-System" target="_blank" class="project-btn">View Project</a>
           </div>
         </div>
       </div>
 
-      <!-- BLOCKELECT - Blockchain Voting System -->
-      <div class="project-box" data-category="web">
+      <!-- BLOCKELECT-BlockchainVoting-System -->
+      <div class="project-box" data-category="web" data-tech="javascript,ethereum" data-type="web">
         <div class="project-image">
-          <img src="_images/voting-project.jpg" alt="BLOCKELECT Blockchain Voting System" />
+          <img src="_images/voting-project.png" loading="lazy" decoding="async" alt="BLOCKELECT-BlockchainVoting-System" width="1672" height="941" />
         </div>
         <div class="project-content">
-          <h3>BLOCKELECT - Blockchain Voting System</h3>
-          <p>Secure and transparent voting system built on blockchain technology to ensure tamper-proof elections and verifiable results.</p>
+          <h3>BLOCKELECT-BlockchainVoting-System</h3>
+          <p>A web3 voting system that ensures secure voter authentication, immutability of votes, and transparent, real-time election results using cryptographic methods and smart contracts on the Ethereum blockchain.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="javascript" title="JavaScript"><i class="fab fa-js"></i></span>
+            <span class="tech-icon" data-tech="ethereum" title="Ethereum"><i class="fab fa-ethereum"></i></span>
+          </div>
           <div class="project-links">
-            <a href="https://github.com/Skismail57/BLOCKELECT-BlockchainVoting-System" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
             <a href="https://github.com/Skismail57/BLOCKELECT-BlockchainVoting-System" target="_blank" class="project-btn">View Project</a>
           </div>
         </div>
       </div>
 
-      <!-- Django To-Do List with User Authentication -->
-      <div class="project-box" data-category="web">
+      <!-- Django-To-Do-List_with_User_Authentication -->
+      <div class="project-box" data-category="web" data-tech="python,django" data-type="web">
         <div class="project-image">
-          <img src="_images/Django-To-Do-List_with_User_Authentication.jpg" alt="Django To-Do List with User Authentication" />
+          <img src="_images/Django-To-Do-List_with_User_Authentication.png" loading="lazy" decoding="async" alt="Django-To-Do-List_with_User_Authentication" width="1672" height="941" />
         </div>
         <div class="project-content">
-          <h3>Django To-Do List with User Authentication</h3>
-          <p>Full-featured task management application built with Django, featuring user authentication, task CRUD operations, and personalized dashboards.</p>
+          <h3>Django-To-Do-List_with_User_Authentication</h3>
+          <p>A secure Django-based To-Do List application with user authentication, task management, and responsive design. Features include user registration, login/logout, CRUD operations for tasks, and custom error pages. Built with Django 5.0, HTML5, CSS3, and SQLite/PostgreSQL support. Ready for deployment with Docker.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="django" title="Django"><i class="fas fa-database"></i></span>
+          </div>
           <div class="project-links">
-            <a href="https://github.com/Skismail57/Django-To-Do-List_with_User_Authentication" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
             <a href="https://github.com/Skismail57/Django-To-Do-List_with_User_Authentication" target="_blank" class="project-btn">View Project</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform -->
+      <div class="project-box" data-category="web" data-tech="nextjs,java,spring" data-type="web">
+        <div class="project-image">
+          <img src="_images/Nextcart Full-_Stack_AI-Powered_E-Commerce_Platform.png" loading="lazy" decoding="async" alt="NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform" width="1672" height="941" />
+        </div>
+        <div class="project-content">
+          <h3>NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform</h3>
+          <p>A complete, production-ready full-stack e-commerce platform built with Next.js 14 (frontend), Core Java 17 (monolith backend), and Spring Boot Microservices (scalable backend). Features AI-powered recommendations, NEXA AI chatbot, voice assistant, fraud detection, price history analysis, and more!</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="nextjs" title="Next.js"><i class="fas fa-code"></i></span>
+            <span class="tech-icon" data-tech="java" title="Java"><i class="fab fa-java"></i></span>
+            <span class="tech-icon" data-tech="spring" title="Spring Boot"><i class="fas fa-leaf"></i></span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Skismail57/NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform" target="_blank" class="project-btn">View Project</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jarvis-AI-Assistant -->
+      <div class="project-box" data-category="ml" data-tech="python,fastapi,react" data-type="ml,web">
+        <div class="project-image">
+          <img src="_images/jarvis.png" loading="lazy" decoding="async" alt="Jarvis-AI-Assistant" width="1672" height="941" />
+        </div>
+        <div class="project-content">
+          <h3>Jarvis-AI-Assistant</h3>
+          <p>AI Voice Assistant (JARVIS) with FastAPI + React. Voice interaction, PC control, ChromaDB vector memory, biometric auth, smart-home integrations, and luxury neon UI.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="fastapi" title="FastAPI"><i class="fas fa-bolt"></i></span>
+            <span class="tech-icon" data-tech="react" title="React"><i class="fab fa-react"></i></span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Skismail57/Jarvis-AI-Assistant" target="_blank" class="project-btn">View Project</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- E-Commerce-Intelligence-Decision-Analytics-Platform -->
+      <div class="project-box" data-category="data" data-tech="python,pandas,sklearn" data-type="ml,data">
+        <div class="project-image">
+          <img src="_images/E-Commerce-Intelligence-Decision-Analytics-Platform.png" loading="lazy" decoding="async" alt="E-Commerce-Intelligence-Decision-Analytics-Platform" width="1672" height="941" />
+        </div>
+        <div class="project-content">
+          <h3>E-Commerce-Intelligence-Decision-Analytics-Platform</h3>
+          <p>End-to-End e-Commerce Analytics Platform with ML-Powered Customer Intelligence, Demand Forecasting, Churn Detection, and Interactive neon-themed Dashboard for Data-Driven Business Decisions.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="pandas" title="Pandas"><i class="fas fa-chart-bar"></i></span>
+            <span class="tech-icon" data-tech="sklearn" title="Scikit-learn"><i class="fas fa-brain"></i></span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Skismail57/E-Commerce-Intelligence-Decision-Analytics-Platform" target="_blank" class="project-btn">View Project</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banking-Customer-Profitability-and-Risk-Analytics-Platform -->
+      <div class="project-box" data-category="data" data-tech="python,fastapi,postgresql" data-type="ml,data">
+        <div class="project-image">
+          <img src="_images/Banking-Customer-Profitability-and-Risk-Analytics-Platform.png" loading="lazy" decoding="async" alt="Banking-Customer-Profitability-and-Risk-Analytics-Platform" width="1672" height="941" />
+        </div>
+        <div class="project-content">
+          <h3>Banking-Customer-Profitability-and-Risk-Analytics-Platform</h3>
+          <p>Production-grade hybrid batch + real-time banking analytics platform for customer profitability, risk intelligence, anomaly detection, early warnings, ML-driven decisions, and executive analytics. Built with Python, FastAPI, PostgreSQL, Kafka/Redpanda, Redis, Streamlit, Docker, Kubernetes, and CI/CD.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="python" title="Python"><i class="fab fa-python"></i></span>
+            <span class="tech-icon" data-tech="fastapi" title="FastAPI"><i class="fas fa-bolt"></i></span>
+            <span class="tech-icon" data-tech="postgresql" title="PostgreSQL"><i class="fas fa-database"></i></span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Skismail57/Banking-Customer-Profitability-and-Risk-Analytics-Platform" target="_blank" class="project-btn">View Project</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WeatherApp-Android-FastAPI -->
+      <div class="project-box" data-category="android" data-tech="java,fastapi" data-type="mobile">
+        <div class="project-image">
+          <img src="_images/WeatherApp-Android-FastAPI.png" loading="lazy" decoding="async" alt="WeatherApp-Android-FastAPI" width="1672" height="941" />
+        </div>
+        <div class="project-content">
+          <h3>WeatherApp-Android-FastAPI</h3>
+          <p>A modern Android weather application built with Java, FastAPI, and Open-Meteo, providing real-time weather, hourly forecasts, 7-day forecasts, historical weather data, city search, and location-based weather updates.</p>
+          <div class="tech-stack">
+            <span class="tech-icon" data-tech="java" title="Java"><i class="fab fa-java"></i></span>
+            <span class="tech-icon" data-tech="fastapi" title="FastAPI"><i class="fas fa-bolt"></i></span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Skismail57/WeatherApp-Android-FastAPI" target="_blank" class="project-btn">View Project</a>
           </div>
         </div>
       </div>
@@ -458,7 +607,7 @@
 
 <!-- Gallery Section -->
 <section id="gallery" class="gallery-section">
-  <h2>My Gallery</h2>
+  <h2 class="gradient-text">My Gallery</h2>
   <p class="sub">— Certifications & Achievements —</p>
   
   <div class="gallery-controls">
@@ -466,132 +615,129 @@
     <button id="galleryNext" class="gallery-btn"><i class="fas fa-chevron-right"></i></button>
   </div>
   
+  <!-- Gallery Search -->
+  <div class="gallery-search">
+    <input type="text" id="gallerySearchInput" placeholder="Search certificates..." />
+    <button id="clearSearch" class="clear-search-btn"><i class="fas fa-times"></i></button>
+  </div>
+  
   <div id="scrollGallery" class="scroll-gallery">
     <div id="galleryTrack" class="gallery-track">
-      <!-- Gallery Items -->
-      <div class="gallery-item">
-        <img src="_images/AI-DevOps-Engineer-Internship-Certificate.jpg" alt="AI-DevOps Internship Certificate">
-        <div class="gallery-overlay">
-          <h3>AI-DevOps Internship</h3>
-          <p>Rooman Technologies</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/AI & Machine Learning Engineering Intern – Ethical Byte.png" loading="eager" decoding="async" alt="AI & Machine Learning Engineering Intern – Ethical Byte">
+        <div class="certificate-name">AI & Machine Learning Engineering Intern – Ethical Byte</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/AI- DevOps-Engineer-Training-Certificate.jpg" alt="AI-DevOps Training Certificate">
-        <div class="gallery-overlay">
-          <h3>AI-DevOps Training</h3>
-          <p>IBM Collaboration</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/AI-DevOps Engineer  Internship Professional Program – Rooman Technologies (in association with IBM & NASSCOM).png" loading="eager" decoding="async" alt="AI-DevOps Engineer  Internship Professional Program – Rooman Technologies (in association with IBM & NASSCOM)">
+        <div class="certificate-name">AI-DevOps Engineer  Internship Professional Program – Rooman Technologies (in association with IBM & NASSCOM)</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/AIML-internship-Ethical-Byte.jpg" alt="AIML Internship">
-        <div class="gallery-overlay">
-          <h3>AIML Internship</h3>
-          <p>Ethical Byte</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/AI-DevOps On-the-Job Training (OJT) – CyberEye Academy.png" loading="eager" decoding="async" alt="AI-DevOps On-the-Job Training (OJT) – CyberEye Academy">
+        <div class="certificate-name">AI-DevOps On-the-Job Training (OJT) – CyberEye Academy</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/IBM-Certificate.jpg" alt="IBM Certificate">
-        <div class="gallery-overlay">
-          <h3>IBM Certificate</h3>
-          <p>Cloud-Native Development</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Cloud-Native Application Development with IBM Cloud and Kubernetes – IBM CEP.png" loading="eager" decoding="async" alt="Cloud-Native Application Development with IBM Cloud and Kubernetes – IBM CEP">
+        <div class="certificate-name">Cloud-Native Application Development with IBM Cloud and Kubernetes – IBM CEP</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/On-Job-Training-Certificate.jpg" alt="On-Job Training">
-        <div class="gallery-overlay">
-          <h3>On-Job Training</h3>
-          <p>Rooman Technologies</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Diploma in Computer Science & Engineering (First Class) – Board of Technical Examinations, Karnataka.png" loading="eager" decoding="async" alt="Diploma in Computer Science & Engineering (First Class) – Board of Technical Examinations, Karnataka">
+        <div class="certificate-name">Diploma in Computer Science & Engineering (First Class) – Board of Technical Examinations, Karnataka</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Diploma Degree.jpg" alt="Diploma Certificate">
-        <div class="gallery-overlay">
-          <h3>Diploma Degree</h3>
-          <p>Computer Science</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Experience & Relieving Certificate Sales Executive – BPO Convergence Pvt. Ltd..png" loading="eager" decoding="async" alt="Experience & Relieving Certificate Sales Executive – BPO Convergence Pvt. Ltd.">
+        <div class="certificate-name">Experience & Relieving Certificate Sales Executive – BPO Convergence Pvt. Ltd.</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Relieving Letter.jpg" alt="Relieving Letter">
-        <div class="gallery-overlay">
-          <h3>Relieving Letter</h3>
-          <p>Work Experience</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Front end Development – Great Learning Academy.png" loading="eager" decoding="async" alt="Front end Development – Great Learning Academy">
+        <div class="certificate-name">Front end Development – Great Learning Academy</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 1.jpg" alt="Certificate 1">
-        <div class="gallery-overlay">
-          <h3>Certificate 1</h3>
-          <p>Frontend Development</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Machine Learning  - Simplilearn SkillUp.png" loading="eager" decoding="async" alt="Machine Learning  - Simplilearn SkillUp">
+        <div class="certificate-name">Machine Learning  - Simplilearn SkillUp</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 2.jpg" alt="Certificate 2">
-        <div class="gallery-overlay">
-          <h3>Certificate 2</h3>
-          <p>Machine Learning</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Artificial Intelligence – Simplilearn SkillUp.png" loading="eager" decoding="async" alt="Artificial Intelligence – Simplilearn SkillUp">
+        <div class="certificate-name">Artificial Intelligence – Simplilearn SkillUp</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 3.jpg" alt="Certificate 3">
-        <div class="gallery-overlay">
-          <h3>Certificate 3</h3>
-          <p>Introduction to AI</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Applications of AI – Great Learning Academy.png" loading="eager" decoding="async" alt="Applications of AI – Great Learning Academy">
+        <div class="certificate-name">Applications of AI – Great Learning Academy</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 4.jpg" alt="Certificate 4">
-        <div class="gallery-overlay">
-          <h3>Certificate 4</h3>
-          <p>Additional Certification</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Python Data Structures – Great Learning Academy.png" loading="eager" decoding="async" alt="Python Data Structures – Great Learning Academy">
+        <div class="certificate-name">Python Data Structures – Great Learning Academy</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 5.jpg" alt="Certificate 5">
-        <div class="gallery-overlay">
-          <h3>Certificate 5</h3>
-          <p>Additional Certification</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Python Simplilearn SkillUp.png" loading="eager" decoding="async" alt="Python Simplilearn SkillUp">
+        <div class="certificate-name">Python Simplilearn SkillUp</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 6.jpg" alt="Certificate 6">
-        <div class="gallery-overlay">
-          <h3>Certificate 6</h3>
-          <p>Additional Certification</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Software Testing – Simplilearn SkillUp.png" loading="eager" decoding="async" alt="Software Testing – Simplilearn SkillUp">
+        <div class="certificate-name">Software Testing – Simplilearn SkillUp</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 7.jpg" alt="Certificate 7">
-        <div class="gallery-overlay">
-          <h3>Certificate 7</h3>
-          <p>Additional Certification</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Life Skills (Jeevan Kaushal 2.0) Certification – Wadhwani Foundation.png" loading="eager" decoding="async" alt="Life Skills (Jeevan Kaushal 2.0) Certification – Wadhwani Foundation">
+        <div class="certificate-name">Life Skills (Jeevan Kaushal 2.0) Certification – Wadhwani Foundation</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Certificate 8.jpg" alt="Certificate 8">
-        <div class="gallery-overlay">
-          <h3>Certificate 8</h3>
-          <p>Additional Certification</p>
-        </div>
+      <div class="gallery-item" data-category="achievement">
+        <img src="_images/Advanced Java Programming Certification (Grade A1) – Anudip Foundation & Accenture.png" loading="eager" decoding="async" alt="Advanced Java Programming Certification (Grade A1) – Anudip Foundation & Accenture">
+        <div class="certificate-name">Advanced Java Programming Certification (Grade A1) – Anudip Foundation & Accenture</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Advance Java Programming.jpg" alt="Advance Java Programming">
-        <div class="gallery-overlay">
-          <h3>Advance Java</h3>
-          <p>Programming Certificate</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Official Assessment Marksheet – National Skills Qualifications Framework (NSQF Level 5).png" loading="eager" decoding="async" alt="Official Assessment Marksheet – National Skills Qualifications Framework (NSQF Level 5)">
+        <div class="certificate-name">Official Assessment Marksheet – National Skills Qualifications Framework (NSQF Level 5)</div>
       </div>
-      <div class="gallery-item">
-        <img src="_images/Marksheet-of-AI-DevOps-Engineer-Certificate.jpg" alt="Marksheet">
-        <div class="gallery-overlay">
-          <h3>Marksheet</h3>
-          <p>AI-DevOps Engineer</p>
-        </div>
+      <div class="gallery-item" data-category="course">
+        <img src="_images/Wadhwani Foundation Certificate S K Ismail- 6747004fcc55d99b8488e082-1.png" loading="eager" decoding="async" alt="Wadhwani Foundation Certificate S K Ismail- 6747004fcc55d99b8488e082-1">
+        <div class="certificate-name">Wadhwani Foundation Certificate S K Ismail- 6747004fcc55d99b8488e082-1</div>
       </div>
     </div>
   </div>
   
   <div id="galleryDots" class="gallery-dots"></div>
+  
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev"><i class="fas fa-chevron-left"></i></button>
+      <button class="lightbox-nav lightbox-next" id="lightboxNext"><i class="fas fa-chevron-right"></i></button>
+      <div class="lightbox-image-container">
+        <img id="lightboxImage" src="" alt="Gallery Image" />
+        <div class="lightbox-caption">
+          <h3 id="lightboxTitle"></h3>
+          <p id="lightboxDescription"></p>
+        </div>
+      </div>
+      <div class="lightbox-counter">
+        <span id="lightboxCounter"></span>
+      </div>
+      <!-- Slideshow Controls -->
+      <div class="lightbox-slideshow">
+        <button class="slideshow-btn" id="slideshowToggle" title="Start Slideshow">
+          <i class="fas fa-play"></i>
+        </button>
+        <div class="slideshow-speed">
+          <input type="range" id="slideshowSpeed" min="1" max="10" value="3" title="Slideshow Speed" />
+        </div>
+        <button class="fullscreen-btn" id="fullscreenToggle" title="Fullscreen">
+          <i class="fas fa-expand"></i>
+        </button>
+      </div>
+      <!-- Share Controls -->
+      <div class="lightbox-share">
+        <button class="share-btn" id="copyLink" title="Copy Link">
+          <i class="fas fa-link"></i>
+        </button>
+        <button class="share-btn" id="emailShare" title="Email">
+          <i class="fab fa-google"></i>
+        </button>
+        <button class="share-btn" id="whatsappShare" title="WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Contact Section -->
@@ -603,7 +749,7 @@
         <h2 style="text-align: center;">Let's get in touch</h2>
         <div class="profile-circle">
           <div class="profile-image">
-            <img src="_images/your-photo.jpg" alt="S K Ismail Profile" />
+            <img src="_images/your-photo.png" loading="eager" decoding="async" alt="S K Ismail Profile" width="1254" height="1254" />
           </div>
         </div>
         <p>Let's be connected to find solutions in dynamic environment to solve real-time problem by working together.</p>
@@ -636,7 +782,7 @@
     <div class="contact-right">
       <div class="contact-form-container">
         <h2 style="text-align: center;">Contact us</h2>
-        <form class="contact-form" id="contactForm">
+        <form class="contact-form" id="contactForm" enctype="multipart/form-data">
           <div class="input-group">
             <input type="text" id="username" name="username" required />
             <label for="username">Username</label>
@@ -653,6 +799,10 @@
             <textarea id="message" name="message" rows="5" required></textarea>
             <label for="message">Message</label>
           </div>
+          <div class="input-group">
+            <input type="file" id="attachment" name="attachment" accept=".pdf,.doc,.docx,.txt,.jpg,.png" />
+            <label for="attachment">Attachment (PDF, DOC, Images)</label>
+          </div>
           <button type="submit" class="send-btn">Send Message</button>
         </form>
         <div id="formMessage" class="form-message"></div>
@@ -664,7 +814,7 @@
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-content">
-    <p>Created By <span class="highlight">S K Ismail</span> | © 2025 S K Ismail, All rights reserved.</p>
+    <p>Created By <span class="footer-name">S K Ismail</span> | © 2025 S K Ismail, All rights reserved.</p>
   </div>
 </footer>
 
@@ -677,16 +827,23 @@
     once: false
   });
 </script>
-<script src="script.js"></script>
+<script src="script.js?v=27"></script>
 <script src="simple-gallery.js"></script>
+<script src="gallery-slider.js"></script>
+<script src="gallery-search.js"></script>
 <script src="skills.js"></script>
 <script src="projects.js"></script>
 <script src="animations.js"></script>
 <script src="progress-indicator.js"></script>
 <script src="about-typing.js"></script>
 <script src="home-arrow.js"></script>
-  <script src="contact-handler.js"></script>
+<script src="contact-handler.js"></script>
 <script src="project-tracking.js"></script>
+<script src="modern-ui.js"></script>
+<script src="advanced-search.js"></script>
+<script src="tech-stack.js"></script>
+<script src="lightbox.js"></script>
+
     <!-- AI Video Introduction Modal -->
     <div id="aiVideoModal" class="modal">
         <div class="modal-content">
@@ -697,7 +854,7 @@
             <div class="modal-body">
                 <div class="ai-avatar-section">
                     <div class="ai-avatar" id="aiAvatar">
-                        <img src="_images/your-photo.jpg" alt="S K Ismail" />
+                        <img src="_images/your-photo.png" loading="eager" decoding="async" alt="S K Ismail" width="1254" height="1254" />
                     </div>
                     <button id="ttsPlayBtn" class="tts-play-btn">
                         <i class="fas fa-volume-up fa-3x"></i>
@@ -719,21 +876,22 @@
     <button id="backToTop" class="back-to-top">
       <i class="fas fa-arrow-up"></i>
     </button>
-<script> 
-const icons = document.querySelectorAll('.icon-box'); 
-const section = document.querySelector('#expertise'); 
 
-const observer = new IntersectionObserver(entries => { 
-    entries.forEach(entry => { 
-        if (entry.isIntersecting) { 
-            icons.forEach(icon => { 
-                icon.classList.add('show'); 
-            }); 
-        } 
-    }); 
-}, { threshold: 0.3 }); 
+<script>
+const icons = document.querySelectorAll('.icon-box');
+const section = document.querySelector('#expertise');
 
-observer.observe(section); 
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            icons.forEach(icon => {
+                icon.classList.add('show');
+            });
+        }
+    });
+}, { threshold: 0.3 });
+
+observer.observe(section);
 
 // Click to toggle skill name display
 icons.forEach(iconBox => {
@@ -746,7 +904,9 @@ icons.forEach(iconBox => {
         this.classList.toggle('active');
     });
 });
+</script>
 
+<script>
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.icon-box')) {
         icons.forEach(box => {

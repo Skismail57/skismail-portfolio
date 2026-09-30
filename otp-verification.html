@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>OTP Verification | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2547f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101322",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen relative overflow-hidden">
+    <!-- Background Layer (Blurred Portfolio) -->
+    <div class="absolute inset-0 z-0 blur-xl opacity-50 pointer-events-none flex flex-col items-center">
+        <div class="w-full max-w-[1440px] px-40 py-10">
+            <header class="flex items-center justify-between border-b border-solid border-slate-200 py-3 mb-10">
+                <div class="flex items-center gap-4 text-slate-800">
+                    <div class="size-6 bg-slate-800 rounded"></div>
+                    <h2 class="text-lg font-bold">Portfolio</h2>
+                </div>
+            </header>
+            <div class="grid grid-cols-3 gap-10">
+                <div class="col-span-2 space-y-6">
+                    <div class="h-40 bg-white rounded-xl shadow-sm"></div>
+                    <div class="h-60 bg-white rounded-xl shadow-sm"></div>
+                </div>
+                <div class="h-80 bg-white rounded-xl shadow-sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay / Main Content -->
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+        <!-- Navbar (Standalone for the modal context) -->
+        <div class="fixed top-0 w-full flex justify-center py-5">
+            <header class="w-full max-w-[1280px] flex items-center justify-between px-10 py-3 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md rounded-xl shadow-sm border border-slate-200/50">
+                <div class="flex items-center gap-4 text-[#111218] dark:text-white">
+                    <div class="size-6 text-primary">
+                        <span class="material-symbols-outlined text-2xl">person</span>
+                    </div>
+                    <h2 class="text-lg font-bold leading-tight tracking-tight font-display">Portfolio Admin</h2>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <span class="material-symbols-outlined text-lg">lock</span>
+                        <span class="text-xs font-medium uppercase tracking-widest">Secure Verification</span>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <!-- Verification Modal -->
+        <div class="w-full max-w-[560px] glass-morphism rounded-3xl shadow-2xl p-8 md:p-12 border border-white dark:border-slate-800 flex flex-col items-center">
+            <!-- Security Icon -->
+            <div class="mb-6 w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-4xl font-bold">verified_user</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-[#111218] dark:text-white tracking-tight text-2xl md:text-3xl font-bold leading-tight text-center pb-4 font-display">
+                Security Verification Required
+            </h1>
+
+            <!-- Body Text -->
+            <p class="text-slate-600 dark:text-slate-300 text-base font-normal leading-relaxed text-center pb-8 max-w-[420px]">
+                Please enter the 6-digit OTP sent to your registered email 
+                <span id="maskedEmail" class="font-bold text-[#111218] dark:text-white">sk***@gmail.com</span>
+            </p>
+
+            <!-- Error/Success Messages -->
+            <div id="errorMessage" class="hidden bg-red-500/20 border border-red-500/50 text-red-600 p-3 rounded-lg text-sm mb-4"></div>
+            <div id="successMessage" class="hidden bg-green-500/20 border border-green-500/50 text-green-600 p-3 rounded-lg text-sm mb-4"></div>
+
+            <!-- OTP Input Field -->
+            <div class="w-full mb-8">
+                <div class="flex justify-center gap-3 md:gap-4">
+                    <fieldset class="relative flex gap-3 md:gap-4">
+                        <input id="otp1" autofocus="" class="flex h-16 w-12 md:w-14 text-center text-xl font-bold rounded-lg border-2 border-slate-200 bg-white focus:border-primary focus:ring-0 transition-all dark:bg-slate-900 dark:border-slate-700 dark:text-white" max="9" maxlength="1" type="number"/>
+                        <input id="otp2" class="flex h-16 w-12 md:w-14 text-center text-xl font-bold rounded-lg border-2 border-slate-200 bg-white focus:border-primary focus:ring-0 transition-all dark:bg-slate-900 dark:border-slate-700 dark:text-white" max="9" maxlength="1" type="number"/>
+                        <input id="otp3" class="flex h-16 w-12 md:w-14 text-center text-xl font-bold rounded-lg border-2 border-slate-200 bg-white focus:border-primary focus:ring-0 transition-all dark:bg-slate-900 dark:border-slate-700 dark:text-white" max="9" maxlength="1" type="number"/>
+                        <input id="otp4" class="flex h-16 w-12 md:w-14 text-center text-xl font-bold rounded-lg border-2 border-slate-200 bg-white focus:border-primary focus:ring-0 transition-all dark:bg-slate-900 dark:border-slate-700 dark:text-white" max="9" maxlength="1" type="number"/>
+                        <input id="otp5" class="flex h-16 w-12 md:w-14 text-center text-xl font-bold rounded-lg border-2 border-slate-200 bg-white focus:border-primary focus:ring-0 transition-all dark:bg-slate-900 dark:border-slate-700 dark:text-white" max="9" maxlength="1" type="number"/>
+                        <input id="otp6" class="flex h-16 w-12 md:w-14 text-center text-xl font-bold rounded-lg border-2 border-slate-200 bg-white focus:border-primary focus:ring-0 transition-all dark:bg-slate-900 dark:border-slate-700 dark:text-white" max="9" maxlength="1" type="number"/>
+                    </fieldset>
+                </div>
+            </div>
+
+            <!-- Timer / Resend -->
+            <div class="flex flex-col items-center gap-2 mb-10">
+                <div class="flex items-center gap-4">
+                    <div class="flex flex-col items-center px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg min-w-[60px]">
+                        <p id="timerMin" class="text-[#111218] dark:text-white text-lg font-bold leading-tight">00</p>
+                        <p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Min</p>
+                    </div>
+                    <span class="text-xl font-bold text-slate-400">:</span>
+                    <div class="flex flex-col items-center px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg min-w-[60px]">
+                        <p id="timerSec" class="text-[#111218] dark:text-white text-lg font-bold leading-tight tracking-tight">45</p>
+                        <p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Sec</p>
+                    </div>
+                </div>
+                <p class="text-slate-500 text-sm mt-3">Didn't receive the code? <button id="resendBtn" onclick="resendOTP()" class="text-primary font-bold hover:underline">Resend OTP</button></p>
+            </div>
+
+            <!-- Primary Action -->
+            <button id="verifyBtn" onclick="verifyOTP()" class="w-full h-14 bg-primary hover:bg-blue-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-3">
+                <span>Verify OTP</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+
+            <!-- Trust Badge -->
+            <div class="mt-8 flex items-center gap-2 text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined text-lg">verified</span>
+                <span class="text-xs font-semibold uppercase tracking-widest">Secure Password Reset</span>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="mt-6 flex gap-6">
+                <a class="text-slate-400 dark:text-slate-500 text-xs hover:text-primary transition-colors" href="/admin/forgot-password">Change Email</a>
+                <a class="text-slate-400 dark:text-slate-500 text-xs hover:text-red-500 transition-colors" href="/admin/login">Cancel</a>
+            </div>
+        </div>
+
+        <!-- Bottom Support Info -->
+        <div class="mt-8 text-center text-slate-400 text-xs">
+            <p>© 2025 S K Ismail Portfolio. All transactions are SSL encrypted.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get identifier from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const identifier = urlParams.get('identifier');
+        const email = urlParams.get('email');
+
+        // Update masked email display
+        if (email) {
+            document.getElementById('maskedEmail').textContent = email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
+        }
+
+        // OTP input handling
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.key >= 0 && e.key <= 9) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                } else if (e.key === 'Backspace') {
+                    if (index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                }
+            });
+        });
+
+        // Timer countdown
+        let timeLeft = 45;
+        const timerMin = document.getElementById('timerMin');
+        const timerSec = document.getElementById('timerSec');
+        const resendBtn = document.getElementById('resendBtn');
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerMin.textContent = minutes.toString().padStart(2, '0');
+            timerSec.textContent = seconds.toString().padStart(2, '0');
+
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                resendBtn.disabled = false;
+                resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // Disable resend button initially
+        resendBtn.disabled = true;
+        resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        updateTimer();
+
+        async function verifyOTP() {
+            const otp = Array.from(inputs).map(input => input.value).join('');
+            const verifyBtn = document.getElementById('verifyBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            if (otp.length !== 6) {
+                errorMessage.textContent = 'Please enter all 6 digits';
+                errorMessage.classList.remove('hidden');
+                successMessage.classList.add('hidden');
+                return;
+            }
+
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = 'Verifying...';
+            errorMessage.classList.add('hidden');
+            successMessage.classList.add('hidden');
+
+            try {
+                // Verify OTP with backend
+                const response = await fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier: identifier || email, otp })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Redirect to set new password page
+                    window.location.href = `/admin/set-new-password?otp=${otp}&identifier=${encodeURIComponent(identifier || email)}`;
+                } else {
+                    errorMessage.textContent = data.error || 'Invalid OTP. Please try again.';
+                    errorMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                // If verify endpoint doesn't exist, redirect directly
+                window.location.href = `/admin/set-new-password?otp=${otp}&identifier=${encodeURIComponent(identifier || email)}`;
+            } finally {
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<span>Verify OTP</span><span class="material-symbols-outlined">arrow_forward</span>';
+            }
+        }
+
+        async function resendOTP() {
+            const resendBtn = document.getElementById('resendBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            resendBtn.disabled = true;
+            resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            errorMessage.classList.add('hidden');
+            successMessage.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier: identifier || email, method: 'email' })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    successMessage.textContent = 'OTP resent successfully!';
+                    successMessage.classList.remove('hidden');
+                    
+                    // Reset timer
+                    timeLeft = 45;
+                    updateTimer();
+                } else {
+                    errorMessage.textContent = data.error || 'Failed to resend OTP';
+                    errorMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.classList.remove('hidden');
+            } finally {
+                resendBtn.disabled = false;
+                resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+</html>

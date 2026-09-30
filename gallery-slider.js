@@ -60,10 +60,29 @@ document.addEventListener('DOMContentLoaded', function() {
     prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
     nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
     
+    // Click handler for certificate names
+    galleryItems.forEach(item => {
+        const certificateName = item.querySelector('.certificate-name');
+        certificateName.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Toggle clicked state
+            if (this.classList.contains('clicked')) {
+                this.classList.remove('clicked');
+            } else {
+                // Remove clicked class from all other certificates
+                document.querySelectorAll('.certificate-name').forEach(name => {
+                    name.classList.remove('clicked');
+                });
+                this.classList.add('clicked');
+            }
+        });
+    });
+    
     // Auto-play functionality
     let autoPlayInterval = setInterval(() => {
         goToSlide((currentIndex + 1) % (maxIndex + 1));
-    }, 3000);
+    }, 8000);
 
     // Pause auto-play on hover
     const galleryContainer = document.querySelector('.gallery-container');
@@ -71,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     galleryContainer.addEventListener('mouseleave', () => {
         autoPlayInterval = setInterval(() => {
             goToSlide((currentIndex + 1) % (maxIndex + 1));
-        }, 3000);
+        }, 8000);
     });
     
     // Initialize

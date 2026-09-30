@@ -185,8 +185,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const img = this.querySelector('img');
             modal.style.display = "block";
             modalImg.src = img.src;
-            const overlay = this.querySelector('.gallery-overlay h3');
-            captionText.innerHTML = overlay ? overlay.textContent : img.alt;
+            const certName = this.querySelector('.certificate-name');
+            captionText.innerHTML = certName ? certName.textContent : img.alt;
         });
     });
 
@@ -198,18 +198,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Close modal when clicking outside image
     modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.style.display = "none";
-            startAutoPlay();
-        }
+      if (e.target === modal) {
+        modal.style.display = "none";
+        startAutoPlay();
+      }
     });
 
     // Close modal on Esc key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.style.display === "block") {
-            modal.style.display = "none";
-            startAutoPlay();
-        }
+      if (e.key === 'Escape' && modal.style.display === "block") {
+        modal.style.display = "none";
+        startAutoPlay();
+      }
     });
     
     // Initialize
