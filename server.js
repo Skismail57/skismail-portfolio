@@ -21,8 +21,9 @@ const { Visitor, ProjectView, ResumeDownload, Skill, Certificate } = require('./
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MongoDB connection - simplified for local development
-mongoose.connect('mongodb://127.0.0.1:27017/portfolio')
+// MongoDB connection - use environment variable or fallback to local
+const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
+mongoose.connect(mongoUri)
 .then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {
