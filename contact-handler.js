@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.innerHTML = '<p style="color: #0a66c2;">Sending message...</p>';
         
         try {
-            const response = await fetch('http://localhost:3000/api/contact', {
+            const response = await fetch('https://skismail-portfolio.onrender.com/api/contact', {
                 method: 'POST',
                 body: formData
             });
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Contact form error:', error);
-            messageDiv.innerHTML = '<p style="color: #dc3545;">Error sending message. Make sure the backend server is running on localhost:3000</p>';
+            messageDiv.innerHTML = '<p style="color: #dc3545;">Error sending message. Please try again later.</p>';
         }
     });
 });
