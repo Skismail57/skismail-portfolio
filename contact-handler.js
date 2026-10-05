@@ -28,13 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.innerHTML = '<p style="color: #0a66c2;">⏳ Sending message... (may take 10-20 seconds)</p>';
 
         try {
-            console.log('Sending contact form to: https://skismail-portfolio.onrender.com/api/contact');
+            console.log('Sending contact form to: https://skismail-portfolio-production.up.railway.app/api/contact');
 
             // Add timeout to prevent hanging
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-            const response = await fetch('https://skismail-portfolio.onrender.com/api/contact', {
+            const response = await fetch('https://skismail-portfolio-production.up.railway.app/api/contact', {
                 method: 'POST',
                 body: formData,
                 signal: controller.signal

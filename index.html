@@ -995,7 +995,7 @@ ttsPlayBtn.addEventListener('click', () => {
     }
 });
 
-// Keep-alive to prevent Render free tier spin-down
+// Keep-alive to prevent Railway free tier spin-down
 setInterval(() => {
     fetch('/api/health', { method: 'HEAD' })
         .catch(err => console.log('Keep-alive ping failed:', err));
