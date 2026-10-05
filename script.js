@@ -376,34 +376,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ===== Contact Form Handling =====
-const contactForm = document.querySelector('.contact-form');
-if (contactForm) {
-  contactForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const name = this.querySelector('input[type="text"]').value;
-    const email = this.querySelector('input[type="email"]').value;
-    const phone = this.querySelector('input[type="tel"]').value;
-    const message = this.querySelector('textarea').value;
-    
-    if (!name || !email || !message) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-    
-    const submitBtn = this.querySelector('button');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Sending...';
-    submitBtn.disabled = true;
-    
-    setTimeout(() => {
-      alert('Thank you for your message! I will get back to you soon.');
-      this.reset();
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-    }, 2000);
-  });
-}
+// Old contact form handler removed - now handled by contact-handler.js
+// This section was conflicting with the real API-based form submission
 
 // ===== Hide Loading Screen =====
 window.addEventListener('load', function() {
