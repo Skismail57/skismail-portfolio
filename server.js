@@ -146,22 +146,22 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
   try {
     const { username, email, phone, message } = req.body;
     const attachment = req.file;
-    
+
     console.log('Contact form data received:', { username, email, phone, message });
     console.log('Attachment:', attachment ? attachment.filename : 'None');
-    
+
     // Validate required fields
     if (!username || !email || !message) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Please fill in all required fields' 
+      return res.status(400).json({
+        success: false,
+        message: 'Please fill in all required fields'
       });
     }
-    
+
     // Store contact in database
     const ip = req.ip || req.connection.remoteAddress;
     const geo = geoip.lookup(ip);
-    
+
     const contact = new Contact({
       name: username,
       email: email,
@@ -172,18 +172,18 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
       location: geo ? { country: geo.country, city: geo.city } : null,
       userAgent: req.get('User-Agent')
     });
-    
+
     await contact.save();
     console.log('New contact message saved to database:', contact._id);
 
     // Send email if credentials are configured (optional)
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && 
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS &&
         process.env.EMAIL_USER !== 'your-email@gmail.com' &&
         process.env.EMAIL_PASS !== 'your-app-password') {
-      
+
       try {
         console.log('Attempting to send email...');
-        
+
         // Email to you
         const mailOptions = {
           from: process.env.EMAIL_USER,
@@ -203,36 +203,36 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
             path: attachment.path
           }] : []
         };
-        
+
         const info = await transporter.sendMail(mailOptions);
         console.log('Email sent successfully!');
         console.log('Message ID:', info.messageId);
-        
-        res.json({ 
-          success: true, 
-          message: 'Message sent successfully! Thank you for contacting me.' 
+
+        return res.json({
+          success: true,
+          message: 'Message sent successfully! Thank you for contacting me.'
         });
       } catch (emailError) {
         console.error('Email sending failed (message still saved to database):', emailError.message);
         // Return success anyway since message is saved to database
-        res.json({ 
-          success: true, 
-          message: 'Message saved successfully! (Email notification not configured)' 
+        return res.json({
+          success: true,
+          message: 'Message saved successfully! Thank you for contacting me.'
         });
       }
     } else {
       console.log('Email not configured - message saved to database only');
-      res.json({ 
-        success: true, 
-        message: 'Message saved successfully! Thank you for contacting me.' 
+      return res.json({
+        success: true,
+        message: 'Message saved successfully! Thank you for contacting me.'
       });
     }
-    
+
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error. Please try again.' 
+    return res.status(500).json({
+      success: false,
+      message: 'Server error. Please try again.'
     });
   }
 });
