@@ -78,7 +78,6 @@ app.use(limiter);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('.')); // Serve static files
 
 // Session configuration
 app.use(session({
@@ -90,6 +89,70 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
+
+// Admin routes (defined before static files to ensure they work)
+app.get('/admin/login', (req, res) => {
+  res.sendFile(__dirname + '/admin-login.html');
+});
+
+app.get('/admin/admin-panel', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-panel.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
+app.get('/admin/admin-panel.html', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-panel.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
+app.get('/admin/dashboard.html', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-dashboard.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
+app.get('/admin/forgot-password', (req, res) => {
+  res.sendFile(__dirname + '/forgot-password.html');
+});
+
+app.get('/admin/otp-verification', (req, res) => {
+  res.sendFile(__dirname + '/otp-verification.html');
+});
+
+app.get('/admin/set-new-password', (req, res) => {
+  res.sendFile(__dirname + '/set-new-password.html');
+});
+
+app.get('/admin/forgot-password-success', (req, res) => {
+  res.sendFile(__dirname + '/forgot-password-success.html');
+});
+
+app.get('/admin/test-otp', (req, res) => {
+  res.sendFile(__dirname + '/test-otp.html');
+});
+
+app.get('/admin', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-dashboard.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
+// Serve static files (after admin routes)
+app.use(express.static('.'));
 
 // Visitor tracking middleware
 app.use(async (req, res, next) => {
@@ -675,86 +738,7 @@ async function createDefaultAdmin() {
   }
 }
 
-// Admin routes
-app.get('/admin/login', (req, res) => {
-  res.sendFile(__dirname + '/admin-login.html');
-});
-
-app.get('/admin/admin-panel', (req, res) => {
-  // Check if user is authenticated
-  if (req.session.user && req.session.user.role === 'admin') {
-    res.sendFile(__dirname + '/admin-panel.html');
-  } else {
-    res.redirect('/admin/login');
-  }
-});
-
-app.get('/admin/admin-panel.html', (req, res) => {
-  // Check if user is authenticated
-  if (req.session.user && req.session.user.role === 'admin') {
-    res.sendFile(__dirname + '/admin-panel.html');
-  } else {
-    res.redirect('/admin/login');
-  }
-});
-
-app.get('/admin/dashboard.html', (req, res) => {
-  // Check if user is authenticated
-  if (req.session.user && req.session.user.role === 'admin') {
-    res.sendFile(__dirname + '/admin-dashboard.html');
-  } else {
-    res.redirect('/admin/login');
-  }
-});
-
-app.get('/admin/forgot-password', (req, res) => {
-  res.sendFile(__dirname + '/forgot-password.html');
-});
-
-app.get('/admin/otp-verification', (req, res) => {
-  res.sendFile(__dirname + '/otp-verification.html');
-});
-
-app.get('/admin/set-new-password', (req, res) => {
-  res.sendFile(__dirname + '/set-new-password.html');
-});
-
-app.get('/admin/forgot-password-success', (req, res) => {
-  res.sendFile(__dirname + '/forgot-password-success.html');
-});
-
-app.get('/admin/test-otp', (req, res) => {
-  res.sendFile(__dirname + '/test-otp.html');
-});
-
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is running' });
-});
-
-app.get('/admin/forgot-password', (req, res) => {
-  res.sendFile(__dirname + '/forgot-password.html');
-});
-
-app.get('/test-otp', (req, res) => {
-  res.sendFile(__dirname + '/test-otp.html');
-});
-
-app.get('/admin', (req, res) => {
-  // Check if user is authenticated
-  if (req.session.user && req.session.user.role === 'admin') {
-    res.sendFile(__dirname + '/admin-dashboard.html');
-  } else {
-    res.redirect('/admin/login');
-  }
-});
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Backend running successfully!' });
-});
-
-// OTP generation function
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
