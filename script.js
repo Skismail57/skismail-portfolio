@@ -423,6 +423,47 @@ window.addEventListener('load', function() {
   // ===== Back To Top Button =====
   const backToTopBtn = document.getElementById('backToTop');
 
+  // ===== Image Lazy Loading Optimization =====
+  const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.classList.add('loaded');
+          observer.unobserve(img);
+        }
+      });
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.01
+    });
+
+    lazyImages.forEach(img => {
+      imageObserver.observe(img);
+    });
+  } else {
+    // Fallback for browsers without IntersectionObserver
+    lazyImages.forEach(img => {
+      img.classList.add('loaded');
+    });
+  }
+
+  // ===== Preload Critical Images =====
+  const criticalImages = [
+    '_images/bg.png',
+    '_images/your-photo.png'
+  ];
+
+  criticalImages.forEach(src => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = src;
+    document.head.appendChild(link);
+  });
+
   if (backToTopBtn) {
     let bttTicking = false;
     function updateBackToTop() {
