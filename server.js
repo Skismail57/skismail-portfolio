@@ -698,6 +698,15 @@ app.get('/admin/admin-panel.html', (req, res) => {
   }
 });
 
+app.get('/admin/dashboard.html', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-dashboard.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
 app.get('/admin/forgot-password', (req, res) => {
   res.sendFile(__dirname + '/forgot-password.html');
 });
