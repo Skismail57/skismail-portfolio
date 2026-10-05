@@ -24,16 +24,23 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('attachment', file);
         }
 
-        // Show loading
-        messageDiv.innerHTML = '<p style="color: #0a66c2;">Sending message...</p>';
+        // Show loading with better message
+        messageDiv.innerHTML = '<p style="color: #0a66c2;">⏳ Sending message... (may take 10-20 seconds)</p>';
 
         try {
             console.log('Sending contact form to: https://skismail-portfolio.onrender.com/api/contact');
 
+            // Add timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
             const response = await fetch('https://skismail-portfolio.onrender.com/api/contact', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             console.log('Response status:', response.status);
 
@@ -48,7 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Contact form error:', error);
-            messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Error sending message. Please try again later.</p>';
+            if (error.name === 'AbortError') {
+                messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Request timed out. The server is waking up (free tier). Please try again in 30 seconds.</p>';
+            } else {
+                messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Error sending message. Please try again later.</p>';
+            }
         }
     });
 });

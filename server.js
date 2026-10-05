@@ -237,6 +237,11 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
   }
 });
 
+// Health check endpoint for keep-alive
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
 // Real Analytics Dashboard with MongoDB
 app.get('/api/analytics', async (req, res) => {
   try {

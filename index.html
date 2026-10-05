@@ -994,6 +994,12 @@ ttsPlayBtn.addEventListener('click', () => {
         aiAvatar.classList.add('talking');
     }
 });
+
+// Keep-alive to prevent Render free tier spin-down
+setInterval(() => {
+    fetch('/api/health', { method: 'HEAD' })
+        .catch(err => console.log('Keep-alive ping failed:', err));
+}, 5 * 60 * 1000); // Ping every 5 minutes
 </script> 
 </body>
 </html>
