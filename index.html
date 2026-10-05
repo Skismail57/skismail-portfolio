@@ -996,10 +996,20 @@ ttsPlayBtn.addEventListener('click', () => {
 });
 
 // Keep-alive to prevent Render free tier spin-down
+// Ping the health endpoint more frequently
 setInterval(() => {
-    fetch('/api/health', { method: 'HEAD' })
+    fetch('/api/health', { method: 'HEAD', cache: 'no-cache' })
+        .then(() => console.log('Keep-alive ping successful'))
         .catch(err => console.log('Keep-alive ping failed:', err));
-}, 5 * 60 * 1000); // Ping every 5 minutes
+}, 3 * 60 * 1000); // Ping every 3 minutes (more frequent)
+
+// Also ping when page becomes visible (user returns to tab)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        fetch('/api/health', { method: 'HEAD', cache: 'no-cache' })
+            .catch(err => console.log('Visibility change ping failed:', err));
+    }
+});
 </script> 
 </body>
 </html>
