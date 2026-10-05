@@ -680,6 +680,15 @@ app.get('/admin/login', (req, res) => {
   res.sendFile(__dirname + '/admin-login.html');
 });
 
+app.get('/admin/admin-panel', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-panel.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
 app.get('/admin/forgot-password', (req, res) => {
   res.sendFile(__dirname + '/forgot-password.html');
 });
