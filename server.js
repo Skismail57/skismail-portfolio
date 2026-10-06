@@ -21,6 +21,9 @@ const { Visitor, ProjectView, ResumeDownload, Skill, Certificate } = require('./
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy for Render (fixes express-rate-limit warning)
+app.set('trust proxy', true);
+
 // MongoDB connection - use environment variable or fallback to local
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
 mongoose.connect(mongoUri)
