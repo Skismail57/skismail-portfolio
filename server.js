@@ -198,7 +198,11 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  // Add timeout configuration
+  connectionTimeout: 10000,
+  greetingTimeout: 5000,
+  socketTimeout: 10000
 });
 
 // Verify email configuration on startup
@@ -258,7 +262,7 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
     console.log('💬 Message:', message);
     console.log('============================\n');
 
-    // Send email (mandatory)
+    // Send email (optional - may fail on Render free tier due to SMTP blocking)
     console.log('Attempting to send email...');
 
     // Email to you
@@ -281,9 +285,14 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
       }] : []
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully!');
-    console.log('Message ID:', info.messageId);
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent successfully!');
+      console.log('Message ID:', info.messageId);
+    } catch (emailError) {
+      console.error('Email sending failed (message still saved to database):', emailError.message);
+      // Don't fail the request - message is saved to database
+    }
 
     return res.json({
       success: true,
@@ -293,14 +302,14 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
     console.error('Contact form error:', error);
     console.error('Error details:', error.message);
     console.error('\n=== CONTACT MESSAGE SAVED TO DATABASE ===');
-    console.error('📧 From:', email);
-    console.error('👤 Name:', username);
-    console.error('📱 Phone:', phone);
-    console.error('💬 Message:', message);
+    console.error('📧 From:', req.body.email);
+    console.error('👤 Name:', req.body.username);
+    console.error('📱 Phone:', req.body.phone);
+    console.error('💬 Message:', req.body.message);
     console.error('==========================================\n');
     return res.status(500).json({
       success: false,
-      message: 'Failed to send email. Message saved to database. Check admin panel.'
+      message: 'Failed to send message. Please try again later.'
     });
   }
 });
