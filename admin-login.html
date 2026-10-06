@@ -791,7 +791,7 @@
                     const data = await response.json();
                     
                     if (response.ok) {
-                        window.location.href = '/admin/admin-panel.html';
+                        window.location.href = '/admin/admin-dashboard.html';
                     } else {
                         errorMessage.textContent = data.error || 'Login failed. Please try again.';
                         errorMessage.classList.add('show');
