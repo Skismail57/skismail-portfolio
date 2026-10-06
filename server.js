@@ -249,6 +249,14 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
     await contact.save();
     console.log('New contact message saved to database:', contact._id);
 
+    // Log contact data to console (backup in case email fails)
+    console.log('\n=== NEW CONTACT MESSAGE ===');
+    console.log('📧 From:', email);
+    console.log('👤 Name:', username);
+    console.log('📱 Phone:', phone);
+    console.log('💬 Message:', message);
+    console.log('============================\n');
+
     // Send email (mandatory)
     console.log('Attempting to send email...');
 
@@ -282,9 +290,16 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
     });
   } catch (error) {
     console.error('Contact form error:', error);
+    console.error('Error details:', error.message);
+    console.error('\n=== CONTACT MESSAGE SAVED TO DATABASE ===');
+    console.error('📧 From:', email);
+    console.error('👤 Name:', username);
+    console.error('📱 Phone:', phone);
+    console.error('💬 Message:', message);
+    console.error('==========================================\n');
     return res.status(500).json({
       success: false,
-      message: 'Failed to send email. Please try again later.'
+      message: 'Failed to send email. Message saved to database. Check admin panel.'
     });
   }
 });
