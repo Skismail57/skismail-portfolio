@@ -1132,15 +1132,6 @@
                             <canvas id="trafficChart"></canvas>
                         </div>
                     </div>
-
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Visitor Demographics</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="demographicsChart"></canvas>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -1688,39 +1679,6 @@
             options: chartOptions
         });
 
-        // Demographics Chart
-        const demographicsCtx = document.getElementById('demographicsChart').getContext('2d');
-        new Chart(demographicsCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['USA', 'India', 'UK', 'Germany', 'Other'],
-                datasets: [{
-                    data: [35, 25, 15, 10, 15],
-                    backgroundColor: [
-                        '#667eea',
-                        '#764ba2',
-                        '#4facfe',
-                        '#00f2fe',
-                        '#43e97b'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#94a3b8',
-                            padding: 20
-                        }
-                    }
-                }
-            }
-        });
-
         // ===== MODAL FUNCTIONS =====
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
@@ -1796,7 +1754,7 @@
                             <i class="fas fa-user"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">Visitor from ${visitor.location?.country || 'Unknown'}</div>
+                            <div class="activity-title">New Visitor</div>
                             <div class="activity-time">${new Date(visitor.timestamp).toLocaleString()}</div>
                         </div>
                         <span class="activity-status completed">New</span>
