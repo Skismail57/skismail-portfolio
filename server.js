@@ -204,6 +204,16 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Verify email configuration on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('❌ Email configuration failed:', error.message);
+    console.error('⚠️  EMAILS WILL NOT BE SENT!');
+  } else {
+    console.log('✅ Email configuration verified successfully');
+  }
+});
+
 // Contact form endpoint
 app.post('/api/contact', upload.single('attachment'), async (req, res) => {
   try {
@@ -239,62 +249,43 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
     await contact.save();
     console.log('New contact message saved to database:', contact._id);
 
-    // Send email if credentials are configured (optional)
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS &&
-        process.env.EMAIL_USER !== 'your-email@gmail.com' &&
-        process.env.EMAIL_PASS !== 'your-app-password') {
+    // Send email (mandatory)
+    console.log('Attempting to send email...');
 
-      try {
-        console.log('Attempting to send email...');
+    // Email to you
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: 'skportfolio57@gmail.com',
+      subject: `Portfolio Contact: ${username}`,
+      html: `
+        <h3>New Contact Form Submission</h3>
+        <p><strong>Name:</strong> ${username}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+        ${attachment ? `<p><strong>Attachment:</strong> ${attachment.filename}</p>` : ''}
+      `,
+      attachments: attachment ? [{
+        filename: attachment.originalname,
+        path: attachment.path
+      }] : []
+    };
 
-        // Email to you
-        const mailOptions = {
-          from: process.env.EMAIL_USER,
-          to: 'skportfolio57@gmail.com',
-          subject: `Portfolio Contact: ${username}`,
-          html: `
-            <h3>New Contact Form Submission</h3>
-            <p><strong>Name:</strong> ${username}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Message:</strong></p>
-            <p>${message}</p>
-            ${attachment ? `<p><strong>Attachment:</strong> ${attachment.filename}</p>` : ''}
-          `,
-          attachments: attachment ? [{
-            filename: attachment.originalname,
-            path: attachment.path
-          }] : []
-        };
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully!');
+    console.log('Message ID:', info.messageId);
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully!');
-        console.log('Message ID:', info.messageId);
-
-        return res.json({
-          success: true,
-          message: 'Message sent successfully! Thank you for contacting me.'
-        });
-      } catch (emailError) {
-        console.error('Email sending failed (message still saved to database):', emailError.message);
-        // Return success anyway since message is saved to database
-        return res.json({
-          success: true,
-          message: 'Message saved successfully! Thank you for contacting me.'
-        });
-      }
-    } else {
-      console.log('Email not configured - message saved to database only');
-      return res.json({
-        success: true,
-        message: 'Message saved successfully! Thank you for contacting me.'
-      });
-    }
-
+    return res.json({
+      success: true,
+      message: 'Message sent successfully! Thank you for contacting me.'
+    });
   } catch (error) {
     console.error('Contact form error:', error);
     return res.status(500).json({
       success: false,
+      message: 'Failed to send email. Please try again later.'
+    });
       message: 'Server error. Please try again.'
     });
   }
