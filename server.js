@@ -129,7 +129,15 @@ app.get('/admin/forgot-password', (req, res) => {
   res.sendFile(__dirname + '/forgot-password.html');
 });
 
+app.get('/admin/forgot-password.html', (req, res) => {
+  res.sendFile(__dirname + '/forgot-password.html');
+});
+
 app.get('/admin/otp-verification', (req, res) => {
+  res.sendFile(__dirname + '/otp-verification.html');
+});
+
+app.get('/admin/otp-verification.html', (req, res) => {
   res.sendFile(__dirname + '/otp-verification.html');
 });
 
@@ -137,11 +145,23 @@ app.get('/admin/set-new-password', (req, res) => {
   res.sendFile(__dirname + '/set-new-password.html');
 });
 
+app.get('/admin/set-new-password.html', (req, res) => {
+  res.sendFile(__dirname + '/set-new-password.html');
+});
+
 app.get('/admin/forgot-password-success', (req, res) => {
   res.sendFile(__dirname + '/forgot-password-success.html');
 });
 
+app.get('/admin/forgot-password-success.html', (req, res) => {
+  res.sendFile(__dirname + '/forgot-password-success.html');
+});
+
 app.get('/admin/test-otp', (req, res) => {
+  res.sendFile(__dirname + '/test-otp.html');
+});
+
+app.get('/admin/test-otp.html', (req, res) => {
   res.sendFile(__dirname + '/test-otp.html');
 });
 
