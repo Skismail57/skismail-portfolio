@@ -286,8 +286,6 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
       success: false,
       message: 'Failed to send email. Please try again later.'
     });
-      message: 'Server error. Please try again.'
-    });
   }
 });
 
