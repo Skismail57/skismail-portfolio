@@ -193,18 +193,19 @@ const requireAuth = (req, res, next) => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s+/g, '') : 'your-app-password'
-  },
-  tls: {
-    rejectUnauthorized: false
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
 // Verify email configuration on startup
+console.log('📧 Email configuration:');
+console.log('   User:', process.env.EMAIL_USER);
+console.log('   Pass configured:', !!process.env.EMAIL_PASS);
+
 transporter.verify((error, success) => {
   if (error) {
     console.error('❌ Email configuration failed:', error.message);
