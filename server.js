@@ -174,10 +174,7 @@ app.get('/admin', (req, res) => {
   }
 });
 
-// Serve static files (after admin routes)
-app.use(express.static('.'));
-
-// Visitor tracking middleware
+// Visitor tracking middleware (before static files)
 app.use(async (req, res, next) => {
   // Skip tracking for API calls and admin routes
   if (req.path.startsWith('/api/') || req.path.startsWith('/admin')) {
@@ -202,6 +199,9 @@ app.use(async (req, res, next) => {
   
   next();
 });
+
+// Serve static files (after admin routes and visitor tracking)
+app.use(express.static('.'));
 
 // Authentication middleware
 const requireAuth = (req, res, next) => {
