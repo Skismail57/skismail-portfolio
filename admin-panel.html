@@ -464,7 +464,13 @@
 
         .action-buttons {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons .btn {
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
         }
 
         .action-btn {
@@ -606,9 +612,11 @@
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: 1.5rem;
+            padding: 1.25rem;
             margin-bottom: 1rem;
             transition: all var(--transition-normal);
+            max-width: 100%;
+            overflow: hidden;
         }
 
         .message-card:hover {
@@ -619,28 +627,37 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .message-sender {
             font-weight: 600;
             color: var(--text-primary);
+            font-size: 1rem;
         }
 
         .message-date {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
 
         .message-subject {
-            font-weight: 600;
+            font-weight: 500;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
+            font-size: 0.9rem;
+            word-break: break-word;
         }
 
         .message-body {
             color: var(--text-muted);
             margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .message-status {
@@ -649,6 +666,7 @@
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
+            margin-bottom: 0.75rem;
         }
 
         .message-status.new {
@@ -1854,12 +1872,12 @@
                     messageCard.innerHTML = `
                         <div class="message-header">
                             <div class="message-sender">${contact.name}</div>
-                            <div class="message-date">${new Date(contact.createdAt).toLocaleString()}</div>
+                            <div class="message-date">${new Date(contact.createdAt).toLocaleDateString()} ${new Date(contact.createdAt).toLocaleTimeString()}</div>
                         </div>
                         <div class="message-subject">${contact.email}</div>
                         <div class="message-body">${contact.message}</div>
                         <span class="message-status ${contact.status === 'read' ? 'read' : 'new'}">${contact.status || 'new'}</span>
-                        <div class="action-buttons" style="margin-top: 1rem;">
+                        <div class="action-buttons">
                             <button class="btn btn-secondary" onclick="markContactRead('${contact._id}')">Mark as Read</button>
                             <button class="btn btn-danger" onclick="deleteContact('${contact._id}')">Delete</button>
                         </div>
