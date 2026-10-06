@@ -125,6 +125,15 @@ app.get('/admin/dashboard.html', (req, res) => {
   }
 });
 
+app.get('/admin/admin-dashboard.html', (req, res) => {
+  // Check if user is authenticated
+  if (req.session.user && req.session.user.role === 'admin') {
+    res.sendFile(__dirname + '/admin-dashboard.html');
+  } else {
+    res.redirect('/admin/login');
+  }
+});
+
 app.get('/admin/forgot-password', (req, res) => {
   res.sendFile(__dirname + '/forgot-password.html');
 });
@@ -711,6 +720,28 @@ app.patch('/api/contacts/:id', requireAuth, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update contact' });
+  }
+});
+
+// Mark contact as read
+app.put('/api/contacts/:id/read', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Contact.findByIdAndUpdate(id, { status: 'read' });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to mark contact as read' });
+  }
+});
+
+// Delete contact
+app.delete('/api/contacts/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Contact.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete contact' });
   }
 });
 
