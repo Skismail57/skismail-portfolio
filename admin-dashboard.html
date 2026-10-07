@@ -586,6 +586,12 @@
             <!-- Analytics Section -->
             <div id="analytics" class="section active">
                 <h3>Analytics Dashboard</h3>
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-danger" onclick="cleanupBotVisits()">🗑️ Delete All Bot Visits</button>
+                    <p style="color: #a0aec0; font-size: 0.9rem; margin-top: 10px;">
+                        This will remove all bot visits (UptimeRobot, Googlebot, etc.) from the database. Only real human visits will remain.
+                    </p>
+                </div>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number" id="totalVisits">0</div>
@@ -1055,6 +1061,31 @@
             } catch (error) {
                 console.error('Error changing username:', error);
                 alert('Failed to change username');
+            }
+        }
+        
+        async function cleanupBotVisits() {
+            if (!confirm('Are you sure you want to delete all bot visits from the database? This will remove UptimeRobot, Googlebot, and other bot visits. Only real human visits will remain.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/analytics/cleanup-bots', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(`Successfully deleted ${data.deletedCount} bot visits from the database!`);
+                    loadAnalytics(); // Reload analytics to show updated counts
+                } else {
+                    alert(data.error || 'Failed to cleanup bot visits');
+                }
+            } catch (error) {
+                console.error('Error cleaning up bot visits:', error);
+                alert('Failed to cleanup bot visits');
             }
         }
         

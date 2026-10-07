@@ -375,6 +375,39 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
+// Clean up bot visits from database
+app.post('/api/analytics/cleanup-bots', requireAuth, async (req, res) => {
+  try {
+    const botUserAgents = [
+      'UptimeRobot',
+      'Googlebot',
+      'bot',
+      'crawler',
+      'spider',
+      'slurp',
+      'facebookexternalhit',
+      'twitterbot',
+      'linkedinbot'
+    ];
+    
+    const botRegex = new RegExp(botUserAgents.join('|'), 'i');
+    
+    // Delete all bot visits
+    const result = await Visitor.deleteMany({
+      userAgent: { $regex: botRegex }
+    });
+    
+    res.json({ 
+      success: true, 
+      message: `Deleted ${result.deletedCount} bot visits from database`,
+      deletedCount: result.deletedCount
+    });
+  } catch (error) {
+    console.error('Error cleaning up bot visits:', error);
+    res.status(500).json({ error: 'Failed to clean up bot visits' });
+  }
+});
+
 // Real Analytics Dashboard with MongoDB
 app.get('/api/analytics', async (req, res) => {
   try {
