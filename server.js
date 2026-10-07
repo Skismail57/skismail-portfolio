@@ -185,8 +185,8 @@ app.get('/admin', (req, res) => {
 
 // Visitor tracking middleware (before static files)
 app.use(async (req, res, next) => {
-  // Skip tracking for API calls and admin routes
-  if (req.path.startsWith('/api/') || req.path.startsWith('/admin')) {
+  // Skip tracking for API calls, admin routes, and favicon
+  if (req.path.startsWith('/api/') || req.path.startsWith('/admin') || req.path === '/favicon.ico') {
     return next();
   }
   

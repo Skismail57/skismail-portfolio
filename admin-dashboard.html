@@ -740,15 +740,31 @@
             document.getElementById('todayVisits').textContent = currentData.todayVisits || 0;
             document.getElementById('totalContacts').textContent = currentData.totalContacts || 0;
             
+            // Page to icon mapping
+            const pageIcons = {
+                '/': '🏠',
+                '/favicon.ico': '🔖',
+                '/admin/login': '🔐',
+                '/admin/admin-panel': '⚙️',
+                '/admin/admin-dashboard': '📊',
+                '/projects': '📁',
+                '/skills': '🛠️',
+                '/certificates': '🏆',
+                '/contact': '📧'
+            };
+            
             // Recent visitors
-            const visitorsHtml = (currentData.recentVisitors || []).map(visitor => `
+            const visitorsHtml = (currentData.recentVisitors || []).map(visitor => {
+                const icon = pageIcons[visitor.path] || '📄';
+                return `
                 <div class="visitor-item">
                     <strong>IP:</strong> ${visitor.ip}<br>
                     <strong>Location:</strong> ${visitor.location ? `${visitor.location.city}, ${visitor.location.country}` : 'Unknown'}<br>
                     <strong>Time:</strong> ${new Date(visitor.timestamp).toLocaleString()}<br>
-                    <strong>Page:</strong> ${visitor.path}
+                    <strong>Page:</strong> ${icon} ${visitor.path}
                 </div>
-            `).join('');
+            `;
+            }).join('');
             document.getElementById('recentVisitors').innerHTML = visitorsHtml;
         }
         
