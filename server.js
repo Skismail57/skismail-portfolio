@@ -203,7 +203,13 @@ app.use(async (req, res, next) => {
       'slurp',
       'facebookexternalhit',
       'twitterbot',
-      'linkedinbot'
+      'linkedinbot',
+      'Go-http-client',
+      'curl',
+      'wget',
+      'python-requests',
+      'axios',
+      'node-fetch'
     ];
     
     const isBot = botUserAgents.some(bot => 
@@ -387,7 +393,13 @@ app.post('/api/analytics/cleanup-bots', requireAuth, async (req, res) => {
       'slurp',
       'facebookexternalhit',
       'twitterbot',
-      'linkedinbot'
+      'linkedinbot',
+      'Go-http-client',
+      'curl',
+      'wget',
+      'python-requests',
+      'axios',
+      'node-fetch'
     ];
     
     const botRegex = new RegExp(botUserAgents.join('|'), 'i');
@@ -408,6 +420,23 @@ app.post('/api/analytics/cleanup-bots', requireAuth, async (req, res) => {
   }
 });
 
+// Reset all visits to zero (delete all visitor records)
+app.post('/api/analytics/reset-visits', requireAuth, async (req, res) => {
+  try {
+    // Delete all visitor records
+    const result = await Visitor.deleteMany({});
+    
+    res.json({ 
+      success: true, 
+      message: `Reset analytics: Deleted ${result.deletedCount} visitor records. Count is now zero.`,
+      deletedCount: result.deletedCount
+    });
+  } catch (error) {
+    console.error('Error resetting visits:', error);
+    res.status(500).json({ error: 'Failed to reset visits' });
+  }
+});
+
 // Real Analytics Dashboard with MongoDB
 app.get('/api/analytics', async (req, res) => {
   try {
@@ -424,7 +453,13 @@ app.get('/api/analytics', async (req, res) => {
       'slurp',
       'facebookexternalhit',
       'twitterbot',
-      'linkedinbot'
+      'linkedinbot',
+      'Go-http-client',
+      'curl',
+      'wget',
+      'python-requests',
+      'axios',
+      'node-fetch'
     ];
     
     const botFilter = {
