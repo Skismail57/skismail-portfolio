@@ -301,7 +301,7 @@
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -609,20 +609,11 @@
                         <div class="stat-number" id="totalContacts">0</div>
                         <div class="stat-label">Total Contacts</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="projectViews">0</div>
-                        <div class="stat-label">Project Views</div>
-                    </div>
                 </div>
                 
                 <div class="chart-container">
                     <h4>Recent Visitors</h4>
                     <div id="recentVisitors" class="visitors-list"></div>
-                </div>
-                
-                <div class="chart-container">
-                    <h4>Top Countries</h4>
-                    <div id="topCountries"></div>
                 </div>
             </div>
             
@@ -759,9 +750,6 @@
             document.getElementById('todayVisits').textContent = currentData.todayVisits || 0;
             document.getElementById('totalContacts').textContent = currentData.totalContacts || 0;
             
-            const totalProjectViews = Object.values(currentData.projectViews || {}).reduce((a, b) => a + b, 0);
-            document.getElementById('projectViews').textContent = totalProjectViews;
-            
             // Recent visitors
             const visitorsHtml = (currentData.recentVisitors || []).map(visitor => `
                 <div class="visitor-item">
@@ -772,14 +760,6 @@
                 </div>
             `).join('');
             document.getElementById('recentVisitors').innerHTML = visitorsHtml;
-            
-            // Top countries
-            const countriesHtml = (currentData.topCountries || []).map(country => `
-                <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border-radius: 6px;">
-                    <strong>${country.country}:</strong> ${country.count} visits
-                </div>
-            `).join('');
-            document.getElementById('topCountries').innerHTML = countriesHtml;
         }
         
         async function loadSkills() {
