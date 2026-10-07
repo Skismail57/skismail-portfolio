@@ -191,12 +191,36 @@ app.use(async (req, res, next) => {
   }
   
   try {
+    const userAgent = req.get('User-Agent');
+    
+    // Filter out bots
+    const botUserAgents = [
+      'UptimeRobot',
+      'Googlebot',
+      'bot',
+      'crawler',
+      'spider',
+      'slurp',
+      'facebookexternalhit',
+      'twitterbot',
+      'linkedinbot'
+    ];
+    
+    const isBot = botUserAgents.some(bot => 
+      userAgent && userAgent.toLowerCase().includes(bot.toLowerCase())
+    );
+    
+    // Skip saving if it's a bot
+    if (isBot) {
+      return next();
+    }
+    
     const ip = req.ip || req.connection.remoteAddress;
     const geo = geoip.lookup(ip);
     
     const visitor = new Visitor({
       ip,
-      userAgent: req.get('User-Agent'),
+      userAgent: userAgent,
       location: geo ? { country: geo.country, city: geo.city } : null,
       path: req.path
     });
@@ -357,15 +381,38 @@ app.get('/api/analytics', async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const totalVisits = await Visitor.countDocuments();
-    const todayVisits = await Visitor.countDocuments({ timestamp: { $gte: today } });
+    // Filter out bots (UptimeRobot, Googlebot, etc.)
+    const botUserAgents = [
+      'UptimeRobot',
+      'Googlebot',
+      'bot',
+      'crawler',
+      'spider',
+      'slurp',
+      'facebookexternalhit',
+      'twitterbot',
+      'linkedinbot'
+    ];
+    
+    const botFilter = {
+      userAgent: { $not: { $regex: new RegExp(botUserAgents.join('|'), 'i') } }
+    };
+    
+    const totalVisits = await Visitor.countDocuments(botFilter);
+    const todayVisits = await Visitor.countDocuments({ 
+      timestamp: { $gte: today },
+      ...botFilter
+    });
     const totalContacts = await Contact.countDocuments();
-    const recentVisitors = await Visitor.find().sort({ timestamp: -1 }).limit(10);
+    const recentVisitors = await Visitor.find(botFilter).sort({ timestamp: -1 }).limit(10);
     const projectViews = await ProjectView.find();
     
-    // Get top countries
+    // Get top countries (excluding bots)
     const topCountries = await Visitor.aggregate([
-      { $match: { 'location.country': { $exists: true, $ne: null } } },
+      { $match: { 
+        'location.country': { $exists: true, $ne: null },
+        ...botFilter
+      }},
       { $group: { _id: '$location.country', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 5 },
