@@ -712,7 +712,9 @@
         // Check authentication on load
         async function checkAuth() {
             try {
-                const response = await fetch('/api/auth/me');
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
                 if (!response.ok) {
                     window.location.href = '/admin/login';
                 }
@@ -724,7 +726,10 @@
         // Logout function
         async function logout() {
             try {
-                await fetch('/api/auth/logout', { method: 'POST' });
+                await fetch('/api/auth/logout', { 
+                    method: 'POST',
+                    credentials: 'include'
+                });
                 window.location.href = '/admin/login';
             } catch (error) {
                 console.error('Logout error:', error);
@@ -735,7 +740,9 @@
         // Load initial data
         async function loadAnalytics() {
             try {
-                const response = await fetch('/api/analytics');
+                const response = await fetch('/api/analytics', {
+                    credentials: 'include'
+                });
                 currentData = await response.json();
                 updateAnalyticsDisplay();
             } catch (error) {
@@ -773,7 +780,9 @@
         
         async function loadSkills() {
             try {
-                const response = await fetch('/api/skills');
+                const response = await fetch('/api/skills', {
+                    credentials: 'include'
+                });
                 const skills = await response.json();
                 const skillsHtml = skills.map(skill => `
                     <div class="skill-card">
@@ -802,7 +811,8 @@
                 await fetch('/api/skills', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, description, icon })
+                    body: JSON.stringify({ name, description, icon }),
+                    credentials: 'include'
                 });
                 
                 document.getElementById('skillName').value = '';
@@ -819,7 +829,10 @@
             if (!confirm('Are you sure you want to delete this skill?')) return;
             
             try {
-                await fetch(`/api/skills/${id}`, { method: 'DELETE' });
+                await fetch(`/api/skills/${id}`, { 
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
                 loadSkills();
             } catch (error) {
                 console.error('Error deleting skill:', error);
@@ -828,7 +841,9 @@
         
         async function loadCertificates() {
             try {
-                const response = await fetch('/api/certificates');
+                const response = await fetch('/api/certificates', {
+                    credentials: 'include'
+                });
                 const certificates = await response.json();
                 const certsHtml = certificates.map(cert => `
                     <div class="cert-card">
@@ -844,7 +859,9 @@
         
         async function loadContacts() {
             try {
-                const response = await fetch('/api/contacts');
+                const response = await fetch('/api/contacts', {
+                    credentials: 'include'
+                });
                 const contacts = await response.json();
                 const contactsHtml = contacts.map(contact => `
                     <div class="message-card">
@@ -875,7 +892,10 @@
         
         async function markContactRead(id) {
             try {
-                await fetch(`/api/contacts/${id}/read`, { method: 'PUT' });
+                await fetch(`/api/contacts/${id}/read`, { 
+                    method: 'PUT',
+                    credentials: 'include'
+                });
                 loadContacts();
             } catch (error) {
                 console.error('Error marking contact as read:', error);
@@ -886,7 +906,10 @@
             if (!confirm('Are you sure you want to delete this contact?')) return;
             
             try {
-                await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
+                await fetch(`/api/contacts/${id}`, { 
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
                 loadContacts();
             } catch (error) {
                 console.error('Error deleting contact:', error);
@@ -904,7 +927,8 @@
                 await fetch('/api/certificates', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ filename })
+                    body: JSON.stringify({ filename }),
+                    credentials: 'include'
                 });
                 
                 document.getElementById('certFilename').value = '';
@@ -918,7 +942,10 @@
             if (!confirm('Are you sure you want to delete this certificate?')) return;
             
             try {
-                await fetch(`/api/certificates/${filename}`, { method: 'DELETE' });
+                await fetch(`/api/certificates/${filename}`, { 
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
                 loadCertificates();
             } catch (error) {
                 console.error('Error deleting certificate:', error);
@@ -930,7 +957,9 @@
             if (!query) return;
             
             try {
-                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+                    credentials: 'include'
+                });
                 const results = await response.json();
                 
                 const resultsHtml = `
@@ -1009,7 +1038,8 @@
                 const response = await fetch('/api/auth/change-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ currentPassword, newPassword })
+                    body: JSON.stringify({ currentPassword, newPassword }),
+                    credentials: 'include'
                 });
                 
                 const data = await response.json();
@@ -1045,7 +1075,8 @@
                 const response = await fetch('/api/auth/change-username', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ newUsername, confirmPassword })
+                    body: JSON.stringify({ newUsername, confirmPassword }),
+                    credentials: 'include'
                 });
                 
                 const data = await response.json();
@@ -1072,7 +1103,8 @@
             try {
                 const response = await fetch('/api/analytics/cleanup-bots', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include' // Include session cookie
                 });
                 
                 const data = await response.json();
@@ -1117,7 +1149,8 @@
                 const response = await fetch('/api/auth/change-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ currentPassword, newPassword })
+                    body: JSON.stringify({ currentPassword, newPassword }),
+                    credentials: 'include'
                 });
                 
                 const data = await response.json();
