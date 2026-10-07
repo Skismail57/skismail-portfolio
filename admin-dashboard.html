@@ -586,10 +586,14 @@
             <!-- Analytics Section -->
             <div id="analytics" class="section active">
                 <h3>Analytics Dashboard</h3>
+                <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-danger" onclick="cleanupBotVisits()">🗑️ Delete Bot Visits</button>
+                    <button class="btn btn-danger" onclick="resetAllVisits()" style="background: linear-gradient(135deg, #f56565 0%, #c53030 100%);">⚠️ Reset All to Zero</button>
+                </div>
                 <div style="margin-bottom: 20px;">
-                    <button class="btn btn-danger" onclick="cleanupBotVisits()">🗑️ Delete All Bot Visits</button>
-                    <p style="color: #a0aec0; font-size: 0.9rem; margin-top: 10px;">
-                        This will remove all bot visits (UptimeRobot, Googlebot, etc.) from the database. Only real human visits will remain.
+                    <p style="color: #a0aec0; font-size: 0.9rem;">
+                        <strong>Delete Bot Visits:</strong> Removes UptimeRobot, Googlebot, and other bot visits.<br>
+                        <strong>Reset All to Zero:</strong> Deletes ALL visitor records and resets count to zero.
                     </p>
                 </div>
                 <div class="stats-grid">
@@ -1096,7 +1100,7 @@
         }
         
         async function cleanupBotVisits() {
-            if (!confirm('Are you sure you want to delete all bot visits from the database? This will remove UptimeRobot, Googlebot, and other bot visits. Only real human visits will remain.')) {
+            if (!confirm('Are you sure you want to delete all bot visits from the database? This will remove UptimeRobot, Googlebot, Go-http-client, and other bot visits. Only real human visits will remain.')) {
                 return;
             }
             
@@ -1118,6 +1122,32 @@
             } catch (error) {
                 console.error('Error cleaning up bot visits:', error);
                 alert('Failed to cleanup bot visits');
+            }
+        }
+        
+        async function resetAllVisits() {
+            if (!confirm('⚠️ WARNING: This will delete ALL visitor records from the database and reset the count to zero. This action cannot be undone. Are you sure?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/analytics/reset-visits', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(`${data.message}`);
+                    loadAnalytics(); // Reload analytics to show updated counts
+                } else {
+                    alert(data.error || 'Failed to reset visits');
+                }
+            } catch (error) {
+                console.error('Error resetting visits:', error);
+                alert('Failed to reset visits');
             }
         }
         
