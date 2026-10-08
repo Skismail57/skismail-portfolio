@@ -2424,6 +2424,47 @@ body.dark-mode .search-highlight {
               transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Staggered animation delays for project cards */
+.project-box:nth-child(1).project-in-view {
+  transition-delay: 0s;
+}
+
+.project-box:nth-child(2).project-in-view {
+  transition-delay: 0.1s;
+}
+
+.project-box:nth-child(3).project-in-view {
+  transition-delay: 0.2s;
+}
+
+.project-box:nth-child(4).project-in-view {
+  transition-delay: 0.3s;
+}
+
+.project-box:nth-child(5).project-in-view {
+  transition-delay: 0.4s;
+}
+
+.project-box:nth-child(6).project-in-view {
+  transition-delay: 0.5s;
+}
+
+.project-box:nth-child(7).project-in-view {
+  transition-delay: 0.6s;
+}
+
+.project-box:nth-child(8).project-in-view {
+  transition-delay: 0.7s;
+}
+
+.project-box:nth-child(9).project-in-view {
+  transition-delay: 0.8s;
+}
+
+.project-box:nth-child(10).project-in-view {
+  transition-delay: 0.9s;
+}
+
 .project-box.project-in-view:hover {
   animation-play-state: running;
 }
