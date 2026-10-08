@@ -671,6 +671,74 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(238, 90, 90, 0.5);
         }
+
+        .skill-card .skill-level {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: inline-block;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .skill-card .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .skill-card .skill-tag {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .skill-card .skill-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+
+        .skill-card .skill-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 1s ease;
+            animation: progressPulse 2s ease infinite;
+        }
+
+        @keyframes progressPulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
         
         .message-card h4 {
             color: #667eea;
@@ -847,15 +915,23 @@
         }
         
         .search-result-item {
-            background: #3d3d3d;
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.6) 0%, rgba(45, 45, 61, 0.6) 100%);
+            backdrop-filter: blur(10px);
             padding: 15px;
             margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #444;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
+        .search-result-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
         .search-result-item strong {
-            color: #0a66c2;
+            color: #667eea;
         }
     </style>
 </head>
@@ -865,7 +941,9 @@
             <h2>Admin Panel</h2>
             <div class="nav-item active" onclick="showSection('analytics')">📊 Analytics</div>
             <div class="nav-item" onclick="showSection('skills')">🛠️ Skills</div>
+            <div class="nav-item" onclick="showSection('projects')">📁 Projects</div>
             <div class="nav-item" onclick="showSection('certificates')">🏆 Certificates</div>
+            <div class="nav-item" onclick="showSection('gallery')">🖼️ Gallery</div>
             <div class="nav-item" onclick="showSection('contacts')">📧 Contacts</div>
             <div class="nav-item" onclick="showSection('search')">🔍 Search</div>
             <div class="nav-item" onclick="showSection('settings')">⚙️ Account Settings</div>
@@ -923,12 +1001,95 @@
                         <label>🎨 Icon Class</label>
                         <input type="text" id="skillIcon" placeholder="e.g., fas fa-paint-brush">
                     </div>
+                    <div class="form-group">
+                        <label>📊 Skill Level</label>
+                        <select id="skillLevel" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px; cursor: pointer;">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📈 Proficiency (%)</label>
+                        <input type="range" id="skillProficiency" min="0" max="100" value="50" style="width: 100%; accent-color: #667eea;" oninput="document.getElementById('proficiencyValue').textContent = this.value + '%'">
+                        <span id="proficiencyValue" style="color: #667eea; font-weight: 600;">50%</span>
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ Tags (comma separated)</label>
+                        <input type="text" id="skillTags" placeholder="e.g., python, machine learning, nlp">
+                    </div>
                     <button class="btn-primary skills-btn" onclick="addSkill()">➕ Add Skill</button>
                 </div>
 
                 <div id="skillsList" class="skills-grid"></div>
             </div>
-            
+
+            <!-- Projects Management -->
+            <div id="projects" class="section">
+                <h3>📁 Projects Management</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>📝 Project Name</label>
+                        <input type="text" id="projectName" placeholder="e.g., AI Chatbot">
+                    </div>
+                    <div class="form-group">
+                        <label>📄 Description</label>
+                        <textarea id="projectDescription" placeholder="Project description and features" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 GitHub Link</label>
+                        <input type="text" id="projectGithub" placeholder="https://github.com/username/repo">
+                    </div>
+                    <div class="form-group">
+                        <label>🖼️ Cover Image URL</label>
+                        <input type="text" id="projectImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>📐 Image Size</label>
+                        <select id="projectSize" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px; cursor: pointer;">
+                            <option value="small">Small (300x200)</option>
+                            <option value="medium" selected>Medium (400x300)</option>
+                            <option value="large">Large (600x400)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ Tags (comma separated)</label>
+                        <input type="text" id="projectTags" placeholder="e.g., ai, python, web">
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="addProject()">➕ Add Project</button>
+                </div>
+
+                <div id="projectsList" class="skills-grid"></div>
+            </div>
+
+            <!-- Gallery Settings -->
+            <div id="gallery" class="section">
+                <h3>🖼️ Gallery Settings</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>⏱️ Slide Speed (seconds)</label>
+                        <input type="number" id="gallerySpeed" min="1" max="10" value="3" placeholder="3" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px;">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Transition Effect</label>
+                        <select id="galleryTransition" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px; cursor: pointer;">
+                            <option value="fade">Fade</option>
+                            <option value="slide">Slide</option>
+                            <option value="zoom">Zoom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>🔁 Auto-play</label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="galleryAutoplay" checked style="width: 20px; height: 20px; accent-color: #667eea;">
+                            <span style="color: #e2e8f0;">Enable auto-play</span>
+                        </label>
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="saveGallerySettings()">💾 Save Gallery Settings</button>
+                </div>
+            </div>
+
             <!-- Certificates Management -->
             <div id="certificates" class="section">
                 <h3>🏆 Certificates Management</h3>
@@ -1103,14 +1264,27 @@
                     credentials: 'include'
                 });
                 const skills = await response.json();
-                const skillsHtml = skills.map(skill => `
+                const skillsHtml = skills.map(skill => {
+                    const level = skill.level || 'Intermediate';
+                    const proficiency = skill.proficiency || 50;
+                    const tags = skill.tags ? skill.tags.split(',').map(t => t.trim()) : [];
+                    const tagsHtml = tags.map(tag => `<span class="skill-tag">${tag}</span>`).join('');
+                    return `
                     <div class="skill-card">
                         <span class="skill-icon"><i class="${skill.icon}"></i></span>
                         <h4>${skill.name}</h4>
+                        <div class="skill-level">${level}</div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: ${proficiency}%"></div>
+                        </div>
+                        <div class="skill-stats">
+                            <div class="skill-stat">📊 ${proficiency}%</div>
+                        </div>
+                        ${tagsHtml ? `<div class="skill-tags">${tagsHtml}</div>` : ''}
                         <p>${skill.description}</p>
                         <button class="delete-btn" onclick="deleteSkill(${skill.id})">🗑️ Delete</button>
                     </div>
-                `).join('');
+                `}).join('');
                 document.getElementById('skillsList').innerHTML = skillsHtml;
             } catch (error) {
                 console.error('Error loading skills:', error);
@@ -1121,24 +1295,31 @@
             const name = document.getElementById('skillName').value;
             const description = document.getElementById('skillDescription').value;
             const icon = document.getElementById('skillIcon').value;
-            
+            const level = document.getElementById('skillLevel').value;
+            const proficiency = document.getElementById('skillProficiency').value;
+            const tags = document.getElementById('skillTags').value;
+
             if (!name || !description) {
-                alert('Please fill in all fields');
+                alert('Please fill in all required fields');
                 return;
             }
-            
+
             try {
                 await fetch('/api/skills', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, description, icon }),
+                    body: JSON.stringify({ name, description, icon, level, proficiency, tags }),
                     credentials: 'include'
                 });
-                
+
                 document.getElementById('skillName').value = '';
                 document.getElementById('skillDescription').value = '';
                 document.getElementById('skillIcon').value = '';
-                
+                document.getElementById('skillLevel').value = 'Intermediate';
+                document.getElementById('skillProficiency').value = 50;
+                document.getElementById('skillTags').value = '';
+                document.getElementById('proficiencyValue').textContent = '50%';
+
                 loadSkills();
             } catch (error) {
                 console.error('Error adding skill:', error);
@@ -1332,12 +1513,125 @@
                 case 'skills':
                     loadSkills();
                     break;
+                case 'projects':
+                    loadProjects();
+                    break;
                 case 'certificates':
                     loadCertificates();
+                    break;
+                case 'gallery':
+                    loadGallerySettings();
                     break;
                 case 'contacts':
                     loadContacts();
                     break;
+            }
+        }
+
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/projects', {
+                    credentials: 'include'
+                });
+                const projects = await response.json();
+                const projectsHtml = projects.map(project => {
+                    const tags = project.tags ? project.tags.split(',').map(t => t.trim()) : [];
+                    const tagsHtml = tags.map(tag => `<span class="skill-tag">${tag}</span>`).join('');
+                    return `
+                    <div class="skill-card">
+                        <span class="skill-icon">📁</span>
+                        <h4>${project.name}</h4>
+                        ${project.image ? `<img src="${project.image}" alt="${project.name}" style="width: 100%; height: ${project.size === 'small' ? '200px' : project.size === 'large' ? '400px' : '300px'}; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">` : ''}
+                        <p>${project.description}</p>
+                        ${tagsHtml ? `<div class="skill-tags">${tagsHtml}</div>` : ''}
+                        ${project.github ? `<a href="${project.github}" target="_blank" style="display: inline-block; margin-right: 10px; color: #667eea; text-decoration: none;">🔗 GitHub</a>` : ''}
+                        <button class="delete-btn" onclick="deleteProject(${project.id})">🗑️ Delete</button>
+                    </div>
+                `}).join('');
+                document.getElementById('projectsList').innerHTML = projectsHtml;
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        async function addProject() {
+            const name = document.getElementById('projectName').value;
+            const description = document.getElementById('projectDescription').value;
+            const github = document.getElementById('projectGithub').value;
+            const image = document.getElementById('projectImage').value;
+            const size = document.getElementById('projectSize').value;
+            const tags = document.getElementById('projectTags').value;
+
+            if (!name || !description) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            try {
+                await fetch('/api/projects', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description, github, image, size, tags }),
+                    credentials: 'include'
+                });
+
+                document.getElementById('projectName').value = '';
+                document.getElementById('projectDescription').value = '';
+                document.getElementById('projectGithub').value = '';
+                document.getElementById('projectImage').value = '';
+                document.getElementById('projectSize').value = 'medium';
+                document.getElementById('projectTags').value = '';
+
+                loadProjects();
+            } catch (error) {
+                console.error('Error adding project:', error);
+            }
+        }
+
+        async function deleteProject(id) {
+            if (!confirm('Are you sure you want to delete this project?')) return;
+
+            try {
+                await fetch(`/api/projects/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                loadProjects();
+            } catch (error) {
+                console.error('Error deleting project:', error);
+            }
+        }
+
+        async function loadGallerySettings() {
+            try {
+                const response = await fetch('/api/gallery-settings', {
+                    credentials: 'include'
+                });
+                const settings = await response.json();
+                document.getElementById('gallerySpeed').value = settings.speed || 3;
+                document.getElementById('galleryTransition').value = settings.transition || 'fade';
+                document.getElementById('galleryAutoplay').checked = settings.autoplay !== false;
+            } catch (error) {
+                console.error('Error loading gallery settings:', error);
+            }
+        }
+
+        async function saveGallerySettings() {
+            const speed = document.getElementById('gallerySpeed').value;
+            const transition = document.getElementById('galleryTransition').value;
+            const autoplay = document.getElementById('galleryAutoplay').checked;
+
+            try {
+                await fetch('/api/gallery-settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ speed, transition, autoplay }),
+                    credentials: 'include'
+                });
+                alert('✅ Gallery settings saved successfully!');
+            } catch (error) {
+                console.error('Error saving gallery settings:', error);
+                alert('❌ Failed to save gallery settings');
             }
         }
         
