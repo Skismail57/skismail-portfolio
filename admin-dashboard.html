@@ -440,19 +440,32 @@
         
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            border-radius: 6px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
             color: #fff;
             font-size: 14px;
             min-height: 100px;
             resize: vertical;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         .form-group textarea:focus {
             outline: none;
-            border-color: #0a66c2;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4), 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .form-group textarea:focus::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
         
         .message-card {
@@ -544,6 +557,119 @@
             100% {
                 background-position: 0% 50%;
             }
+        }
+
+        .skills-form-container {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.8) 0%, rgba(45, 45, 61, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skills-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        .skills-btn {
+            width: 100%;
+            margin-top: 10px;
+            animation: fadeIn 1s ease;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .skill-card {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.9) 0%, rgba(45, 45, 61, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.4);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-card p {
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .skill-card .skill-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .skill-card .delete-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(238, 90, 90, 0.3);
+        }
+
+        .skill-card .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(238, 90, 90, 0.5);
         }
         
         .message-card h4 {
@@ -720,18 +846,6 @@
             line-height: 1.6;
         }
         
-        .cert-card {
-            background: #3d3d3d;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 12px;
-            border: 1px solid #444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        
         .search-result-item {
             background: #3d3d3d;
             padding: 15px;
@@ -795,39 +909,43 @@
             
             <!-- Skills Management -->
             <div id="skills" class="section">
-                <h3>Skills Management</h3>
-                <div class="form-group">
-                    <label>Skill Name</label>
-                    <input type="text" id="skillName" placeholder="e.g., AI Development">
+                <h3>🛠️ Skills Management</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>🎯 Skill Name</label>
+                        <input type="text" id="skillName" placeholder="e.g., AI Development">
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Description</label>
+                        <textarea id="skillDescription" placeholder="Skill description and technologies" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Icon Class</label>
+                        <input type="text" id="skillIcon" placeholder="e.g., fas fa-paint-brush">
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="addSkill()">➕ Add Skill</button>
                 </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="skillDescription" placeholder="Skill description and technologies"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Icon Class</label>
-                    <input type="text" id="skillIcon" placeholder="e.g., fas fa-paint-brush">
-                </div>
-                <button class="btn" onclick="addSkill()">Add Skill</button>
-                
-                <div id="skillsList"></div>
+
+                <div id="skillsList" class="skills-grid"></div>
             </div>
             
             <!-- Certificates Management -->
             <div id="certificates" class="section">
-                <h3>Certificates Management</h3>
-                <div class="form-group">
-                    <label>Certificate Filename</label>
-                    <input type="text" id="certFilename" placeholder="certificate-name.png">
+                <h3>🏆 Certificates Management</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>📄 Certificate Filename</label>
+                        <input type="text" id="certFilename" placeholder="certificate-name.png">
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="addCertificate()">➕ Add Certificate</button>
                 </div>
-                <button class="btn" onclick="addCertificate()">Add Certificate</button>
-                
-                <div id="certificatesList"></div>
+
+                <div id="certificatesList" class="skills-grid"></div>
             </div>
             
             <!-- Contacts -->
             <div id="contacts" class="section">
-                <h3>Contact Messages</h3>
+                <h3>📧 Contact Messages</h3>
                 <div id="contactsList"></div>
             </div>
             
@@ -987,9 +1105,10 @@
                 const skills = await response.json();
                 const skillsHtml = skills.map(skill => `
                     <div class="skill-card">
-                        <h4><i class="${skill.icon}"></i> ${skill.name}</h4>
+                        <span class="skill-icon"><i class="${skill.icon}"></i></span>
+                        <h4>${skill.name}</h4>
                         <p>${skill.description}</p>
-                        <button class="btn btn-danger" onclick="deleteSkill(${skill.id})">Delete</button>
+                        <button class="delete-btn" onclick="deleteSkill(${skill.id})">🗑️ Delete</button>
                     </div>
                 `).join('');
                 document.getElementById('skillsList').innerHTML = skillsHtml;
@@ -1047,9 +1166,10 @@
                 });
                 const certificates = await response.json();
                 const certsHtml = certificates.map(cert => `
-                    <div class="cert-card">
-                        <span>${cert}</span>
-                        <button class="btn btn-danger" onclick="deleteCertificate('${cert}')">Delete</button>
+                    <div class="skill-card">
+                        <span class="skill-icon">🏆</span>
+                        <h4>${cert}</h4>
+                        <button class="delete-btn" onclick="deleteCertificate('${cert}')">🗑️ Delete</button>
                     </div>
                 `).join('');
                 document.getElementById('certificatesList').innerHTML = certsHtml;
