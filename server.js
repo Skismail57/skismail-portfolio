@@ -16,7 +16,7 @@ require('dotenv').config();
 // Import models
 const User = require('./models/User');
 const Contact = require('./models/Contact');
-const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings } = require('./models/Analytics');
+const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings, Profile, About, Social, Theme } = require('./models/Analytics');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -619,6 +619,166 @@ app.post('/api/gallery-settings', requireAuth, async (req, res) => {
     res.json(settings);
   } catch (error) {
     res.status(500).json({ error: 'Failed to save gallery settings' });
+  }
+});
+
+// Profile management API
+app.get('/api/profile', async (req, res) => {
+  try {
+    let profile = await Profile.findOne();
+    if (!profile) {
+      profile = new Profile({
+        name: 'S K Ismail',
+        title: 'AIML Engineer | Python Developer | Full Stack Developer',
+        bio: '',
+        image: '',
+        location: 'India',
+        email: '',
+        phone: ''
+      });
+      await profile.save();
+    }
+    res.json(profile);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+
+app.post('/api/profile', requireAuth, async (req, res) => {
+  try {
+    const { name, title, bio, image, location, email, phone } = req.body;
+    let profile = await Profile.findOne();
+    if (!profile) {
+      profile = new Profile({ name, title, bio, image, location, email, phone });
+    } else {
+      profile.name = name;
+      profile.title = title;
+      profile.bio = bio;
+      profile.image = image;
+      profile.location = location;
+      profile.email = email;
+      profile.phone = phone;
+    }
+    await profile.save();
+    res.json(profile);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save profile' });
+  }
+});
+
+// About section API
+app.get('/api/about', async (req, res) => {
+  try {
+    let about = await About.findOne();
+    if (!about) {
+      about = new About({ welcome: '', me: '', highlights: '' });
+      await about.save();
+    }
+    res.json(about);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch about' });
+  }
+});
+
+app.post('/api/about', requireAuth, async (req, res) => {
+  try {
+    const { welcome, me, highlights } = req.body;
+    let about = await About.findOne();
+    if (!about) {
+      about = new About({ welcome, me, highlights });
+    } else {
+      about.welcome = welcome;
+      about.me = me;
+      about.highlights = highlights;
+    }
+    await about.save();
+    res.json(about);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save about' });
+  }
+});
+
+// Social links API
+app.get('/api/social', async (req, res) => {
+  try {
+    let social = await Social.findOne();
+    if (!social) {
+      social = new Social({
+        linkedin: '',
+        github: '',
+        twitter: '',
+        instagram: '',
+        facebook: '',
+        youtube: ''
+      });
+      await social.save();
+    }
+    res.json(social);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch social' });
+  }
+});
+
+app.post('/api/social', requireAuth, async (req, res) => {
+  try {
+    const { linkedin, github, twitter, instagram, facebook, youtube } = req.body;
+    let social = await Social.findOne();
+    if (!social) {
+      social = new Social({ linkedin, github, twitter, instagram, facebook, youtube });
+    } else {
+      social.linkedin = linkedin;
+      social.github = github;
+      social.twitter = twitter;
+      social.instagram = instagram;
+      social.facebook = facebook;
+      social.youtube = youtube;
+    }
+    await social.save();
+    res.json(social);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save social' });
+  }
+});
+
+// Theme settings API
+app.get('/api/theme', async (req, res) => {
+  try {
+    let theme = await Theme.findOne();
+    if (!theme) {
+      theme = new Theme({
+        primary: '#667eea',
+        secondary: '#764ba2',
+        background: '#0f0c29',
+        font: "'Segoe UI', sans-serif",
+        animations: true,
+        darkMode: true
+      });
+      await theme.save();
+    }
+    res.json(theme);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch theme' });
+  }
+});
+
+app.post('/api/theme', requireAuth, async (req, res) => {
+  try {
+    const { primary, secondary, background, font, animations, darkMode } = req.body;
+    let theme = await Theme.findOne();
+    if (!theme) {
+      theme = new Theme({ primary, secondary, background, font, animations, darkMode });
+    } else {
+      theme.primary = primary;
+      theme.secondary = secondary;
+      theme.background = background;
+      theme.font = font;
+      theme.animations = animations;
+      theme.darkMode = darkMode;
+    }
+    await theme.save();
+    res.json(theme);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save theme' });
   }
 });
 

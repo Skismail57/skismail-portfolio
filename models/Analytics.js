@@ -143,6 +143,106 @@ const gallerySettingsSchema = new mongoose.Schema({
   }
 });
 
+const profileSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    default: 'S K Ismail'
+  },
+  title: {
+    type: String,
+    default: 'AIML Engineer | Python Developer | Full Stack Developer'
+  },
+  bio: {
+    type: String,
+    default: ''
+  },
+  image: {
+    type: String,
+    default: ''
+  },
+  location: {
+    type: String,
+    default: 'India'
+  },
+  email: {
+    type: String,
+    default: ''
+  },
+  phone: {
+    type: String,
+    default: ''
+  }
+});
+
+const aboutSchema = new mongoose.Schema({
+  welcome: {
+    type: String,
+    default: ''
+  },
+  me: {
+    type: String,
+    default: ''
+  },
+  highlights: {
+    type: String,
+    default: ''
+  }
+});
+
+const socialSchema = new mongoose.Schema({
+  linkedin: {
+    type: String,
+    default: ''
+  },
+  github: {
+    type: String,
+    default: ''
+  },
+  twitter: {
+    type: String,
+    default: ''
+  },
+  instagram: {
+    type: String,
+    default: ''
+  },
+  facebook: {
+    type: String,
+    default: ''
+  },
+  youtube: {
+    type: String,
+    default: ''
+  }
+});
+
+const themeSchema = new mongoose.Schema({
+  primary: {
+    type: String,
+    default: '#667eea'
+  },
+  secondary: {
+    type: String,
+    default: '#764ba2'
+  },
+  background: {
+    type: String,
+    default: '#0f0c29'
+  },
+  font: {
+    type: String,
+    default: "'Segoe UI', sans-serif"
+  },
+  animations: {
+    type: Boolean,
+    default: true
+  },
+  darkMode: {
+    type: Boolean,
+    default: true
+  }
+});
+
 module.exports = {
   Visitor: mongoose.model('Visitor', visitorSchema),
   ProjectView: mongoose.model('ProjectView', projectViewSchema),
@@ -150,5 +250,9 @@ module.exports = {
   Skill: mongoose.model('Skill', skillSchema),
   Certificate: mongoose.model('Certificate', certificateSchema),
   Project: mongoose.model('Project', projectSchema),
-  GallerySettings: mongoose.model('GallerySettings', gallerySettingsSchema)
+  GallerySettings: mongoose.model('GallerySettings', gallerySettingsSchema),
+  Profile: mongoose.model('Profile', profileSchema),
+  About: mongoose.model('About', aboutSchema),
+  Social: mongoose.model('Social', socialSchema),
+  Theme: mongoose.model('Theme', themeSchema)
 };
