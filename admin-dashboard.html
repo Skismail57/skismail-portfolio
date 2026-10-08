@@ -605,6 +605,16 @@
                     <h4>Recent Visitors</h4>
                     <div id="recentVisitors" class="visitors-list"></div>
                 </div>
+                
+                <div class="reset-section" style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-radius: 12px; box-shadow: 0 4px 15px rgba(238, 90, 90, 0.3);">
+                    <h4 style="color: white; margin-bottom: 10px;">⚠️ Reset Visitor Data</h4>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 15px; font-size: 14px;">
+                        Delete all visitor records and start fresh. This will reset visit counts to zero and clear the Recent Visitors list. This action cannot be undone.
+                    </p>
+                    <button onclick="resetAllVisits()" style="background: white; color: #ee5a5a; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                        🗑️ Reset All Visitor Data
+                    </button>
+                </div>
             </div>
             
             <!-- Skills Management -->
@@ -767,7 +777,32 @@
             }).join('');
             document.getElementById('recentVisitors').innerHTML = visitorsHtml;
         }
-        
+
+        async function resetAllVisits() {
+            if (!confirm('Are you sure you want to delete ALL visitor data? This will reset visit counts to zero and cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/analytics/reset-visits', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`✅ ${data.message}`);
+                    loadAnalytics(); // Reload analytics to show updated counts
+                } else {
+                    alert('❌ Failed to reset visitor data');
+                }
+            } catch (error) {
+                console.error('Error resetting visits:', error);
+                alert('❌ Error resetting visitor data');
+            }
+        }
+
         async function loadSkills() {
             try {
                 const response = await fetch('/api/skills', {
