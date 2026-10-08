@@ -71,17 +71,49 @@
         }
         
         .settings-section {
-            background: #2d2d2d;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #444;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d3d 100%);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(102, 126, 234, 0.1);
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .settings-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        .settings-section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.3), 0 0 0 1px rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
         .settings-section h4 {
-            color: #0a66c2;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .settings-section h4::before {
+            content: '⚙️';
+            font-size: 1.2rem;
         }
         
         .settings-grid {
@@ -97,18 +129,30 @@
         
         .form-group input {
             width: 100%;
-            padding: 12px;
-            background: #1a1a1a;
-            border: 2px solid #444;
-            border-radius: 6px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
             color: #fff;
             font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
-        
+
         .form-group input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4), 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .form-group input:focus::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
         
         .btn-primary {
@@ -120,10 +164,11 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3), 0 0 0 1px rgba(102, 126, 234, 0.1);
             position: relative;
             overflow: hidden;
+            animation: fadeIn 1s ease;
         }
 
         .btn-primary::before {
@@ -134,8 +179,25 @@
             width: 0;
             height: 0;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5), 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
             transition: width 0.6s, height 0.6s;
         }
 
@@ -183,9 +245,14 @@
         }
         
         .section h3 {
-            color: #0a66c2;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .form-group {
@@ -194,8 +261,12 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #ccc;
+            margin-bottom: 10px;
+            color: #667eea;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         
         .form-group input, .form-group textarea {
@@ -367,6 +438,38 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
             }
         }
         
@@ -669,10 +772,10 @@
             
             <!-- Account Settings Section -->
             <div id="settings" class="section">
-                <h3>Account Settings</h3>
+                <h3>⚙️ Account Settings</h3>
                 <div class="settings-grid">
                     <div class="settings-section">
-                        <h4>Change Password</h4>
+                        <h4>🔐 Change Password</h4>
                         <div class="form-group">
                             <label>Current Password</label>
                             <input type="password" id="currentPassword" placeholder="Current Password">
@@ -681,11 +784,11 @@
                             <label>New Password (min 6 chars)</label>
                             <input type="password" id="newPassword" placeholder="New Password (min 6 chars)">
                         </div>
-                        <button onclick="changePassword()" class="btn-primary">Update Password</button>
+                        <button onclick="changePassword()" class="btn-primary">🔒 Update Password</button>
                     </div>
                     
                     <div class="settings-section">
-                        <h4>Change Username</h4>
+                        <h4>👤 Change Username</h4>
                         <div class="form-group">
                             <label>New Username (min 3 chars)</label>
                             <input type="text" id="newUsername" placeholder="New Username (min 3 chars)">
@@ -694,7 +797,7 @@
                             <label>Confirm Password</label>
                             <input type="password" id="confirmPassword" placeholder="Confirm Password">
                         </div>
-                        <button onclick="changeUsername()" class="btn-primary">Update Username</button>
+                        <button onclick="changeUsername()" class="btn-primary">👤 Update Username</button>
                     </div>
                 </div>
             </div>
