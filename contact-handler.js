@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Show loading with better message
-        messageDiv.innerHTML = '<p style="color: #0a66c2;">⏳ Sending message... (may take 60-180 seconds if server is waking up - free tier)</p>';
+        messageDiv.innerHTML = '<p style="color: #0a66c2;">⏳ Sending message...</p>';
 
         try {
             console.log('Sending contact form to: https://skismail-portfolio.onrender.com/api/contact');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Response data:', result);
 
             if (result.success) {
-                messageDiv.innerHTML = '<p style="color: #28a745; font-weight: bold;">✓ Message sent successfully! Thank you for contacting me.</p>';
+                messageDiv.innerHTML = '<p style="color: #ffffff; font-weight: bold;">✓ Message sent successfully! Thank you for contacting me.</p>';
                 form.reset();
             } else {
                 messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Failed to send message: ' + (result.message || 'Please try again.') + '</p>';
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Contact form error:', error);
             if (error.name === 'AbortError') {
-                messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Request timed out. The server is waking up (free tier delay). Please refresh the page, wait 1 minute, then try again. Email requires the server to be awake.</p>';
+                messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Request timed out. Please try again.</p>';
             } else {
                 messageDiv.innerHTML = '<p style="color: #dc3545;">✗ Error sending message. Please try again later.</p>';
             }

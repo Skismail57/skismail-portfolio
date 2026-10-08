@@ -3788,6 +3788,21 @@ body:not(.dark-mode) .profile-image {
   color: #333 !important;
 }
 
+/* ===== FORM MESSAGE ===== */
+.form-message {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1rem;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.form-message p {
+  margin: 0;
+}
+
 /* ===== FOOTER ===== */
 footer {
   background: #0a0a0a;
