@@ -16,7 +16,7 @@ require('dotenv').config();
 // Import models
 const User = require('./models/User');
 const Contact = require('./models/Contact');
-const { Visitor, ProjectView, ResumeDownload, Skill, Certificate } = require('./models/Analytics');
+const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings } = require('./models/Analytics');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -538,8 +538,8 @@ app.get('/api/skills', async (req, res) => {
 
 app.post('/api/skills', requireAuth, async (req, res) => {
   try {
-    const { name, description, icon } = req.body;
-    const newSkill = new Skill({ name, description, icon });
+    const { name, description, icon, level, proficiency, tags } = req.body;
+    const newSkill = new Skill({ name, description, icon, level, proficiency, tags });
     await newSkill.save();
     res.json(newSkill);
   } catch (error) {
@@ -554,6 +554,71 @@ app.delete('/api/skills/:id', requireAuth, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete skill' });
+  }
+});
+
+// Projects management API with MongoDB
+
+app.get('/api/projects', async (req, res) => {
+  try {
+    const projects = await Project.find().sort({ order: 1, createdAt: 1 });
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
+});
+
+app.post('/api/projects', requireAuth, async (req, res) => {
+  try {
+    const { name, description, github, image, size, tags } = req.body;
+    const newProject = new Project({ name, description, github, image, size, tags });
+    await newProject.save();
+    res.json(newProject);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create project' });
+  }
+});
+
+app.delete('/api/projects/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Project.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete project' });
+  }
+});
+
+// Gallery settings API
+
+app.get('/api/gallery-settings', async (req, res) => {
+  try {
+    let settings = await GallerySettings.findOne();
+    if (!settings) {
+      settings = new GallerySettings({ speed: 3, transition: 'fade', autoplay: true });
+      await settings.save();
+    }
+    res.json(settings);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch gallery settings' });
+  }
+});
+
+app.post('/api/gallery-settings', requireAuth, async (req, res) => {
+  try {
+    const { speed, transition, autoplay } = req.body;
+    let settings = await GallerySettings.findOne();
+    if (!settings) {
+      settings = new GallerySettings({ speed, transition, autoplay });
+    } else {
+      settings.speed = speed;
+      settings.transition = transition;
+      settings.autoplay = autoplay;
+    }
+    await settings.save();
+    res.json(settings);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save gallery settings' });
   }
 });
 
