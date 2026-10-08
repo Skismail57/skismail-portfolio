@@ -2483,7 +2483,6 @@ body.dark-mode .project-box {
 /* Project Image Styling */
 .project-image {
   width: 100%;
-  min-height: 300px;
   overflow: hidden;
   border-radius: 20px 20px 0 0;
   position: relative;
@@ -2533,7 +2532,7 @@ body.dark-mode .project-box {
 
 /* Project Content */
 .project-content {
-  padding: 15px 20px 20px 20px;
+  padding: 10px 20px 20px 20px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -2543,7 +2542,7 @@ body.dark-mode .project-box {
   font-size: 1.3rem;
   color: var(--accent-primary);
   margin-bottom: 15px;
-  margin-top: 5px;
+  margin-top: 0;
   font-weight: 600;
 }
 
