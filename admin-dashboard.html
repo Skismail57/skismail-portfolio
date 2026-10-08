@@ -72,6 +72,16 @@
             font-size: 1.8rem;
             font-weight: 700;
             text-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .sidebar h2::before {
+            content: '🚀';
+            font-size: 1.5rem;
         }
         
         .nav-item {
@@ -559,6 +569,35 @@
             }
         }
 
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
         .skills-form-container {
             background: linear-gradient(135deg, rgba(30, 30, 46, 0.8) 0%, rgba(45, 45, 61, 0.8) 100%);
             backdrop-filter: blur(10px);
@@ -940,10 +979,14 @@
         <div class="sidebar">
             <h2>Admin Panel</h2>
             <div class="nav-item active" onclick="showSection('analytics')">📊 Analytics</div>
+            <div class="nav-item" onclick="showSection('profile')">👤 Profile</div>
             <div class="nav-item" onclick="showSection('skills')">🛠️ Skills</div>
             <div class="nav-item" onclick="showSection('projects')">📁 Projects</div>
             <div class="nav-item" onclick="showSection('certificates')">🏆 Certificates</div>
             <div class="nav-item" onclick="showSection('gallery')">🖼️ Gallery</div>
+            <div class="nav-item" onclick="showSection('about')">📝 About</div>
+            <div class="nav-item" onclick="showSection('social')">🔗 Social Links</div>
+            <div class="nav-item" onclick="showSection('theme')">🎨 Theme</div>
             <div class="nav-item" onclick="showSection('contacts')">📧 Contacts</div>
             <div class="nav-item" onclick="showSection('search')">🔍 Search</div>
             <div class="nav-item" onclick="showSection('settings')">⚙️ Account Settings</div>
@@ -1025,6 +1068,42 @@
                 <div id="skillsList" class="skills-grid"></div>
             </div>
 
+            <!-- Profile Management -->
+            <div id="profile" class="section">
+                <h3>👤 Profile Management</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>📛 Full Name</label>
+                        <input type="text" id="profileName" placeholder="S K Ismail">
+                    </div>
+                    <div class="form-group">
+                        <label>💼 Title</label>
+                        <input type="text" id="profileTitle" placeholder="AIML Engineer | Python Developer | Full Stack Developer">
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Bio</label>
+                        <textarea id="profileBio" placeholder="Your professional bio..." rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🖼️ Profile Image URL</label>
+                        <input type="text" id="profileImage" placeholder="https://example.com/profile.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>📍 Location</label>
+                        <input type="text" id="profileLocation" placeholder="India">
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email</label>
+                        <input type="email" id="profileEmail" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Phone</label>
+                        <input type="tel" id="profilePhone" placeholder="+91 1234567890">
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="saveProfile()">💾 Save Profile</button>
+                </div>
+            </div>
+
             <!-- Projects Management -->
             <div id="projects" class="section">
                 <h3>📁 Projects Management</h3>
@@ -1087,6 +1166,103 @@
                         </label>
                     </div>
                     <button class="btn-primary skills-btn" onclick="saveGallerySettings()">💾 Save Gallery Settings</button>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div id="about" class="section">
+                <h3>📝 About Section</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>👋 Welcome Message</label>
+                        <textarea id="aboutWelcome" placeholder="Hi, I'm S K Ismail..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>📖 About Me</label>
+                        <textarea id="aboutMe" placeholder="Detailed about me section..." rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🎯 Key Highlights (one per line)</label>
+                        <textarea id="aboutHighlights" placeholder="• 5+ years experience&#10;• 50+ projects completed" rows="4"></textarea>
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="saveAbout()">💾 Save About</button>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div id="social" class="section">
+                <h3>🔗 Social Links</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>💼 LinkedIn</label>
+                        <input type="text" id="socialLinkedin" placeholder="https://linkedin.com/in/username">
+                    </div>
+                    <div class="form-group">
+                        <label>🐙 GitHub</label>
+                        <input type="text" id="socialGithub" placeholder="https://github.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label>🐦 Twitter/X</label>
+                        <input type="text" id="socialTwitter" placeholder="https://twitter.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label>📸 Instagram</label>
+                        <input type="text" id="socialInstagram" placeholder="https://instagram.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label>💼 Facebook</label>
+                        <input type="text" id="socialFacebook" placeholder="https://facebook.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label>🎥 YouTube</label>
+                        <input type="text" id="socialYoutube" placeholder="https://youtube.com/@username">
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="saveSocial()">💾 Save Social Links</button>
+                </div>
+            </div>
+
+            <!-- Theme Settings -->
+            <div id="theme" class="section">
+                <h3>🎨 Theme Settings</h3>
+                <div class="skills-form-container">
+                    <div class="form-group">
+                        <label>🎨 Primary Color</label>
+                        <input type="color" id="themePrimary" value="#667eea" style="width: 100%; height: 50px; border: none; border-radius: 10px; cursor: pointer;">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Secondary Color</label>
+                        <input type="color" id="themeSecondary" value="#764ba2" style="width: 100%; height: 50px; border: none; border-radius: 10px; cursor: pointer;">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Background Color</label>
+                        <input type="color" id="themeBackground" value="#0f0c29" style="width: 100%; height: 50px; border: none; border-radius: 10px; cursor: pointer;">
+                    </div>
+                    <div class="form-group">
+                        <label>🔠 Font Family</label>
+                        <select id="themeFont" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px; cursor: pointer;">
+                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                            <option value="'Roboto', sans-serif">Roboto</option>
+                            <option value="'Open Sans', sans-serif">Open Sans</option>
+                            <option value="'Poppins', sans-serif">Poppins</option>
+                            <option value="'Inter', sans-serif">Inter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>✨ Enable Animations</label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="themeAnimations" checked style="width: 20px; height: 20px; accent-color: #667eea;">
+                            <span style="color: #e2e8f0;">Enable smooth animations</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>🌙 Dark Mode</label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="themeDarkMode" checked style="width: 20px; height: 20px; accent-color: #667eea;">
+                            <span style="color: #e2e8f0;">Enable dark mode</span>
+                        </label>
+                    </div>
+                    <button class="btn-primary skills-btn" onclick="saveTheme()">💾 Save Theme</button>
+                    <button class="btn-primary skills-btn" onclick="resetTheme()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%); margin-top: 10px;">🔄 Reset to Default</button>
                 </div>
             </div>
 
@@ -1510,6 +1686,9 @@
                 case 'analytics':
                     loadAnalytics();
                     break;
+                case 'profile':
+                    loadProfile();
+                    break;
                 case 'skills':
                     loadSkills();
                     break;
@@ -1522,9 +1701,195 @@
                 case 'gallery':
                     loadGallerySettings();
                     break;
+                case 'about':
+                    loadAbout();
+                    break;
+                case 'social':
+                    loadSocial();
+                    break;
+                case 'theme':
+                    loadTheme();
+                    break;
                 case 'contacts':
                     loadContacts();
                     break;
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                const response = await fetch('/api/profile', {
+                    credentials: 'include'
+                });
+                const profile = await response.json();
+                document.getElementById('profileName').value = profile.name || '';
+                document.getElementById('profileTitle').value = profile.title || '';
+                document.getElementById('profileBio').value = profile.bio || '';
+                document.getElementById('profileImage').value = profile.image || '';
+                document.getElementById('profileLocation').value = profile.location || '';
+                document.getElementById('profileEmail').value = profile.email || '';
+                document.getElementById('profilePhone').value = profile.phone || '';
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function saveProfile() {
+            const name = document.getElementById('profileName').value;
+            const title = document.getElementById('profileTitle').value;
+            const bio = document.getElementById('profileBio').value;
+            const image = document.getElementById('profileImage').value;
+            const location = document.getElementById('profileLocation').value;
+            const email = document.getElementById('profileEmail').value;
+            const phone = document.getElementById('profilePhone').value;
+
+            try {
+                await fetch('/api/profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, title, bio, image, location, email, phone }),
+                    credentials: 'include'
+                });
+                alert('✅ Profile saved successfully!');
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                alert('❌ Failed to save profile');
+            }
+        }
+
+        async function loadAbout() {
+            try {
+                const response = await fetch('/api/about', {
+                    credentials: 'include'
+                });
+                const about = await response.json();
+                document.getElementById('aboutWelcome').value = about.welcome || '';
+                document.getElementById('aboutMe').value = about.me || '';
+                document.getElementById('aboutHighlights').value = about.highlights || '';
+            } catch (error) {
+                console.error('Error loading about:', error);
+            }
+        }
+
+        async function saveAbout() {
+            const welcome = document.getElementById('aboutWelcome').value;
+            const me = document.getElementById('aboutMe').value;
+            const highlights = document.getElementById('aboutHighlights').value;
+
+            try {
+                await fetch('/api/about', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ welcome, me, highlights }),
+                    credentials: 'include'
+                });
+                alert('✅ About section saved successfully!');
+            } catch (error) {
+                console.error('Error saving about:', error);
+                alert('❌ Failed to save about section');
+            }
+        }
+
+        async function loadSocial() {
+            try {
+                const response = await fetch('/api/social', {
+                    credentials: 'include'
+                });
+                const social = await response.json();
+                document.getElementById('socialLinkedin').value = social.linkedin || '';
+                document.getElementById('socialGithub').value = social.github || '';
+                document.getElementById('socialTwitter').value = social.twitter || '';
+                document.getElementById('socialInstagram').value = social.instagram || '';
+                document.getElementById('socialFacebook').value = social.facebook || '';
+                document.getElementById('socialYoutube').value = social.youtube || '';
+            } catch (error) {
+                console.error('Error loading social:', error);
+            }
+        }
+
+        async function saveSocial() {
+            const linkedin = document.getElementById('socialLinkedin').value;
+            const github = document.getElementById('socialGithub').value;
+            const twitter = document.getElementById('socialTwitter').value;
+            const instagram = document.getElementById('socialInstagram').value;
+            const facebook = document.getElementById('socialFacebook').value;
+            const youtube = document.getElementById('socialYoutube').value;
+
+            try {
+                await fetch('/api/social', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ linkedin, github, twitter, instagram, facebook, youtube }),
+                    credentials: 'include'
+                });
+                alert('✅ Social links saved successfully!');
+            } catch (error) {
+                console.error('Error saving social:', error);
+                alert('❌ Failed to save social links');
+            }
+        }
+
+        async function loadTheme() {
+            try {
+                const response = await fetch('/api/theme', {
+                    credentials: 'include'
+                });
+                const theme = await response.json();
+                document.getElementById('themePrimary').value = theme.primary || '#667eea';
+                document.getElementById('themeSecondary').value = theme.secondary || '#764ba2';
+                document.getElementById('themeBackground').value = theme.background || '#0f0c29';
+                document.getElementById('themeFont').value = theme.font || "'Segoe UI', sans-serif";
+                document.getElementById('themeAnimations').checked = theme.animations !== false;
+                document.getElementById('themeDarkMode').checked = theme.darkMode !== false;
+            } catch (error) {
+                console.error('Error loading theme:', error);
+            }
+        }
+
+        async function saveTheme() {
+            const primary = document.getElementById('themePrimary').value;
+            const secondary = document.getElementById('themeSecondary').value;
+            const background = document.getElementById('themeBackground').value;
+            const font = document.getElementById('themeFont').value;
+            const animations = document.getElementById('themeAnimations').checked;
+            const darkMode = document.getElementById('themeDarkMode').checked;
+
+            try {
+                await fetch('/api/theme', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ primary, secondary, background, font, animations, darkMode }),
+                    credentials: 'include'
+                });
+                alert('✅ Theme saved successfully! Refresh to see changes.');
+            } catch (error) {
+                console.error('Error saving theme:', error);
+                alert('❌ Failed to save theme');
+            }
+        }
+
+        async function resetTheme() {
+            if (!confirm('Are you sure you want to reset to default theme?')) return;
+
+            try {
+                await fetch('/api/theme', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        primary: '#667eea',
+                        secondary: '#764ba2',
+                        background: '#0f0c29',
+                        font: "'Segoe UI', sans-serif",
+                        animations: true,
+                        darkMode: true
+                    }),
+                    credentials: 'include'
+                });
+                alert('✅ Theme reset to default! Refresh to see changes.');
+                loadTheme();
+            } catch (error) {
+                console.error('Error resetting theme:', error);
+                alert('❌ Failed to reset theme');
             }
         }
 
