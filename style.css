@@ -2533,7 +2533,7 @@ body.dark-mode .project-box {
 
 /* Project Content */
 .project-content {
-  padding: 25px;
+  padding: 15px 20px 20px 20px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -2543,6 +2543,7 @@ body.dark-mode .project-box {
   font-size: 1.3rem;
   color: var(--accent-primary);
   margin-bottom: 15px;
+  margin-top: 5px;
   font-weight: 600;
 }
 
