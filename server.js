@@ -16,7 +16,7 @@ require('dotenv').config();
 // Import models
 const User = require('./models/User');
 const Contact = require('./models/Contact');
-const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings, Profile, About, Social, Theme } = require('./models/Analytics');
+const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings, Profile, About, Social, Theme, Experience, Download, EmailTemplate, Maintenance } = require('./models/Analytics');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -250,6 +250,47 @@ const requireAuth = (req, res, next) => {
     res.status(401).json({ error: 'Authentication required' });
   }
 };
+
+// Maintenance mode middleware (before serving static files)
+app.use(async (req, res, next) => {
+  try {
+    const maintenance = await Maintenance.findOne();
+    if (maintenance && maintenance.status === 'on') {
+      if (req.path.startsWith('/admin') || req.path.startsWith('/api')) {
+        return next(); // Allow admin access and API calls even in maintenance
+      }
+      return res.status(503).send(`
+        <html>
+        <head>
+          <title>Maintenance Mode</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              text-align: center;
+              padding: 20px;
+            }
+            h1 { font-size: 3rem; margin-bottom: 20px; }
+            p { font-size: 1.2rem; max-width: 600px; }
+          </style>
+        </head>
+        <body>
+          <h1>🔧 Maintenance Mode</h1>
+          <p>${maintenance.message || 'Site is under maintenance. We\\'ll be back soon!'}</p>
+        </body>
+        </html>
+      `);
+    }
+    next();
+  } catch (error) {
+    next();
+  }
+});
 
 // Email configuration
 const transporter = nodemailer.createTransport({
@@ -1429,6 +1470,188 @@ app.post('/api/auth/reset-password', async (req, res) => {
   } catch (error) {
     console.error('Reset password error:', error);
     res.status(500).json({ error: 'Password reset failed' });
+  }
+});
+
+// Experience APIs
+app.get('/api/experience', async (req, res) => {
+  try {
+    const experiences = await Experience.find().sort({ startDate: -1 });
+    res.json(experiences);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load experiences' });
+  }
+});
+
+app.post('/api/experience', requireAuth, async (req, res) => {
+  try {
+    const { company, title, startDate, endDate, description, skills } = req.body;
+    const experience = new Experience({ company, title, startDate, endDate, description, skills });
+    await experience.save();
+    res.json({ success: true, message: 'Experience added successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add experience' });
+  }
+});
+
+app.delete('/api/experience/:id', requireAuth, async (req, res) => {
+  try {
+    await Experience.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: 'Experience deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete experience' });
+  }
+});
+
+// Downloads APIs
+app.get('/api/downloads', async (req, res) => {
+  try {
+    const downloads = await Download.find().sort({ createdAt: -1 });
+    res.json(downloads);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load downloads' });
+  }
+});
+
+app.post('/api/downloads', requireAuth, async (req, res) => {
+  try {
+    const { name, type, url } = req.body;
+    const download = new Download({ name, type, url });
+    await download.save();
+    res.json({ success: true, message: 'Download added successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add download' });
+  }
+});
+
+app.delete('/api/downloads/:id', requireAuth, async (req, res) => {
+  try {
+    await Download.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: 'Download deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete download' });
+  }
+});
+
+// Export API
+app.get('/api/export', requireAuth, async (req, res) => {
+  try {
+    const data = {
+      skills: await Skill.find(),
+      certificates: await Certificate.find(),
+      projects: await Project.find(),
+      experience: await Experience.find(),
+      downloads: await Download.find(),
+      about: await About.findOne(),
+      profile: await User.findOne({ role: 'admin' }),
+      theme: await Theme.findOne(),
+      emailTemplates: await EmailTemplate.findOne()
+    };
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to export data' });
+  }
+});
+
+// Import API
+app.post('/api/import', requireAuth, async (req, res) => {
+  try {
+    const data = req.body;
+    
+    // Import skills
+    if (data.skills && data.skills.length > 0) {
+      await Skill.deleteMany({});
+      await Skill.insertMany(data.skills);
+    }
+    
+    // Import certificates
+    if (data.certificates && data.certificates.length > 0) {
+      await Certificate.deleteMany({});
+      await Certificate.insertMany(data.certificates);
+    }
+    
+    // Import projects
+    if (data.projects && data.projects.length > 0) {
+      await Project.deleteMany({});
+      await Project.insertMany(data.projects);
+    }
+    
+    // Import experience
+    if (data.experience && data.experience.length > 0) {
+      await Experience.deleteMany({});
+      await Experience.insertMany(data.experience);
+    }
+    
+    // Import downloads
+    if (data.downloads && data.downloads.length > 0) {
+      await Download.deleteMany({});
+      await Download.insertMany(data.downloads);
+    }
+    
+    // Import about
+    if (data.about) {
+      await About.findOneAndUpdate({}, data.about, { upsert: true });
+    }
+    
+    // Import theme
+    if (data.theme) {
+      await Theme.findOneAndUpdate({}, data.theme, { upsert: true });
+    }
+    
+    // Import email templates
+    if (data.emailTemplates) {
+      await EmailTemplate.findOneAndUpdate({}, data.emailTemplates, { upsert: true });
+    }
+    
+    res.json({ success: true, message: 'Data imported successfully' });
+  } catch (error) {
+    console.error('Import error:', error);
+    res.status(500).json({ error: 'Failed to import data' });
+  }
+});
+
+// Email Templates APIs
+app.get('/api/email-templates', async (req, res) => {
+  try {
+    const templates = await EmailTemplate.findOne() || {
+      otpSubject: 'Password Reset OTP',
+      otpBody: 'Your OTP is {{otp}}',
+      contactSubject: 'New Contact Message',
+      contactBody: 'New message from {{name}}: {{message}}'
+    };
+    res.json(templates);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load email templates' });
+  }
+});
+
+app.post('/api/email-templates', requireAuth, async (req, res) => {
+  try {
+    const { otpSubject, otpBody, contactSubject, contactBody } = req.body;
+    await EmailTemplate.findOneAndUpdate({}, { otpSubject, otpBody, contactSubject, contactBody }, { upsert: true });
+    res.json({ success: true, message: 'Email templates saved successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save email templates' });
+  }
+});
+
+// Maintenance Mode APIs
+app.get('/api/maintenance', async (req, res) => {
+  try {
+    const maintenance = await Maintenance.findOne() || { status: 'off', message: '' };
+    res.json(maintenance);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load maintenance mode' });
+  }
+});
+
+app.post('/api/maintenance', requireAuth, async (req, res) => {
+  try {
+    const { status, message } = req.body;
+    await Maintenance.findOneAndUpdate({}, { status, message }, { upsert: true });
+    res.json({ success: true, message: 'Maintenance mode updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update maintenance mode' });
   }
 });
 
