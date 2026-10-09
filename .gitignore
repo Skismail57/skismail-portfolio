@@ -37,3 +37,6 @@ build/
 # Temporary files
 tmp/
 temp/
+
+# Unplugged product folder (React source not needed for deployment)
+unplugged-404/product/
