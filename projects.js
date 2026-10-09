@@ -5,10 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectBoxes = document.querySelectorAll('.project-box');
   const projectSection = document.getElementById('projects');
 
-  // Initialize projects - remove inline styles to let CSS handle it
+  // Initialize projects - remove all animation classes
   projectBoxes.forEach(box => {
-    box.classList.remove('project-in-view');
-    box.classList.remove('slide-left', 'slide-right');
+    box.classList.remove('project-in-view', 'slide-left', 'slide-right');
   });
 
   // One-by-one project entrance animation with left-right wave pattern
@@ -32,10 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
           project.classList.add('slide-right');
         }
 
+        // Force a reflow to ensure the class change is recognized
+        void project.offsetWidth;
+
         // Then add the in-view class to trigger the animation
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           project.classList.add('project-in-view');
-        }, 50);
+        });
       }, index * 150); // 150ms delay between each card
     });
   }
