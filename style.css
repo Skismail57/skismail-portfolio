@@ -2779,7 +2779,7 @@ body.dark-mode .gallery-subtitle {
   min-width: 280px;
   position: relative;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   background: #ffffff;
   height: 280px;
   border: 3px solid #eee;
@@ -2788,7 +2788,7 @@ body.dark-mode .gallery-subtitle {
   transition: all 0.4s ease;
   opacity: 1;
   transform: translateY(30px);
-  padding: 10px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2840,7 +2840,8 @@ body.dark-mode .gallery-subtitle {
 .gallery-item.active {
   border-color: #0a66c2;
   box-shadow: 0 15px 40px rgba(10,102,194,0.3);
-  padding: 12px;
+  padding: 8px;
+  transform: scale(1.02);
 }
 
 .gallery-item img {
