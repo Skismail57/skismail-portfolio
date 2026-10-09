@@ -243,6 +243,87 @@ const themeSchema = new mongoose.Schema({
   }
 });
 
+const experienceSchema = new mongoose.Schema({
+  company: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  startDate: {
+    type: Date,
+    required: true
+  },
+  endDate: {
+    type: Date
+  },
+  description: {
+    type: String,
+    default: ''
+  },
+  skills: {
+    type: String,
+    default: ''
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const downloadSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    enum: ['resume', 'portfolio', 'cv', 'other'],
+    default: 'other'
+  },
+  url: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const emailTemplateSchema = new mongoose.Schema({
+  otpSubject: {
+    type: String,
+    default: 'Password Reset OTP'
+  },
+  otpBody: {
+    type: String,
+    default: 'Your OTP is {{otp}}'
+  },
+  contactSubject: {
+    type: String,
+    default: 'New Contact Message'
+  },
+  contactBody: {
+    type: String,
+    default: 'New message from {{name}}: {{message}}'
+  }
+});
+
+const maintenanceSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    enum: ['on', 'off'],
+    default: 'off'
+  },
+  message: {
+    type: String,
+    default: ''
+  }
+});
+
 module.exports = {
   Visitor: mongoose.model('Visitor', visitorSchema),
   ProjectView: mongoose.model('ProjectView', projectViewSchema),
@@ -254,5 +335,9 @@ module.exports = {
   Profile: mongoose.model('Profile', profileSchema),
   About: mongoose.model('About', aboutSchema),
   Social: mongoose.model('Social', socialSchema),
-  Theme: mongoose.model('Theme', themeSchema)
+  Theme: mongoose.model('Theme', themeSchema),
+  Experience: mongoose.model('Experience', experienceSchema),
+  Download: mongoose.model('Download', downloadSchema),
+  EmailTemplate: mongoose.model('EmailTemplate', emailTemplateSchema),
+  Maintenance: mongoose.model('Maintenance', maintenanceSchema)
 };
