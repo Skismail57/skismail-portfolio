@@ -1182,46 +1182,6 @@ nav ul li a.active {
   border-color: #1ABC9C;
 }
 
-/* Home arrow button styling */
-.home-arrow {
-  position: fixed;
-  bottom: 100px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background: #e0e0e0;
-  color: #333;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0;
-  visibility: hidden;
-  z-index: 9998;
-  box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
-  border: none;
-}
-
-body.dark-mode .home-arrow {
-  background: #2d2d2d;
-  color: white;
-  box-shadow: 6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a;
-}
-
-.home-arrow.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.home-arrow:hover {
-  background: #555555;
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
 /* Remove unused about-buttons styles since buttons were removed */
 
 /* ===== CIRCULAR PROGRESS INDICATOR ===== */
