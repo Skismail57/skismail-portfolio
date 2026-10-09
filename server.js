@@ -1123,17 +1123,17 @@ async function createDefaultAdmin() {
         username: 'skismail57',
         email: 'skportfolio57@gmail.com',
         phone: '+918904851665',
-        password: 'admin123',
+        password: 'Ismail-Portfolio@57',
         role: 'admin'
       });
       await defaultAdmin.save();
-      console.log('Default admin user created in MongoDB: skismail57/admin123');
+      console.log('Default admin user created in MongoDB: skismail57/Ismail-Portfolio@57');
     }
   } catch (error) {
     console.log('MongoDB not available, using in-memory admin');
     // Fallback to in-memory
     const bcrypt = require('bcryptjs');
-    const hashedPassword = await bcrypt.hash('admin123', 12);
+    const hashedPassword = await bcrypt.hash('Ismail-Portfolio@57', 12);
     inMemoryUsers.push({
       _id: 'admin1',
       username: 'skismail57',
@@ -1142,7 +1142,7 @@ async function createDefaultAdmin() {
       password: hashedPassword,
       role: 'admin'
     });
-    console.log('In-memory admin user created: skismail57/admin123');
+    console.log('In-memory admin user created: skismail57/Ismail-Portfolio@57');
   }
 }
 
