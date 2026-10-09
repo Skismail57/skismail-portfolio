@@ -46,6 +46,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['email', 'phone'],
     default: null
+  },
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
+  twoFactorSecret: {
+    type: String,
+    default: null
   }
 }, {
   timestamps: true

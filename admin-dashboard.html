@@ -1008,6 +1008,7 @@
             <div class="nav-item" onclick="showSection('email-templates')">📧 Email Templates</div>
             <div class="nav-item" onclick="showSection('maintenance')">🔧 Maintenance Mode</div>
             <div class="nav-item" onclick="showSection('audit-logs')">📋 Audit Logs</div>
+            <div class="nav-item" onclick="showSection('two-factor')">🔐 Two-Factor Auth</div>
             <div class="nav-item" onclick="logout()" style="background: #dc3545; margin-top: 20px;">🚪 Logout</div>
         </div>
         
@@ -1511,6 +1512,37 @@
                 </div>
                 <div id="auditLogsList" class="skills-grid"></div>
             </div>
+
+            <!-- Two-Factor Authentication Section -->
+            <div id="two-factor" class="section">
+                <h3>🔐 Two-Factor Authentication</h3>
+                <div class="skills-form-container">
+                    <p style="color: #e2e8f0; margin-bottom: 20px;">Add an extra layer of security to your admin account.</p>
+                    <div id="twoFactorStatus"></div>
+                    <div id="twoFactorSetup" style="display: none;">
+                        <div class="form-group">
+                            <label>Scan QR Code with Authenticator App</label>
+                            <div id="qrCode" style="text-align: center; margin: 20px 0;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter 6-digit code from app</label>
+                            <input type="text" id="totpCode" placeholder="123456" maxlength="6" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px;">
+                        </div>
+                        <button class="btn-primary skills-btn" onclick="verify2FA()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✅ Enable 2FA</button>
+                        <button class="btn-primary skills-btn" onclick="cancel2FASetup()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);">❌ Cancel</button>
+                    </div>
+                    <div id="twoFactorActions">
+                        <button class="btn-primary skills-btn" onclick="setup2FA()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🔧 Setup 2FA</button>
+                        <div id="disable2FA" style="display: none;">
+                            <div class="form-group">
+                                <label>Enter password to disable 2FA</label>
+                                <input type="password" id="disable2FAPassword" placeholder="Current password" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px;">
+                            </div>
+                            <button class="btn-primary skills-btn" onclick="disable2FA()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);">🔓 Disable 2FA</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1915,6 +1947,9 @@
                     break;
                 case 'audit-logs':
                     loadAuditLogs();
+                    break;
+                case 'two-factor':
+                    load2FAStatus();
                     break;
             }
         }
@@ -2467,6 +2502,123 @@
                 document.getElementById('auditLogsList').innerHTML = logsHtml;
             } catch (error) {
                 console.error('Error loading audit logs:', error);
+            }
+        }
+
+        // Two-Factor Authentication Functions
+        async function load2FAStatus() {
+            try {
+                const response = await fetch('/api/auth/2fa/status', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                const statusDiv = document.getElementById('twoFactorStatus');
+                const setupDiv = document.getElementById('twoFactorSetup');
+                const actionsDiv = document.getElementById('twoFactorActions');
+                const disableDiv = document.getElementById('disable2FA');
+                
+                if (data.enabled) {
+                    statusDiv.innerHTML = '<p style="color: #10b981; font-weight: bold;">✅ Two-Factor Authentication is ENABLED</p>';
+                    setupDiv.style.display = 'none';
+                    actionsDiv.style.display = 'none';
+                    disableDiv.style.display = 'block';
+                } else {
+                    statusDiv.innerHTML = '<p style="color: #f59e0b; font-weight: bold;">⚠️ Two-Factor Authentication is DISABLED</p>';
+                    setupDiv.style.display = 'none';
+                    actionsDiv.style.display = 'block';
+                    disableDiv.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading 2FA status:', error);
+            }
+        }
+
+        async function setup2FA() {
+            try {
+                const response = await fetch('/api/auth/2fa/setup', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                document.getElementById('twoFactorSetup').style.display = 'block';
+                document.getElementById('twoFactorActions').style.display = 'none';
+                document.getElementById('qrCode').innerHTML = `<img src="${data.qrCode}" alt="QR Code" style="max-width: 200px;">`;
+            } catch (error) {
+                console.error('Error setting up 2FA:', error);
+                alert('❌ Failed to setup 2FA');
+            }
+        }
+
+        async function verify2FA() {
+            const totpCode = document.getElementById('totpCode').value;
+            
+            if (!totpCode || totpCode.length !== 6) {
+                alert('Please enter a valid 6-digit code');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/2fa/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ totpCode }),
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Two-Factor Authentication enabled successfully!');
+                    document.getElementById('twoFactorSetup').style.display = 'none';
+                    document.getElementById('totpCode').value = '';
+                    load2FAStatus();
+                } else {
+                    alert('❌ Invalid code. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error verifying 2FA:', error);
+                alert('❌ Failed to verify 2FA code');
+            }
+        }
+
+        function cancel2FASetup() {
+            document.getElementById('twoFactorSetup').style.display = 'none';
+            document.getElementById('twoFactorActions').style.display = 'block';
+            document.getElementById('totpCode').value = '';
+        }
+
+        async function disable2FA() {
+            const password = document.getElementById('disable2FAPassword').value;
+            
+            if (!password) {
+                alert('Please enter your password');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to disable Two-Factor Authentication? This will reduce your account security.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/2fa/disable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Two-Factor Authentication disabled successfully!');
+                    document.getElementById('disable2FAPassword').value = '';
+                    load2FAStatus();
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to disable 2FA'));
+                }
+            } catch (error) {
+                console.error('Error disabling 2FA:', error);
+                alert('❌ Failed to disable 2FA');
             }
         }
 

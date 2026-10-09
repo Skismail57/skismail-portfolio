@@ -482,6 +482,40 @@ loginForm.addEventListener('submit', async (e) => {
     const data = await response.json();
 
     btnText.classList.remove('hidden');
+
+    // Check if 2FA is required
+    if (data.requiresTwoFactor) {
+      // Show 2FA input modal
+      const totpCode = prompt('Enter your 2FA code from authenticator app:');
+      if (!totpCode) {
+        showToast('2FA code required', 'error');
+        return;
+      }
+
+      // Retry login with TOTP code
+      const response2FA = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: email, password, totpCode }),
+        credentials: 'include'
+      });
+
+      const data2FA = await response2FA.json();
+
+      if (data2FA.success) {
+        showToast('Login successful!');
+        setTimeout(() => {
+          window.location.href = '/admin/admin-dashboard.html';
+        }, 1000);
+      } else {
+        showToast(data2FA.error || 'Invalid 2FA code', 'error');
+        btnLoader.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+      return;
+    }
     btnLoader.classList.add('hidden');
     submitBtn.disabled = false;
 
