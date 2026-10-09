@@ -326,6 +326,38 @@ const maintenanceSchema = new mongoose.Schema({
   message: {
     type: String,
     default: ''
+  },
+  customHtml: {
+    type: String,
+    default: ''
+  },
+  endTime: {
+    type: Date
+  },
+  whitelistedIPs: {
+    type: [String],
+    default: []
+  }
+});
+
+const auditLogSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  username: String,
+  action: {
+    type: String,
+    required: true
+  },
+  details: {
+    type: mongoose.Schema.Types.Mixed
+  },
+  ip: String,
+  userAgent: String,
+  timestamp: {
+    type: Date,
+    default: Date.now
   }
 });
 
@@ -344,5 +376,6 @@ module.exports = {
   Experience: mongoose.model('Experience', experienceSchema),
   Download: mongoose.model('Download', downloadSchema),
   EmailTemplate: mongoose.model('EmailTemplate', emailTemplateSchema),
-  Maintenance: mongoose.model('Maintenance', maintenanceSchema)
+  Maintenance: mongoose.model('Maintenance', maintenanceSchema),
+  AuditLog: mongoose.model('AuditLog', auditLogSchema)
 };

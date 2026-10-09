@@ -1007,6 +1007,7 @@
             <div class="nav-item" onclick="showSection('import')">📂 Import/Restore</div>
             <div class="nav-item" onclick="showSection('email-templates')">📧 Email Templates</div>
             <div class="nav-item" onclick="showSection('maintenance')">🔧 Maintenance Mode</div>
+            <div class="nav-item" onclick="showSection('audit-logs')">📋 Audit Logs</div>
             <div class="nav-item" onclick="logout()" style="background: #dc3545; margin-top: 20px;">🚪 Logout</div>
         </div>
         
@@ -1485,8 +1486,30 @@
                         <label>📝 Maintenance Message</label>
                         <textarea id="maintenanceMessage" placeholder="Site is under maintenance. We'll be back soon!" rows="3"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>🕐 Estimated End Time</label>
+                        <input type="datetime-local" id="maintenanceEndTime">
+                    </div>
+                    <div class="form-group">
+                        <label>🌐 Whitelisted IPs (comma separated)</label>
+                        <input type="text" id="maintenanceWhitelist" placeholder="e.g., 192.168.1.1, 10.0.0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>📄 Custom HTML (optional)</label>
+                        <textarea id="maintenanceCustomHtml" placeholder="Custom HTML for maintenance page. Use {{COUNTDOWN}} for countdown timer." rows="6"></textarea>
+                    </div>
                     <button class="btn-primary skills-btn" onclick="toggleMaintenance()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);">🔧 Update Maintenance Mode</button>
                 </div>
+            </div>
+
+            <!-- Audit Logs Section -->
+            <div id="audit-logs" class="section">
+                <h3>📋 Audit Logs</h3>
+                <div class="skills-form-container">
+                    <p style="color: #e2e8f0; margin-bottom: 20px;">View recent admin actions and security events.</p>
+                    <button class="btn-primary skills-btn" onclick="loadAuditLogs()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🔄 Refresh Logs</button>
+                </div>
+                <div id="auditLogsList" class="skills-grid"></div>
             </div>
         </div>
     </div>
@@ -1889,6 +1912,9 @@
                     break;
                 case 'maintenance':
                     loadMaintenance();
+                    break;
+                case 'audit-logs':
+                    loadAuditLogs();
                     break;
             }
         }
@@ -2393,6 +2419,9 @@
                 const maintenance = await response.json();
                 document.getElementById('maintenanceStatus').value = maintenance.status || 'off';
                 document.getElementById('maintenanceMessage').value = maintenance.message || '';
+                document.getElementById('maintenanceEndTime').value = maintenance.endTime || '';
+                document.getElementById('maintenanceWhitelist').value = maintenance.whitelistedIPs ? maintenance.whitelistedIPs.join(', ') : '';
+                document.getElementById('maintenanceCustomHtml').value = maintenance.customHtml || '';
             } catch (error) {
                 console.error('Error loading maintenance mode:', error);
             }
@@ -2401,18 +2430,43 @@
         async function toggleMaintenance() {
             const status = document.getElementById('maintenanceStatus').value;
             const message = document.getElementById('maintenanceMessage').value;
+            const endTime = document.getElementById('maintenanceEndTime').value;
+            const whitelistedIPs = document.getElementById('maintenanceWhitelist').value.split(',').map(ip => ip.trim()).filter(ip => ip);
+            const customHtml = document.getElementById('maintenanceCustomHtml').value;
 
             try {
                 await fetch('/api/maintenance', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status, message }),
+                    body: JSON.stringify({ status, message, endTime, whitelistedIPs, customHtml }),
                     credentials: 'include'
                 });
                 alert('✅ Maintenance mode updated successfully!');
             } catch (error) {
                 console.error('Error updating maintenance mode:', error);
                 alert('❌ Error updating maintenance mode');
+            }
+        }
+
+        // Audit Logs Functions
+        async function loadAuditLogs() {
+            try {
+                const response = await fetch('/api/audit-logs', {
+                    credentials: 'include'
+                });
+                const logs = await response.json();
+                const logsHtml = logs.map(log => `
+                    <div class="skill-card">
+                        <h4>${log.action}</h4>
+                        <p>👤 ${log.username || 'Unknown'}</p>
+                        <p>🕐 ${new Date(log.timestamp).toLocaleString()}</p>
+                        <p>🌐 ${log.ip || 'Unknown IP'}</p>
+                        <p>📋 ${log.details?.method} ${log.details?.path}</p>
+                    </div>
+                `).join('');
+                document.getElementById('auditLogsList').innerHTML = logsHtml;
+            } catch (error) {
+                console.error('Error loading audit logs:', error);
             }
         }
 
