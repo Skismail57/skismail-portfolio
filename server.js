@@ -210,6 +210,15 @@ app.get('/admin', (req, res) => {
   }
 });
 
+// Catch-all for admin routes - serve unplugged page for invalid admin routes
+app.get('/admin/*', (req, res) => {
+  const acceptHeader = req.headers.get('accept') || '';
+  if (acceptHeader.includes('text/html')) {
+    return res.sendFile(__dirname + '/unplugged-404/index.html');
+  }
+  res.status(404).json({ error: 'Not found' });
+});
+
 // Visitor tracking middleware (before static files)
 app.use(async (req, res, next) => {
   // Skip tracking for API calls, admin routes, and favicon
