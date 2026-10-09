@@ -2377,47 +2377,25 @@ body.dark-mode .search-highlight {
   transform: translateY(0) rotateX(0deg) scale(1);
   transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 0s !important;
 }
 
-/* Staggered animation delays for project cards */
-.project-box:nth-child(1).project-in-view {
-  transition-delay: 0s;
+/* Slide from left animation */
+.project-box.slide-left {
+  transform: translateX(-50px) translateY(60px) rotateX(8deg) scale(0.96);
 }
 
-.project-box:nth-child(2).project-in-view {
-  transition-delay: 0.1s;
+.project-box.slide-left.project-in-view {
+  transform: translateY(0) rotateX(0deg) scale(1);
 }
 
-.project-box:nth-child(3).project-in-view {
-  transition-delay: 0.2s;
+/* Slide from right animation */
+.project-box.slide-right {
+  transform: translateX(50px) translateY(60px) rotateX(8deg) scale(0.96);
 }
 
-.project-box:nth-child(4).project-in-view {
-  transition-delay: 0.3s;
-}
-
-.project-box:nth-child(5).project-in-view {
-  transition-delay: 0.4s;
-}
-
-.project-box:nth-child(6).project-in-view {
-  transition-delay: 0.5s;
-}
-
-.project-box:nth-child(7).project-in-view {
-  transition-delay: 0.6s;
-}
-
-.project-box:nth-child(8).project-in-view {
-  transition-delay: 0.7s;
-}
-
-.project-box:nth-child(9).project-in-view {
-  transition-delay: 0.8s;
-}
-
-.project-box:nth-child(10).project-in-view {
-  transition-delay: 0.9s;
+.project-box.slide-right.project-in-view {
+  transform: translateY(0) rotateX(0deg) scale(1);
 }
 
 .project-box.project-in-view:hover {
