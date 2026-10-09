@@ -281,7 +281,7 @@ app.use(async (req, res, next) => {
         </head>
         <body>
           <h1>🔧 Maintenance Mode</h1>
-          <p>${maintenance.message || 'Site is under maintenance. We\\'ll be back soon!'}</p>
+          <p>${maintenance.message || "Site is under maintenance. We'll be back soon!"}</p>
         </body>
         </html>
       `);
