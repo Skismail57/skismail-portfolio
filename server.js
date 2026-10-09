@@ -269,6 +269,14 @@ app.use(async (req, res, next) => {
 // Serve static files (after admin routes and visitor tracking)
 app.use(express.static('.'));
 
+// Serve unplugged 404 page
+app.get('/unplugged-404', (req, res) => {
+  res.sendFile(__dirname + '/unplugged-404/index.html');
+});
+
+// Serve unplugged assets
+app.use('/unplugged-404', express.static(__dirname + '/unplugged-404'));
+
 // Authentication middleware
 const requireAuth = (req, res, next) => {
   if (req.session.user && req.session.user.role === 'admin') {
@@ -1899,14 +1907,6 @@ app.get('/api/auth/2fa/status', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to get 2FA status' });
   }
 });
-
-// Serve unplugged 404 page
-app.get('/unplugged-404', (req, res) => {
-  res.sendFile(__dirname + '/unplugged-404/index.html');
-});
-
-// Serve unplugged assets
-app.use('/unplugged-404', express.static(__dirname + '/unplugged-404'));
 
 // Catch-all route for 404: serve unplugged page for HTML requests
 app.get('*', (req, res) => {
