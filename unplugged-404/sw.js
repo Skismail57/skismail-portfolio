@@ -11,8 +11,8 @@
    ========================================================================== */
 
 const CACHE    = 'unplugged-assets-v1';
-const SCOPE    = (self.registration && self.registration.scope) || '/';
-const ORIGIN   = new URL(SCOPE).origin;
+const SCOPE    = '/';
+const ORIGIN   = self.location.origin;
 
 /* Keep this list in sync with the files next to sw.js on disk. Resolved
    against the SW scope so the same file works at site root or in a sub-

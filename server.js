@@ -286,6 +286,11 @@ app.get('/unplugged-404', (req, res) => {
 // Serve unplugged assets
 app.use('/unplugged-404', express.static(__dirname + '/unplugged-404'));
 
+// Serve service worker
+app.get('/unplugged-404/sw.js', (req, res) => {
+  res.sendFile(__dirname + '/unplugged-404/sw.js');
+});
+
 // Authentication middleware
 const requireAuth = (req, res, next) => {
   if (req.session.user && req.session.user.role === 'admin') {
