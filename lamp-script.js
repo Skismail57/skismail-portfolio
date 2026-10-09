@@ -372,6 +372,8 @@ function switchTab(mode) {
     headingTitle.textContent = 'Welcome Back';
     headingSub.textContent = 'Enter your details to access your Admin Portal';
     emailInput.placeholder = 'User Name / Email';
+    emailInput.type = 'text';
+    emailInput.autocomplete = 'username';
     btnText.textContent = 'Sign In';
   } else {
     tabSignUp.classList.add('active');
@@ -384,6 +386,8 @@ function switchTab(mode) {
     headingTitle.textContent = 'Create Account';
     headingSub.textContent = 'Join thousands of creators building the future';
     emailInput.placeholder = 'Email Address / Username';
+    emailInput.type = 'email';
+    emailInput.autocomplete = 'email';
     btnText.textContent = 'Get Started';
   }
 }
