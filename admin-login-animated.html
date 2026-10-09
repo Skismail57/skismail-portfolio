@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - S K Ismail Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/animated-lamp.css">
+</head>
+<body>
+  <!-- Ambient Room Background -->
+  <main class="room" id="room">
+    <!-- Background Elements -->
+    <div class="night-sky">
+      <div class="stars-cluster"></div>
+      <div class="ambient-window">
+        <div class="window-frame"></div>
+        <div class="window-pane">
+          <div class="window-glow"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="room-light" id="roomLight"></div>
+    <div class="fireflies" id="fireflies"></div>
+
+    <!-- Top Controls: Sound Toggle -->
+    <header class="top-controls">
+      <!-- Sound FX Toggle -->
+      <button class="sound-toggle" id="soundToggle" aria-label="Toggle Sound Effects" title="Sound Effects (ON/OFF)">
+        <svg class="sound-icon sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.08"></path>
+        </svg>
+        <svg class="sound-icon sound-off hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Interactive Lamp Area -->
+    <section class="lamp-side">
+      <div class="lamp-container" id="lampContainer">
+        <div class="lamp-glow"></div>
+        
+        <!-- Lamp Head Assembly -->
+        <div class="lamp-top-finial"></div>
+        <div class="lamp-head" id="lampHead">
+          <div class="lamp-inner-bulb"></div>
+        </div>
+        
+        <!-- Dynamic Volumetric Light Beam -->
+        <div class="light-beam" id="lightBeam">
+          <div class="dust-motes"></div>
+        </div>
+
+        <!-- Lamp Hardware -->
+        <div class="lamp-neck-joint"></div>
+        <div class="lamp-stem"></div>
+        <div class="lamp-joint"></div>
+        <div class="lamp-base">
+          <div class="base-ridge"></div>
+        </div>
+        <div class="desk-surface" id="deskSurface"></div>
+
+        <!-- Dynamic String with SVG physics path -->
+        <svg class="string-svg" aria-hidden="true">
+          <path id="stringPath" d="M 0 0 L 0 95"></path>
+        </svg>
+
+        <!-- Pull Switch Handle -->
+        <div class="string-handle" id="stringHandle" aria-label="Pull lamp switch string" tabindex="0">
+          <div class="handle-bead"></div>
+        </div>
+      </div>
+
+      <!-- Glowing Signature Name -->
+      <div class="lamp-signature" aria-hidden="true">
+        <span class="sig-text">Shaikh Ismail</span>
+        <span class="sig-underline"></span>
+      </div>
+    </section>
+
+    <!-- Glassmorphic Authentication Card -->
+    <section class="login-side">
+      <div class="login-card glass" id="loginCard">
+        <div class="card-glow-overlay" id="cardGlow"></div>
+        <div class="glass-line"></div>
+
+        <!-- Form Switcher Tabs -->
+        <div class="form-tabs" role="tablist">
+          <div class="tab-slider" id="tabSlider"></div>
+          <button class="tab-btn active" id="tabSignIn" type="button" role="tab" aria-selected="true">Sign In</button>
+          <button class="tab-btn" id="tabSignUp" type="button" role="tab" aria-selected="false">Create Account</button>
+        </div>
+
+        <!-- Card Header -->
+        <div class="login-heading">
+          <h2 id="headingTitle">Welcome Back</h2>
+          <p id="headingSub">Enter your details to access your Admin Portal</p>
+        </div>
+
+        <!-- Form Elements -->
+        <form class="auth-form" id="loginForm" autocomplete="on">
+          <div class="inputs">
+            <!-- Full Name (for Sign Up only) -->
+            <label class="input-wrap signup-only-field" id="fullNameWrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <input type="text" id="fullNameInput" placeholder="Full Name" autocomplete="name">
+            </label>
+
+            <!-- Email Address -->
+            <label class="input-wrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </span>
+              <input type="email" id="emailInput" placeholder="User Name / Email" required autocomplete="email">
+            </label>
+
+            <!-- Password with Show/Hide Toggle -->
+            <label class="input-wrap password-wrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <input type="password" id="passwordInput" placeholder="Password" required autocomplete="current-password">
+              <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                <svg class="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-hide hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </label>
+
+            <!-- Password Strength Bar (Shows dynamically on type) -->
+            <div class="password-meter" id="passwordMeter">
+              <div class="meter-bar"><span class="meter-fill" id="meterFill"></span></div>
+              <span class="meter-text" id="meterText">Password strength</span>
+            </div>
+          </div>
+
+          <!-- Options Row (Remember me & Forgot Password) -->
+          <div class="options-row" id="optionsRow">
+            <label class="remember-label">
+              <input type="checkbox" id="rememberMe" checked>
+              <span class="checkbox-custom"></span>
+              <span class="remember-text">Remember me</span>
+            </label>
+            <a href="/admin/forgot-password.html" class="forgot-link" id="forgotLink">Forgot password?</a>
+          </div>
+
+          <!-- Submit Button with Dynamic Loading/Success State -->
+          <button class="sign-in-btn" id="submitBtn" type="submit">
+            <span class="btn-text" id="btnText">Sign In</span>
+            <div class="btn-loader hidden" id="btnLoader">
+              <span class="spinner"></span>
+            </div>
+          </button>
+
+          <!-- Social Login Divider -->
+          <div class="divider">
+            <span></span>
+            <b>OR CONTINUE WITH</b>
+            <span></span>
+          </div>
+
+          <!-- Social Buttons with Rich SVG Icons -->
+          <div class="socials">
+            <button class="social-btn" type="button" id="googleBtn" aria-label="Sign in with Google">
+              <svg class="social-svg" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Google</span>
+            </button>
+            <button class="social-btn" type="button" id="githubBtn" aria-label="Sign in with GitHub">
+              <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+              <span>GitHub</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Notification / Toast Feedback -->
+        <div class="feedback-toast" id="feedbackToast">
+          <span class="toast-icon">✨</span>
+          <span class="toast-text" id="toastText">Welcome back! Access granted.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/animated-lamp.js"></script>
+</body>
+</html>
