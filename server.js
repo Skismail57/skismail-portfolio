@@ -846,40 +846,45 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     let user = null;
-    
+
     try {
-      // Try MongoDB first
-      user = await User.findOne({ username });
+      // Try MongoDB first - search by both username and email
+      user = await User.findOne({
+        $or: [
+          { username: username },
+          { email: username }
+        ]
+      });
       if (user && (await user.comparePassword(password))) {
         req.session.user = {
           id: user._id,
           username: user.username,
           role: user.role
         };
-        return res.json({ 
-          success: true, 
-          user: { username: user.username, role: user.role } 
+        return res.json({
+          success: true,
+          user: { username: user.username, role: user.role }
         });
       }
     } catch (dbError) {
       console.log('MongoDB login failed, trying in-memory');
     }
-    
-    // Fallback to in-memory
+
+    // Fallback to in-memory - search by both username and email
     const bcrypt = require('bcryptjs');
-    user = inMemoryUsers.find(u => u.username === username);
+    user = inMemoryUsers.find(u => u.username === username || u.email === username);
     if (user && (await bcrypt.compare(password, user.password))) {
       req.session.user = {
         id: user._id,
         username: user.username,
         role: user.role
       };
-      return res.json({ 
-        success: true, 
-        user: { username: user.username, role: user.role } 
+      return res.json({
+        success: true,
+        user: { username: user.username, role: user.role }
       });
     }
-    
+
     res.status(401).json({ error: 'Invalid credentials' });
   } catch (error) {
     console.error('Login error:', error);
