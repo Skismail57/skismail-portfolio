@@ -1911,12 +1911,19 @@ app.get('/api/auth/2fa/status', requireAuth, async (req, res) => {
 // Catch-all route for 404: serve unplugged page for HTML requests
 app.get('*', (req, res) => {
   // If it's an API request, return 404 JSON
-  if (req.path.startsWith('/api') || req.path.startsWith('/admin')) {
+  if (req.path.startsWith('/api')) {
     return res.status(404).json({ error: 'Not found' });
   }
   
-  // For HTML requests to non-existent routes, serve unplugged 404 page
-  res.sendFile(__dirname + '/unplugged-404/index.html');
+  // For HTML requests (including admin routes), serve unplugged 404 page
+  // This allows the unplugged page to work for both portfolio and admin when offline
+  const acceptHeader = req.headers.get('accept') || '';
+  if (acceptHeader.includes('text/html')) {
+    return res.sendFile(__dirname + '/unplugged-404/index.html');
+  }
+  
+  // For other requests, return 404 JSON
+  res.status(404).json({ error: 'Not found' });
 });
 
 app.listen(PORT, async () => {
