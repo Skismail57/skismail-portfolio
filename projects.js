@@ -5,28 +5,26 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectBoxes = document.querySelectorAll('.project-box');
   const projectSection = document.getElementById('projects');
 
-  // Initialize projects with hidden state and rotation
+  // Initialize projects - remove inline styles to let CSS handle it
   projectBoxes.forEach(box => {
-    box.style.opacity = '0';
-    box.style.transform = 'translateY(60px) rotateX(8deg) scale(0.96)';
-    box.style.transition = 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+    box.classList.remove('project-in-view');
   });
 
-  // One-by-one project entrance animation with rotation
+  // One-by-one project entrance animation with rotation using CSS classes
   function animateProjectsOneByOne() {
     const visibleProjects = Array.from(projectBoxes).filter(box =>
       box.style.display !== 'none' && getComputedStyle(box).display !== 'none'
     );
 
-    visibleProjects.forEach((project, index) => {
-      // Reset to hidden state with rotation
-      project.style.opacity = '0';
-      project.style.transform = 'translateY(60px) rotateX(8deg) scale(0.96)';
+    // Remove animation class from all visible projects first
+    visibleProjects.forEach(project => {
+      project.classList.remove('project-in-view');
+    });
 
-      // Animate one by one with staggered delay
+    // Add animation class one by one with staggered delay
+    visibleProjects.forEach((project, index) => {
       setTimeout(() => {
-        project.style.opacity = '1';
-        project.style.transform = 'translateY(0) rotateX(0deg) scale(1)';
+        project.classList.add('project-in-view');
       }, index * 150); // 150ms delay between each card
     });
   }
@@ -35,10 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectSectionObserver = new IntersectionObserver(function(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Reset all projects to hidden state with rotation
+        // Reset all projects
         projectBoxes.forEach(box => {
-          box.style.opacity = '0';
-          box.style.transform = 'translateY(60px) rotateX(8deg) scale(0.96)';
+          box.classList.remove('project-in-view');
         });
 
         // Start one-by-one animation
@@ -69,9 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Filter projects with animation
       projectBoxes.forEach(box => {
-        // Reset animations
-        box.style.opacity = '0';
-        box.style.transform = 'translateY(60px) rotateX(8deg) scale(0.96)';
+        box.classList.remove('project-in-view');
 
         if (filterValue === 'all' || box.getAttribute('data-category') === filterValue) {
           box.style.display = 'flex';
@@ -87,18 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Project hover effects
-  projectBoxes.forEach(box => {
-    box.addEventListener('mouseenter', () => {
-      box.style.transform = 'translateY(-8px) scale(1.02)';
-      box.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1)';
-      box.style.transition = 'all 0.3s ease';
-    });
-
-    box.addEventListener('mouseleave', () => {
-      box.style.transform = 'translateY(0) scale(1)';
-      box.style.boxShadow = '0 10px 30px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04)';
-      box.style.transition = 'all 0.3s ease';
-    });
-  });
+  // Project hover effects - let CSS handle this
+  // No inline styles needed since CSS has hover effects defined
 });
