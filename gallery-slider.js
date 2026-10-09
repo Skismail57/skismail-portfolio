@@ -60,26 +60,30 @@ document.addEventListener('DOMContentLoaded', function() {
     prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
     nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
     
-    // Click handler for certificate names
+    // Click handler for gallery items (entire card)
     galleryItems.forEach(item => {
-        const certificateName = item.querySelector('.certificate-name');
-        certificateName.addEventListener('click', function(e) {
-            e.stopPropagation();
-
-            // Toggle clicked state
-            if (this.classList.contains('clicked')) {
-                this.classList.remove('clicked');
-                item.classList.remove('active');
+        item.addEventListener('click', function(e) {
+            // Toggle active state
+            if (this.classList.contains('active')) {
+                this.classList.remove('active');
+                const certificateName = this.querySelector('.certificate-name');
+                if (certificateName) {
+                    certificateName.classList.remove('clicked');
+                }
             } else {
-                // Remove clicked class from all other certificates
-                document.querySelectorAll('.certificate-name').forEach(name => {
-                    name.classList.remove('clicked');
-                });
+                // Remove active class from all other items
                 document.querySelectorAll('.gallery-item').forEach(galleryItem => {
                     galleryItem.classList.remove('active');
+                    const name = galleryItem.querySelector('.certificate-name');
+                    if (name) {
+                        name.classList.remove('clicked');
+                    }
                 });
-                this.classList.add('clicked');
-                item.classList.add('active');
+                this.classList.add('active');
+                const certificateName = this.querySelector('.certificate-name');
+                if (certificateName) {
+                    certificateName.classList.add('clicked');
+                }
             }
         });
     });
