@@ -1908,6 +1908,17 @@ app.get('/unplugged-404', (req, res) => {
 // Serve unplugged assets
 app.use('/unplugged-404', express.static(__dirname + '/unplugged-404'));
 
+// Catch-all route for 404: serve unplugged page for HTML requests
+app.get('*', (req, res) => {
+  // If it's an API request, return 404 JSON
+  if (req.path.startsWith('/api') || req.path.startsWith('/admin')) {
+    return res.status(404).json({ error: 'Not found' });
+  }
+  
+  // For HTML requests to non-existent routes, serve unplugged 404 page
+  res.sendFile(__dirname + '/unplugged-404/index.html');
+});
+
 app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);
   await createDefaultAdmin();
