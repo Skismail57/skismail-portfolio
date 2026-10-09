@@ -1900,6 +1900,14 @@ app.get('/api/auth/2fa/status', requireAuth, async (req, res) => {
   }
 });
 
+// Serve unplugged 404 page
+app.get('/unplugged-404', (req, res) => {
+  res.sendFile(__dirname + '/unplugged-404/index.html');
+});
+
+// Serve unplugged assets
+app.use('/unplugged-404', express.static(__dirname + '/unplugged-404'));
+
 app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);
   await createDefaultAdmin();
