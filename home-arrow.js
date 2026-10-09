@@ -1,53 +1,49 @@
-// Home arrow navigation button
+// Scroll navigation buttons (up and down arrows)
 document.addEventListener('DOMContentLoaded', function() {
-    // Create home arrow button
-    const homeArrow = document.createElement('div');
-    homeArrow.className = 'home-arrow';
-    homeArrow.innerHTML = '↑';
-    homeArrow.title = 'Back to Home';
-    
-    // Add to body
-    document.body.appendChild(homeArrow);
-    
-    // Show/hide based on scroll position and current section
-    function updateHomeArrow() {
-        const homeSection = document.getElementById('home');
-        const currentSection = getCurrentSection();
-        
-        // Show arrow when not on home section and scrolled down
-        if (currentSection !== 'home' && window.scrollY > 100) {
-            homeArrow.classList.add('visible');
+    const scrollToBottomBtn = document.getElementById('scrollToBottom');
+    const backToTopBtn = document.getElementById('backToTop');
+
+    // Show/hide buttons based on scroll position
+    function updateScrollButtons() {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollPercentage = (scrollY / (documentHeight - windowHeight)) * 100;
+
+        // Show down arrow when at top (scrollY < 100)
+        if (scrollY < 100) {
+            scrollToBottomBtn.classList.add('visible');
         } else {
-            homeArrow.classList.remove('visible');
+            scrollToBottomBtn.classList.remove('visible');
+        }
+
+        // Show up arrow when scrolled down (scrollY > 300)
+        if (scrollY > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
         }
     }
-    
-    // Get current section based on scroll position
-    function getCurrentSection() {
-        const sections = ['home', 'about', 'qualification', 'skills', 'experties', 'projects', 'gallery', 'contact'];
-        
-        for (let section of sections) {
-            const element = document.getElementById(section);
-            if (element) {
-                const rect = element.getBoundingClientRect();
-                if (rect.top <= 100 && rect.bottom >= 100) {
-                    return section;
-                }
-            }
-        }
-        return 'home';
-    }
-    
-    // Click handler - scroll to home
-    homeArrow.addEventListener('click', function() {
-        document.getElementById('home').scrollIntoView({
+
+    // Click handler - scroll to bottom
+    scrollToBottomBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
             behavior: 'smooth'
         });
     });
-    
+
+    // Click handler - scroll to top
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
     // Update on scroll
-    window.addEventListener('scroll', updateHomeArrow);
-    
+    window.addEventListener('scroll', updateScrollButtons);
+
     // Initial check
-    updateHomeArrow();
+    updateScrollButtons();
 });
