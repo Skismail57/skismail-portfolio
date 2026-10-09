@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 &middot; This page came unplugged</title>
+    <!--
+      Resolve style.css / script.js / fonts/* relative to the FOLDER this HTML was
+      served from, even when a SW serves this content at a deep URL such as
+      /portfolio/projects/case-study/. Prevents ERR_CONNECTION_REFUSED for
+      incorrectly resolved asset paths. Runs BEFORE <link> / <script src>.
+      Works at site-root OR in a subfolder install.
+    -->
+    <script data-unplugged-base="1">
+      (function () {
+        try {
+          if (document.querySelector('base')) return; // SW already injected one earlier
+          var loc = window.location;
+          var p = loc.pathname || '/';
+          var folder = '/unplugged-404/';
+          var b = document.createElement('base');
+          b.href = loc.protocol + '//' + loc.host + folder;
+          b.setAttribute('data-unplugged-base', '1');
+          document.head.insertBefore(b, document.head.firstChild);
+        } catch (_) {}
+      })();
+    </script>
+    <link rel="stylesheet" href="/unplugged-404/style.css" />
+    <!--
+      Pre-detect network state before anything runs. If the user is offline
+      (no Wi-Fi, no data, or the server can't be reached), the page renders
+      its OFFLINE variant (big OFFLINE + reconnect copy) instead of 404.
+      Flips back automatically when the network returns.
+
+      Offline sources (any wins):
+        1. navigator.onLine  === false
+        2. ?__offline=1 in the URL
+        3. window.__UNPLUGGED_START_OFFLINE pre-set to true (SW fallback)
+    -->
+    <script>
+      (function () {
+        try {
+          var forced = (typeof window.__UNPLUGGED_START_OFFLINE === 'boolean')
+            ? window.__UNPLUGGED_START_OFFLINE
+            : null;
+          var swFlag = /[?&]__offline=1(&|#|$)/.test(window.location.search);
+          var online = (typeof navigator !== 'undefined') ? !!navigator.onLine : true;
+          var startOffline = (forced !== null) ? forced : (swFlag || !online);
+
+          window.__UNPLUGGED_START_OFFLINE = startOffline;
+          if (startOffline) {
+            document.title = 'Offline \u00b7 Your connection came unplugged';
+            document.documentElement.setAttribute('data-net', 'offline');
+          } else {
+            document.documentElement.setAttribute('data-net', 'online');
+          }
+          function flip(net) {
+            document.documentElement.setAttribute('data-net', net);
+            if (net === 'offline') {
+              document.title = 'Offline \u00b7 Your connection came unplugged';
+            } else {
+              document.title = '404 \u00b7 This page came unplugged';
+            }
+          }
+          if (typeof window !== 'undefined' && window.addEventListener) {
+            window.addEventListener('online',  function () { flip('online');  });
+            window.addEventListener('offline', function () { flip('offline'); });
+          }
+        } catch (_) {}
+      })();
+
+      /* Register the unplugged service worker so any navigation failure on the
+         site (link clicked while offline) shows this unplugged page instead of
+         the browser's default "no internet" error. Works on mobile + desktop. */
+      (function () {
+        if ('serviceWorker' in navigator) {
+          var baseHref = '/unplugged-404/';
+          var swUrl = new URL('sw.js', window.location.origin + baseHref);
+          // Register after load so it never competes with the first paint.
+          window.addEventListener('load', function () {
+            navigator.serviceWorker
+              .register('/unplugged-404/sw.js', { scope: '/' })
+              .catch(function () { /* registration failures are non-fatal */ });
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

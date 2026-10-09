@@ -1,0 +1,479 @@
+/* Unplugged404.css: the not-found page that came unplugged.
+   susanoo.ui
+   ------------------------------------------------------------------------
+   The page fills the viewport (--up-page-height in tokens.css). Top to
+   bottom: a status line, the "screen" (404, heading, message, the way home)
+   and the rig: a desk against a wall, a socket, and the plug on its cable.
+   Colours, type and the hardware's finishes come from tokens.css.
+
+   Everything is scoped under .unplugged-root: no bare body/html/* rules, so
+   nothing leaks into the rest of your app.
+   ============================================================================ */
+
+/* Scoped reset: zero specificity via :where(), so the component renders the
+   same whether or not your app has its own CSS reset. */
+:where(.unplugged-root, .unplugged-root *, .unplugged-root *::before, .unplugged-root *::after) {
+  box-sizing: border-box;
+}
+:where(.unplugged-root) :where(button, a) { font: inherit; color: inherit; }
+:where(.unplugged-root) :where(h1, p) { margin: 0; }
+
+.unplugged-root {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: var(--up-page-height);
+  padding: 0 clamp(16px, 4vw, 40px);
+  overflow: hidden;                /* the cable hangs off the bottom edge */
+  overscroll-behavior: contain;    /* a drag of the plug never bounces the page behind it */
+  color: var(--text-primary);
+  background-color: var(--up-bg-off);
+  font-family: var(--font-sans);
+  letter-spacing: var(--tr-base);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 500ms var(--ease-out-quart);
+}
+.unplugged-root[data-power="on"] { background-color: var(--bg-canvas); }
+
+/* The light the screen throws once it's on. */
+.unplugged-root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(60% 55% at 50% 32%, rgba(var(--up-glow-rgb), var(--up-glow-strength)), transparent 72%);
+  opacity: 0;
+  transition: opacity 700ms var(--ease-out-quart);
+  pointer-events: none;
+}
+.unplugged-root[data-power="on"]::before { opacity: 1; }
+
+.up-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================== STATUS ============================== */
+.up-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  user-select: none;
+  transition: color 300ms var(--ease-out-quart);
+}
+.up-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  animation: up-blink 1.8s ease-in-out infinite;
+}
+[data-power="on"] .up-status { color: var(--text-secondary); }
+[data-power="on"] .up-status-dot {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  box-shadow: 0 0 10px rgba(var(--up-glow-rgb), 0.6);
+  animation: none;
+}
+
+/* ============================== SCREEN ============================== */
+/* Dim while unplugged. Only the look changes: it stays in the page for
+   screen readers, and keyboard focus inside it lights it up. */
+.up-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 640px;
+  padding: 28px 0 12px;
+  text-align: center;
+}
+[data-power="off"] .up-screen {
+  opacity: var(--up-dim);
+  animation: up-dead 6.4s linear infinite;
+}
+[data-power="off"] .up-screen:has(:focus-visible) { opacity: 1; animation: none; }
+
+.up-code {
+  font-size: var(--up-code-size);
+  font-weight: 650;
+  line-height: 0.84;
+  letter-spacing: -0.065em;
+  font-variant-numeric: tabular-nums;
+  /* nudge back the trailing negative tracking so it centres optically */
+  padding-right: 0.065em;
+  color: var(--text-primary);
+  text-shadow: var(--up-code-glow);
+  user-select: none;
+}
+/* Unlit it's an empty tube: just the outline of the glass. */
+[data-power="off"] .up-code {
+  color: transparent;
+  -webkit-text-stroke: max(1.5px, 0.008em) var(--up-tube);
+  text-shadow: none;
+  animation: up-strike 6.4s linear infinite;
+}
+.up-title {
+  margin-top: 26px;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: var(--tr-display);
+  text-wrap: balance;
+}
+.up-message {
+  max-width: 440px;
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+.up-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 22px;
+  margin-top: 28px;
+}
+.up-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px 0 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms var(--ease-out-quart), transform 160ms var(--ease-out-quart),
+    box-shadow 200ms var(--ease-out-quart);
+}
+.up-home:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.up-home:active { transform: translateY(0) scale(0.98); }
+.up-home svg { transition: transform 200ms var(--ease-out-quart); }
+.up-home:hover svg { transform: translateX(-2px); }
+.up-secondary {
+  padding: 6px 2px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 4px;
+  transition: color 160ms var(--ease-out-quart), text-decoration-color 160ms var(--ease-out-quart);
+}
+.up-secondary:hover { color: var(--text-primary); text-decoration-color: currentColor; }
+
+/* ================================ RIG =============================== */
+/* A desk against a wall, seen side on. The stage is measured in JS and the
+   hardware scales down (--up-k) on narrow screens. */
+.up-rig {
+  position: relative;
+  flex: none;
+  width: 100%;
+  max-width: 760px;
+}
+.up-stage {
+  position: relative;
+  height: var(--up-rig-height);
+  -webkit-tap-highlight-color: transparent;
+}
+.up-scene,
+.up-socket,
+.up-cable,
+.up-fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+/* Back to front: wall and desk, socket, cable, plug, spark. */
+.up-scene { z-index: 0; }
+.up-socket { z-index: 1; }
+.up-cable { z-index: 2; }
+.up-plug { z-index: 3; }
+.up-fx { z-index: 4; }
+
+.up-controls {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.up-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  user-select: none;
+  transition: opacity 300ms var(--ease-out-quart);
+}
+[data-power="on"] .up-hint { opacity: 0; }
+.up-fallback {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px 0 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated-1);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 160ms var(--ease-out-quart), background 160ms var(--ease-out-quart),
+    color 160ms var(--ease-out-quart), transform 160ms var(--ease-out-quart);
+}
+.up-fallback:hover { border-color: var(--text-tertiary); }
+.up-fallback:active { transform: scale(0.97); }
+[data-power="on"] .up-fallback {
+  border-color: var(--border-default);
+  background: transparent;
+  color: var(--text-tertiary);
+}
+[data-power="on"] .up-fallback:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+.up-home:focus-visible,
+.up-secondary:focus-visible,
+.up-fallback:focus-visible {
+  outline: 0;
+  box-shadow: var(--shadow-focus-ring);
+}
+.up-secondary:focus-visible { border-radius: 4px; }
+
+/* ---- The scene: wall and desk ---- */
+.up-stop-wall { stop-color: var(--up-wall); }
+.up-wall-line { fill: var(--up-wall-line); }
+.up-desk { fill: var(--up-desk); }
+.up-desk-edge { fill: var(--up-desk-edge); }
+
+/* ---- The cable ---- */
+.up-cable path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.up-cable-edge { stroke: var(--up-cable-edge); }
+.up-cable-body { stroke: var(--up-cable); }
+.up-cable-shine { stroke: var(--up-cable-shine); }
+
+/* ---- The plug ---- */
+/* The button's box is the plug's body; its right edge is the nose, which JS
+   positions. The pins overhang it. */
+.up-plug {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(62px * var(--up-k));
+  height: calc(32px * var(--up-k));
+  margin: calc(-16px * var(--up-k)) 0 0 calc(-62px * var(--up-k));
+  padding: 0;
+  border: 0;
+  border-radius: calc(8px * var(--up-k));
+  background: none;
+  cursor: grab;
+  touch-action: none;             /* the drag owns touch, not the page scroll */
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* A finger-sized hit area around a plug that's only 32px tall. */
+.up-plug::before { content: ''; position: absolute; inset: -10px -6px; }
+.up-plug svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(82px * var(--up-k));
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, var(--up-shadow)));
+}
+.unplugged-root.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.is-dragging .up-plug { cursor: grabbing; }
+.up-plug:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 5px;
+}
+.up-stop-plug-hi { stop-color: var(--up-plug-hi); }
+.up-stop-plug-lo { stop-color: var(--up-plug-lo); }
+.up-stop-pin-hi { stop-color: var(--up-pin-hi); }
+.up-stop-pin-lo { stop-color: var(--up-pin-lo); }
+.up-body { stroke: var(--up-plug-edge); stroke-width: 1; }
+.up-boot { fill: var(--up-plug-lo); stroke: var(--up-plug-edge); stroke-width: 1; }
+.up-groove { fill: none; stroke: var(--up-plug-groove); stroke-width: 1.4; stroke-linecap: round; }
+.up-sheen { fill: none; stroke: var(--up-plug-sheen); stroke-width: 1.2; stroke-linecap: round; }
+.up-face { fill: var(--up-plug-face); }
+
+/* ---- The socket ---- */
+.up-stop-socket-hi { stop-color: var(--up-socket-hi); }
+.up-stop-socket-lo { stop-color: var(--up-socket-lo); }
+.up-barrel { stroke: var(--up-socket-edge); stroke-width: 1; }
+.up-plate { fill: var(--up-plate); stroke: var(--up-socket-edge); stroke-width: 1; }
+.up-socket-face { fill: var(--up-socket-face); stroke: var(--up-socket-edge); stroke-width: 1; }
+.up-recess {
+  fill: var(--up-recess);
+  stroke: transparent;
+  stroke-width: 1.5;
+  transition: stroke 200ms var(--ease-out-quart);
+}
+/* While a drag is close enough to seat on release, the socket's mouth lights. */
+.is-near .up-recess { stroke: var(--up-near); }
+.up-hole { fill: var(--up-hole); }
+.up-led {
+  fill: var(--up-led-off);
+  transition: fill 200ms var(--ease-out-quart), filter 200ms var(--ease-out-quart);
+}
+[data-power="on"] .up-led {
+  fill: var(--up-led-on);
+  filter: drop-shadow(0 0 3px rgba(var(--up-light-rgb), 0.9));
+}
+
+/* ---- The spark: a flash and a few streaks from the gap ---- */
+.up-flash {
+  fill: rgba(var(--up-light-rgb), 0.5);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: up-flash 340ms ease-out forwards;
+  filter: blur(4px);
+}
+.up-ray {
+  fill: none;
+  stroke: rgb(var(--up-light-rgb));
+  stroke-width: calc(1.6px * var(--up-k));
+  stroke-linecap: round;
+  stroke-dasharray: 0.45 1.2;
+  stroke-dashoffset: 0.45;
+  animation: up-ray 300ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* ============================ FLICKER ============================ */
+/* Unplugged: the screen sits dim and tries to strike, soon after the page
+   opens and again every few seconds. The swings are small and slow, far
+   under any flash threshold. */
+@keyframes up-dead {
+  0%, 13%, 16.5%, 19%, 64%, 66.5%, 100% { opacity: var(--up-dim); }
+  14% { opacity: calc(var(--up-dim) * 1.45); }
+  15.5% { opacity: calc(var(--up-dim) * 0.8); }
+  17.5% { opacity: calc(var(--up-dim) * 1.25); }
+  65.2% { opacity: calc(var(--up-dim) * 1.3); }
+}
+@keyframes up-strike {
+  0%, 13%, 16.5%, 19%, 64%, 66.5%, 100% { color: transparent; }
+  14% { color: rgba(var(--up-light-rgb), 0.16); }
+  17.5% { color: rgba(var(--up-light-rgb), 0.08); }
+  65.2% { color: rgba(var(--up-light-rgb), 0.1); }
+}
+/* Plugged in: it catches, drops once, then holds. */
+.is-booting .up-screen { animation: up-boot 760ms linear 110ms both; }
+@keyframes up-boot {
+  0% { opacity: var(--up-dim); }
+  7% { opacity: 0.9; }
+  15% { opacity: 0.32; }
+  25% { opacity: 1; }
+  33% { opacity: 0.7; }
+  45%, 100% { opacity: 1; }
+}
+/* Unplugged: it fades out with one last gasp. */
+.is-dying .up-screen { animation: up-die 460ms linear both; }
+@keyframes up-die {
+  0% { opacity: 1; }
+  28% { opacity: 0.42; }
+  42% { opacity: 0.66; }
+  100% { opacity: var(--up-dim); }
+}
+@keyframes up-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes up-flash {
+  0% { opacity: 0; transform: scale(0.3); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+@keyframes up-ray {
+  0% { stroke-dashoffset: 0.45; opacity: 1; }
+  80% { opacity: 1; }
+  100% { stroke-dashoffset: -1; opacity: 0; }
+}
+
+/* ========================== REDUCED MOTION ========================== */
+/* No flicker, no spark, no fades: the state changes in one step. The JSX
+   also moves the plug without animating it and lets the cable settle at
+   once instead of swinging. */
+@media (prefers-reduced-motion: reduce) {
+  .unplugged-root,
+  .unplugged-root::before,
+  .up-status,
+  .up-hint,
+  .up-led,
+  .up-recess,
+  .up-home,
+  .up-home svg,
+  .up-fallback { transition: none !important; }
+  .up-screen,
+  .up-code,
+  .up-status-dot { animation: none !important; }
+  .up-spark { display: none; }
+}
+
+/* ============================== NARROW ============================== */
+/* The rig drops below the text and scales down (JS sets --up-k), and the
+   button moves out of the rig to sit on its own, full width. */
+@media (max-width: 560px) {
+  .unplugged-root {
+    --up-code-size: clamp(96px, 31vw, 150px);
+    --up-rig-height: 184px;
+  }
+  .up-status { margin-top: 20px; }
+  .up-screen { padding-top: 22px; }
+  .up-title { margin-top: 20px; font-size: 25px; }
+  .up-message { font-size: 15px; }
+  .up-actions { margin-top: 24px; }
+  .up-rig { margin-top: 14px; }
+  .up-controls {
+    position: static;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+    max-width: 340px;
+  }
+  .up-fallback {
+    justify-content: center;
+    width: 100%;
+    height: 46px;
+    font-size: 15px;
+  }
+  [data-power="on"] .up-fallback { width: auto; }
+}

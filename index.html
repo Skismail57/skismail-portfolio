@@ -22,6 +22,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#667eea">
 
+  <!-- Service Worker for Offline Support -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/unplugged-404/sw.js', { scope: '/' })
+          .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+
   <!-- Open Graph / Social Media Tags -->
   <meta property="og:title" content="S K Ismail | AIML Engineer & Full Stack Developer">
   <meta property="og:description" content="Portfolio of S K Ismail, AIML Engineer, Machine Learning Engineer, and Python Developer.">
