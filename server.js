@@ -26,7 +26,7 @@ const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 
 // Trust proxy for Render (fixes express-rate-limit warning)
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 
 // MongoDB connection - use environment variable or fallback to local
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
@@ -42,21 +42,30 @@ mongoose.connect(mongoUri)
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later'
+  message: 'Too many requests from this IP, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
 });
 
 // Strict rate limit for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // limit each IP to 5 login attempts per windowMs
-  message: 'Too many login attempts, please try again later'
+  message: 'Too many login attempts, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
 });
 
 // API rate limit
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 50, // limit each IP to 50 API requests per windowMs
-  message: 'Too many API requests, please try again later'
+  message: 'Too many API requests, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
 });
 
 // File upload configuration
