@@ -1254,12 +1254,6 @@ body.dark-mode .home-arrow {
   stroke-dashoffset: 201.06;
 }
 
-.progress-bg {
-  stroke: rgba(255, 255, 255, 0.2);
-  stroke-width: 3;
-  fill: none;
-}
-
 .progress-text {
   position: absolute;
   top: 50%;
