@@ -25,10 +25,20 @@ const PORT = process.env.PORT || 3000;
 const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 
-// Rate limiting
-const rateLimit = require('express-rate-limit');
+// Trust proxy for Render (fixes express-rate-limit warning)
+app.set('trust proxy', true);
 
-// General rate limit
+// MongoDB connection - use environment variable or fallback to local
+const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
+mongoose.connect(mongoUri)
+.then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+  console.log('Starting without MongoDB - using in-memory storage');
+});
+
+// Rate limiting
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
@@ -47,25 +57,6 @@ const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 50, // limit each IP to 50 API requests per windowMs
   message: 'Too many API requests, please try again later'
-});
-
-// Trust proxy for Render (fixes express-rate-limit warning)
-app.set('trust proxy', true);
-
-// MongoDB connection - use environment variable or fallback to local
-const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
-mongoose.connect(mongoUri)
-.then(() => {
-  console.log('Connected to MongoDB');
-}).catch(err => {
-  console.error('MongoDB connection error:', err);
-  console.log('Starting without MongoDB - using in-memory storage');
-});
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000 // limit each IP to 1000 requests per windowMs (increased for testing)
 });
 
 // File upload configuration
@@ -105,7 +96,6 @@ const upload = multer({
 });
 
 // Middleware
-app.use(limiter);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
