@@ -1236,12 +1236,14 @@ body.dark-mode .home-arrow {
   opacity: 1;
   visibility: visible;
   transition: all 0.3s ease;
+  filter: none;
 }
 
 .progress-circle svg {
   transform: rotate(-90deg);
   width: 100%;
   height: 100%;
+  filter: none;
 }
 
 .progress-bar {
@@ -1249,9 +1251,10 @@ body.dark-mode .home-arrow {
   stroke-linecap: round;
   stroke: #1dd1a1;
   stroke-width: 3;
-  fill: none;
+  fill: transparent;
   stroke-dasharray: 201.06;
   stroke-dashoffset: 201.06;
+  filter: none;
 }
 
 .progress-text {
@@ -1270,8 +1273,6 @@ body.dark-mode .home-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .scroll-percentage {
