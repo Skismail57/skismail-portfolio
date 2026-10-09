@@ -1924,8 +1924,7 @@ app.get('*', (req, res) => {
     return res.status(404).json({ error: 'Not found' });
   }
   
-  // For HTML requests (including admin routes), serve unplugged 404 page
-  // This allows the unplugged page to work for both portfolio and admin when offline
+  // For HTML requests, serve unplugged 404 page
   const acceptHeader = req.headers.get('accept') || '';
   if (acceptHeader.includes('text/html')) {
     return res.sendFile(__dirname + '/unplugged-404/index.html');
