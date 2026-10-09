@@ -65,16 +65,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const certificateName = item.querySelector('.certificate-name');
         certificateName.addEventListener('click', function(e) {
             e.stopPropagation();
-            
+
             // Toggle clicked state
             if (this.classList.contains('clicked')) {
                 this.classList.remove('clicked');
+                item.classList.remove('active');
             } else {
                 // Remove clicked class from all other certificates
                 document.querySelectorAll('.certificate-name').forEach(name => {
                     name.classList.remove('clicked');
                 });
+                document.querySelectorAll('.gallery-item').forEach(galleryItem => {
+                    galleryItem.classList.remove('active');
+                });
                 this.classList.add('clicked');
+                item.classList.add('active');
             }
         });
     });

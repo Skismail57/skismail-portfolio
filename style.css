@@ -2788,7 +2788,10 @@ body.dark-mode .gallery-subtitle {
   transition: all 0.4s ease;
   opacity: 1;
   transform: translateY(30px);
-  padding: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gallery-item.visible {
@@ -2800,7 +2803,7 @@ body.dark-mode .gallery-subtitle {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: top;
+  object-position: center;
   transition: transform 0.3s ease;
   background: white;
   border-radius: 4px;
@@ -2832,6 +2835,12 @@ body.dark-mode .gallery-subtitle {
   transform: translateY(-10px) scale(1.02);
   box-shadow: 0 15px 40px rgba(10,102,194,0.3);
   border-color: #0a66c2;
+}
+
+.gallery-item.active {
+  border-color: #0a66c2;
+  box-shadow: 0 15px 40px rgba(10,102,194,0.3);
+  padding: 12px;
 }
 
 .gallery-item img {
@@ -2871,6 +2880,12 @@ body.dark-mode .gallery-subtitle {
 
 .gallery-name.show {
   display: block;
+}
+
+.gallery-name.clicked {
+  color: #0a66c2;
+  font-weight: 700;
+  background: #f0f8ff;
 }
 
 @keyframes fadeIn {
@@ -4019,6 +4034,11 @@ h1, h2, h3, h4, h5, h6 {
 .certificate-name {
   font-family: var(--font-variable);
   font-weight: 500;
+}
+
+.certificate-name.clicked {
+  color: #0a66c2;
+  font-weight: 600;
 }
 
 .section-title {
