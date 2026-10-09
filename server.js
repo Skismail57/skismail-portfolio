@@ -16,10 +16,34 @@ require('dotenv').config();
 // Import models
 const User = require('./models/User');
 const Contact = require('./models/Contact');
-const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings, Profile, About, Social, Theme, Experience, Download, EmailTemplate, Maintenance } = require('./models/Analytics');
+const { Visitor, ProjectView, ResumeDownload, Skill, Certificate, Project, GallerySettings, Profile, About, Social, Theme, Experience, Download, EmailTemplate, Maintenance, AuditLog } = require('./models/Analytics');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Rate limiting
+const rateLimit = require('express-rate-limit');
+
+// General rate limit
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later'
+});
+
+// Strict rate limit for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 login attempts per windowMs
+  message: 'Too many login attempts, please try again later'
+});
+
+// API rate limit
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limit each IP to 50 API requests per windowMs
+  message: 'Too many API requests, please try again later'
+});
 
 // Trust proxy for Render (fixes express-rate-limit warning)
 app.set('trust proxy', true);
@@ -251,14 +275,89 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+// Audit logging middleware
+const auditLog = (action) => {
+  return async (req, res, next) => {
+    const originalSend = res.send;
+    res.send = function(data) {
+      // Log only on success
+      if (res.statusCode < 400) {
+        const logEntry = {
+          userId: req.session.user?.id,
+          username: req.session.user?.username,
+          action: action,
+          details: {
+            method: req.method,
+            path: req.path,
+            body: req.body
+          },
+          ip: req.ip || req.connection.remoteAddress,
+          userAgent: req.headers['user-agent']
+        };
+        
+        AuditLog.create(logEntry).catch(err => console.error('Audit log error:', err));
+      }
+      originalSend.call(this, data);
+    };
+    next();
+  };
+};
+
 // Maintenance mode middleware (before serving static files)
 app.use(async (req, res, next) => {
   try {
     const maintenance = await Maintenance.findOne();
     if (maintenance && maintenance.status === 'on') {
+      // Check if IP is whitelisted
+      const clientIP = req.ip || req.connection.remoteAddress;
+      if (maintenance.whitelistedIPs && maintenance.whitelistedIPs.includes(clientIP)) {
+        return next(); // Allow whitelisted IPs
+      }
+
       if (req.path.startsWith('/admin') || req.path.startsWith('/api')) {
         return next(); // Allow admin access and API calls even in maintenance
       }
+
+      // Use custom HTML if provided, otherwise use default
+      if (maintenance.customHtml && maintenance.customHtml.trim()) {
+        let html = maintenance.customHtml;
+        
+        // Replace countdown placeholder if endTime is set
+        if (maintenance.endTime) {
+          const now = new Date();
+          const endTime = new Date(maintenance.endTime);
+          const diff = endTime - now;
+          
+          if (diff > 0) {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            html = html.replace('{{COUNTDOWN}}', `${hours}h ${minutes}m ${seconds}s`);
+          } else {
+            html = html.replace('{{COUNTDOWN}}', 'Maintenance ending soon');
+          }
+        } else {
+          html = html.replace('{{COUNTDOWN}}', '');
+        }
+        
+        return res.status(503).send(html);
+      }
+
+      // Default maintenance page
+      let countdownText = '';
+      if (maintenance.endTime) {
+        const now = new Date();
+        const endTime = new Date(maintenance.endTime);
+        const diff = endTime - now;
+        
+        if (diff > 0) {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          countdownText = `<p style="font-size: 1.5rem; margin-top: 20px;">⏱️ Estimated time remaining: ${hours}h ${minutes}m ${seconds}s</p>`;
+        }
+      }
+
       return res.status(503).send(`
         <html>
         <head>
@@ -282,6 +381,7 @@ app.use(async (req, res, next) => {
         <body>
           <h1>🔧 Maintenance Mode</h1>
           <p>${maintenance.message || "Site is under maintenance. We'll be back soon!"}</p>
+          ${countdownText}
         </body>
         </html>
       `);
@@ -421,6 +521,13 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
+
+// Apply rate limiters
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/forgot-password', authLimiter);
+app.use('/api/auth/verify-otp', authLimiter);
+app.use('/api/auth/reset-password', authLimiter);
+app.use('/api', apiLimiter);
 
 // Clean up bot visits from database
 app.post('/api/analytics/cleanup-bots', requireAuth, async (req, res) => {
@@ -577,7 +684,7 @@ app.get('/api/skills', async (req, res) => {
   }
 });
 
-app.post('/api/skills', requireAuth, async (req, res) => {
+app.post('/api/skills', requireAuth, auditLog('CREATE_SKILL'), async (req, res) => {
   try {
     const { name, description, icon, level, proficiency, tags } = req.body;
     const newSkill = new Skill({ name, description, icon, level, proficiency, tags });
@@ -588,7 +695,7 @@ app.post('/api/skills', requireAuth, async (req, res) => {
   }
 });
 
-app.delete('/api/skills/:id', requireAuth, async (req, res) => {
+app.delete('/api/skills/:id', requireAuth, auditLog('DELETE_SKILL'), async (req, res) => {
   try {
     const { id } = req.params;
     await Skill.findByIdAndDelete(id);
@@ -609,7 +716,7 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
-app.post('/api/projects', requireAuth, async (req, res) => {
+app.post('/api/projects', requireAuth, auditLog('CREATE_PROJECT'), async (req, res) => {
   try {
     const { name, description, github, image, size, category, tags } = req.body;
     const newProject = new Project({ name, description, github, image, size, category, tags });
@@ -620,7 +727,7 @@ app.post('/api/projects', requireAuth, async (req, res) => {
   }
 });
 
-app.delete('/api/projects/:id', requireAuth, async (req, res) => {
+app.delete('/api/projects/:id', requireAuth, auditLog('DELETE_PROJECT'), async (req, res) => {
   try {
     const { id } = req.params;
     await Project.findByIdAndDelete(id);
@@ -833,7 +940,7 @@ app.get('/api/certificates', async (req, res) => {
   }
 });
 
-app.post('/api/certificates', requireAuth, async (req, res) => {
+app.post('/api/certificates', requireAuth, auditLog('CREATE_CERTIFICATE'), async (req, res) => {
   try {
     const { filename, description } = req.body;
     const newCertificate = new Certificate({ filename, description });
@@ -844,7 +951,7 @@ app.post('/api/certificates', requireAuth, async (req, res) => {
   }
 });
 
-app.delete('/api/certificates/:id', requireAuth, async (req, res) => {
+app.delete('/api/certificates/:id', requireAuth, auditLog('DELETE_CERTIFICATE'), async (req, res) => {
   try {
     const { id } = req.params;
     await Certificate.findByIdAndDelete(id);
@@ -1483,7 +1590,7 @@ app.get('/api/experience', async (req, res) => {
   }
 });
 
-app.post('/api/experience', requireAuth, async (req, res) => {
+app.post('/api/experience', requireAuth, auditLog('CREATE_EXPERIENCE'), async (req, res) => {
   try {
     const { company, title, startDate, endDate, description, skills } = req.body;
     const experience = new Experience({ company, title, startDate, endDate, description, skills });
@@ -1494,7 +1601,7 @@ app.post('/api/experience', requireAuth, async (req, res) => {
   }
 });
 
-app.delete('/api/experience/:id', requireAuth, async (req, res) => {
+app.delete('/api/experience/:id', requireAuth, auditLog('DELETE_EXPERIENCE'), async (req, res) => {
   try {
     await Experience.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Experience deleted successfully' });
@@ -1513,7 +1620,7 @@ app.get('/api/downloads', async (req, res) => {
   }
 });
 
-app.post('/api/downloads', requireAuth, async (req, res) => {
+app.post('/api/downloads', requireAuth, auditLog('CREATE_DOWNLOAD'), async (req, res) => {
   try {
     const { name, type, url } = req.body;
     const download = new Download({ name, type, url });
@@ -1524,7 +1631,7 @@ app.post('/api/downloads', requireAuth, async (req, res) => {
   }
 });
 
-app.delete('/api/downloads/:id', requireAuth, async (req, res) => {
+app.delete('/api/downloads/:id', requireAuth, auditLog('DELETE_DOWNLOAD'), async (req, res) => {
   try {
     await Download.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Download deleted successfully' });
@@ -1554,7 +1661,7 @@ app.get('/api/export', requireAuth, async (req, res) => {
 });
 
 // Import API
-app.post('/api/import', requireAuth, async (req, res) => {
+app.post('/api/import', requireAuth, auditLog('IMPORT_DATA'), async (req, res) => {
   try {
     const data = req.body;
     
@@ -1638,20 +1745,30 @@ app.post('/api/email-templates', requireAuth, async (req, res) => {
 // Maintenance Mode APIs
 app.get('/api/maintenance', async (req, res) => {
   try {
-    const maintenance = await Maintenance.findOne() || { status: 'off', message: '' };
+    const maintenance = await Maintenance.findOne() || { status: 'off', message: '', customHtml: '', endTime: null, whitelistedIPs: [] };
     res.json(maintenance);
   } catch (error) {
     res.status(500).json({ error: 'Failed to load maintenance mode' });
   }
 });
 
-app.post('/api/maintenance', requireAuth, async (req, res) => {
+app.post('/api/maintenance', requireAuth, auditLog('UPDATE_MAINTENANCE'), async (req, res) => {
   try {
-    const { status, message } = req.body;
-    await Maintenance.findOneAndUpdate({}, { status, message }, { upsert: true });
+    const { status, message, customHtml, endTime, whitelistedIPs } = req.body;
+    await Maintenance.findOneAndUpdate({}, { status, message, customHtml, endTime, whitelistedIPs }, { upsert: true });
     res.json({ success: true, message: 'Maintenance mode updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update maintenance mode' });
+  }
+});
+
+// Audit Log APIs
+app.get('/api/audit-logs', requireAuth, async (req, res) => {
+  try {
+    const logs = await AuditLog.find().sort({ timestamp: -1 }).limit(100);
+    res.json(logs);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load audit logs' });
   }
 });
 
