@@ -611,8 +611,8 @@ app.get('/api/projects', async (req, res) => {
 
 app.post('/api/projects', requireAuth, async (req, res) => {
   try {
-    const { name, description, github, image, size, tags } = req.body;
-    const newProject = new Project({ name, description, github, image, size, tags });
+    const { name, description, github, image, size, category, tags } = req.body;
+    const newProject = new Project({ name, description, github, image, size, category, tags });
     await newProject.save();
     res.json(newProject);
   } catch (error) {

@@ -111,6 +111,11 @@ const projectSchema = new mongoose.Schema({
     enum: ['small', 'medium', 'large'],
     default: 'medium'
   },
+  category: {
+    type: String,
+    enum: ['AI/ML', 'Web Development', 'Mobile Apps', 'Data Science', 'Blockchain', 'Other'],
+    default: 'Other'
+  },
   tags: {
     type: String,
     default: ''
