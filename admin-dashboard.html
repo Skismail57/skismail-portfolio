@@ -1156,6 +1156,17 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>📂 Category</label>
+                        <select id="projectCategory" style="width: 100%; padding: 14px 16px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 10px; color: #fff; font-size: 14px; cursor: pointer;">
+                            <option value="AI/ML">AI/ML</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Mobile Apps">Mobile Apps</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Blockchain">Blockchain</option>
+                            <option value="Other" selected>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>🏷️ Tags (comma separated)</label>
                         <input type="text" id="projectTags" placeholder="e.g., ai, python, web">
                     </div>
@@ -2072,6 +2083,7 @@
                     <div class="skill-card">
                         <span class="skill-icon">📁</span>
                         <h4>${project.name}</h4>
+                        ${project.category ? `<span style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; margin-bottom: 10px;">${project.category}</span>` : ''}
                         ${project.image ? `<img src="${project.image}" alt="${project.name}" style="width: 100%; height: ${project.size === 'small' ? '200px' : project.size === 'large' ? '400px' : '300px'}; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">` : ''}
                         <p>${project.description}</p>
                         ${tagsHtml ? `<div class="skill-tags">${tagsHtml}</div>` : ''}
@@ -2091,6 +2103,7 @@
             const github = document.getElementById('projectGithub').value;
             const image = document.getElementById('projectImage').value;
             const size = document.getElementById('projectSize').value;
+            const category = document.getElementById('projectCategory').value;
             const tags = document.getElementById('projectTags').value;
 
             if (!name || !description) {
@@ -2102,7 +2115,7 @@
                 await fetch('/api/projects', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, description, github, image, size, tags }),
+                    body: JSON.stringify({ name, description, github, image, size, category, tags }),
                     credentials: 'include'
                 });
 
@@ -2111,6 +2124,7 @@
                 document.getElementById('projectGithub').value = '';
                 document.getElementById('projectImage').value = '';
                 document.getElementById('projectSize').value = 'medium';
+                document.getElementById('projectCategory').value = 'Other';
                 document.getElementById('projectTags').value = '';
 
                 loadProjects();
