@@ -5,62 +5,51 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectBoxes = document.querySelectorAll('.project-box');
   const projectSection = document.getElementById('projects');
 
-  // Initialize projects - remove all animation classes
+  // Initialize projects - set initial hidden state
   projectBoxes.forEach(box => {
-    box.classList.remove('project-in-view', 'slide-left', 'slide-right', 'fade-up');
+    box.style.opacity = '0';
+    box.style.transform = 'translateY(40px)';
+    box.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
   });
 
-  // One-by-one project entrance animation with enhanced effects
+  // One-by-one project entrance animation with fade-up effect
   function animateProjectsOneByOne() {
     const visibleProjects = Array.from(projectBoxes).filter(box =>
       box.style.display !== 'none' && getComputedStyle(box).display !== 'none'
     );
 
-    // Remove animation classes from all visible projects first
+    // Reset all visible projects to hidden state
     visibleProjects.forEach(project => {
-      project.classList.remove('project-in-view', 'slide-left', 'slide-right', 'fade-up');
+      project.style.opacity = '0';
+      project.style.transform = 'translateY(40px)';
     });
 
-    // Add animation class one by one with staggered delay
+    // Animate each card with staggered delay (100-150ms)
     visibleProjects.forEach((project, index) => {
       setTimeout(() => {
-        // Add fade-up entrance effect
-        project.classList.add('fade-up');
-
-        // Alternate between left and right slide for wave effect
-        if (index % 2 === 0) {
-          project.classList.add('slide-left');
-        } else {
-          project.classList.add('slide-right');
-        }
-
-        // Force a reflow to ensure the class change is recognized
-        void project.offsetWidth;
-
-        // Then add the in-view class to trigger the final animation
-        requestAnimationFrame(() => {
-          project.classList.add('project-in-view');
-        });
-      }, index * 120); // 120ms delay between each card for smoother stagger
+        project.style.opacity = '1';
+        project.style.transform = 'translateY(0)';
+      }, index * 100); // 100ms staggered delay
     });
   }
 
-  // Trigger animation when project section comes into view with threshold
+  // Trigger animation when project section comes into view
   const projectSectionObserver = new IntersectionObserver(function(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Reset all projects
+        // Reset all projects to hidden state
         projectBoxes.forEach(box => {
-          box.classList.remove('project-in-view', 'slide-left', 'slide-right', 'fade-up');
+          box.style.opacity = '0';
+          box.style.transform = 'translateY(40px)';
         });
 
-        // Start one-by-one animation with slight delay
+        // Start staggered animation
         setTimeout(() => {
           animateProjectsOneByOne();
-        }, 150);
+        }, 100);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
   if (projectSection) {
     projectSectionObserver.observe(projectSection);
@@ -95,7 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Filter projects with animation
       projectBoxes.forEach(box => {
-        box.classList.remove('project-in-view', 'slide-left', 'slide-right', 'fade-up');
+        box.style.opacity = '0';
+        box.style.transform = 'translateY(40px)';
 
         if (filterValue === 'all' || box.getAttribute('data-category') === filterValue) {
           box.style.display = 'flex';
@@ -111,14 +101,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Enhanced hover effects via CSS classes
+  // Enhanced hover effects - lift and image zoom
   projectBoxes.forEach(box => {
     box.addEventListener('mouseenter', () => {
-      box.classList.add('project-hover');
+      box.style.transform = 'translateY(-8px)';
+      box.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
+      box.style.borderColor = 'rgba(10, 102, 194, 0.5)';
+      box.style.zIndex = '10';
+
+      const img = box.querySelector('.project-image img');
+      if (img) {
+        img.style.transform = 'scale(1.05)';
+      }
     });
 
     box.addEventListener('mouseleave', () => {
-      box.classList.remove('project-hover');
+      box.style.transform = 'translateY(0)';
+      box.style.boxShadow = '';
+      box.style.borderColor = '';
+      box.style.zIndex = '';
+
+      const img = box.querySelector('.project-image img');
+      if (img) {
+        img.style.transform = 'scale(1)';
+      }
     });
   });
 });
