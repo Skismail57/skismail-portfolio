@@ -5,11 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectBoxes = document.querySelectorAll('.project-box');
   const projectSection = document.getElementById('projects');
 
-  // Initialize projects - set initial hidden state
+  // Initialize projects - remove animation classes
   projectBoxes.forEach(box => {
-    box.style.opacity = '0';
-    box.style.transform = 'translateY(40px)';
-    box.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    box.classList.remove('project-animate-in');
   });
 
   // One-by-one project entrance animation with fade-up effect
@@ -18,17 +16,15 @@ document.addEventListener('DOMContentLoaded', function() {
       box.style.display !== 'none' && getComputedStyle(box).display !== 'none'
     );
 
-    // Reset all visible projects to hidden state
+    // Remove animation class from all visible projects
     visibleProjects.forEach(project => {
-      project.style.opacity = '0';
-      project.style.transform = 'translateY(40px)';
+      project.classList.remove('project-animate-in');
     });
 
     // Animate each card with staggered delay (100-150ms)
     visibleProjects.forEach((project, index) => {
       setTimeout(() => {
-        project.style.opacity = '1';
-        project.style.transform = 'translateY(0)';
+        project.classList.add('project-animate-in');
       }, index * 100); // 100ms staggered delay
     });
   }
@@ -37,10 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectSectionObserver = new IntersectionObserver(function(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Reset all projects to hidden state
+        // Reset all projects
         projectBoxes.forEach(box => {
-          box.style.opacity = '0';
-          box.style.transform = 'translateY(40px)';
+          box.classList.remove('project-animate-in');
         });
 
         // Start staggered animation
@@ -49,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
 
   if (projectSection) {
     projectSectionObserver.observe(projectSection);
@@ -84,8 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Filter projects with animation
       projectBoxes.forEach(box => {
-        box.style.opacity = '0';
-        box.style.transform = 'translateY(40px)';
+        box.classList.remove('project-animate-in');
 
         if (filterValue === 'all' || box.getAttribute('data-category') === filterValue) {
           box.style.display = 'flex';
@@ -98,33 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => {
         animateProjectsOneByOne();
       }, 100);
-    });
-  });
-
-  // Enhanced hover effects - lift and image zoom
-  projectBoxes.forEach(box => {
-    box.addEventListener('mouseenter', () => {
-      box.style.transform = 'translateY(-8px)';
-      box.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
-      box.style.borderColor = 'rgba(10, 102, 194, 0.5)';
-      box.style.zIndex = '10';
-
-      const img = box.querySelector('.project-image img');
-      if (img) {
-        img.style.transform = 'scale(1.05)';
-      }
-    });
-
-    box.addEventListener('mouseleave', () => {
-      box.style.transform = 'translateY(0)';
-      box.style.boxShadow = '';
-      box.style.borderColor = '';
-      box.style.zIndex = '';
-
-      const img = box.querySelector('.project-image img');
-      if (img) {
-        img.style.transform = 'scale(1)';
-      }
     });
   });
 });
