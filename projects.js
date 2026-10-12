@@ -27,8 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
 
-      // Refresh GSAP ScrollTrigger after filtering
-      ScrollTrigger.refresh();
+      // Refresh GSAP ScrollTrigger after filtering if available
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+      }
     });
   });
 });

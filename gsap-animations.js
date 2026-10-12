@@ -1,132 +1,163 @@
 // GSAP Animations - Professional Scroll-Linked Effects & Micro-Interactions
-document.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('load', function() {
+  console.log('GSAP Animations: Window loaded, initializing...');
+  
+  // Check if GSAP is loaded
+  if (typeof gsap === 'undefined') {
+    console.error('GSAP is not loaded!');
+    return;
+  }
+  
   // Register GSAP plugins
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  console.log('GSAP Animations: Plugins registered');
 
   // ===== HERO SECTION ANIMATIONS =====
-  const heroTimeline = gsap.timeline();
+  // Check if hero content exists
+  const heroContent = document.querySelector('.hero-content');
+  if (heroContent) {
+    const heroTimeline = gsap.timeline();
 
-  // Fade in hero content
-  heroTimeline
-    .from('.hero-content h1', {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      ease: 'power3.out'
-    })
-    .from('.hero-content p', {
-      opacity: 0,
-      y: 30,
-      duration: 0.8,
-      ease: 'power3.out'
-    }, '-=0.5')
-    .from('.hero-content .about-btn, .hero-content .projects-btn', {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power3.out'
-    }, '-=0.4');
+    // Fade in hero content
+    heroTimeline
+      .from('.hero-content h1', {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        ease: 'power3.out'
+      })
+      .from('.hero-content p', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      }, '-=0.5')
+      .from('.hero-content .about-btn, .hero-content .projects-btn', {
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out'
+      }, '-=0.4');
+  }
 
   // ===== PROJECT CARDS ANIMATIONS =====
   // Scroll-triggered reveal with stagger
-  gsap.from('.project-box', {
-    scrollTrigger: {
-      trigger: '.project-container',
-      start: 'top 80%',
-      end: 'bottom 20%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    y: 60,
-    scale: 0.95,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: 'power3.out',
-    clearProps: 'all' // Clear inline styles after animation
-  });
-
-  // ===== GALLERY ITEMS ANIMATIONS =====
-  gsap.from('.gallery-item', {
-    scrollTrigger: {
-      trigger: '.gallery-container',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    x: -50,
-    duration: 0.8,
-    stagger: 0.1,
-    ease: 'power3.out'
-  });
-
-  // ===== SKILL ICONS ANIMATIONS =====
-  gsap.from('.icon-box', {
-    scrollTrigger: {
-      trigger: '#expertise',
-      start: 'top 75%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    scale: 0.8,
-    rotation: -10,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: 'back.out(1.7)'
-  });
-
-  // ===== ABOUT SECTION ANIMATIONS =====
-  gsap.from('.about-container', {
-    scrollTrigger: {
-      trigger: '#about',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    x: -50,
-    duration: 1,
-    ease: 'power3.out'
-  });
-
-  gsap.from('.about-text', {
-    scrollTrigger: {
-      trigger: '#about',
-      start: 'top 75%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    x: 50,
-    duration: 1,
-    ease: 'power3.out'
-  });
-
-  // ===== CONTACT SECTION ANIMATIONS =====
-  gsap.from('.contact-container', {
-    scrollTrigger: {
-      trigger: '#contact',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    y: 50,
-    duration: 0.8,
-    ease: 'power3.out'
-  });
-
-  // ===== SECTION TITLES ANIMATIONS =====
-  gsap.utils.toArray('.section-title').forEach(title => {
-    gsap.from(title, {
+  const projectContainer = document.querySelector('.project-container');
+  if (projectContainer) {
+    gsap.from('.project-box', {
       scrollTrigger: {
-        trigger: title,
-        start: 'top 85%',
+        trigger: '.project-container',
+        start: 'top 80%',
+        end: 'bottom 20%',
         toggleActions: 'play none none reverse'
       },
       opacity: 0,
-      y: 30,
+      y: 60,
+      scale: 0.95,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: 'power3.out',
+      clearProps: 'all' // Clear inline styles after animation
+    });
+  }
+
+  // ===== GALLERY ITEMS ANIMATIONS =====
+  const galleryContainer = document.querySelector('.gallery-container');
+  if (galleryContainer) {
+    gsap.from('.gallery-item', {
+      scrollTrigger: {
+        trigger: '.gallery-container',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 0,
+      x: -50,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: 'power3.out'
+    });
+  }
+
+  // ===== SKILL ICONS ANIMATIONS =====
+  const expertiseSection = document.querySelector('#expertise');
+  if (expertiseSection) {
+    gsap.from('.icon-box', {
+      scrollTrigger: {
+        trigger: '#expertise',
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 0,
+      scale: 0.8,
+      rotation: -10,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: 'back.out(1.7)'
+    });
+  }
+
+  // ===== ABOUT SECTION ANIMATIONS =====
+  const aboutSection = document.querySelector('#about');
+  if (aboutSection) {
+    gsap.from('.about-container', {
+      scrollTrigger: {
+        trigger: '#about',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 0,
+      x: -50,
+      duration: 1,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.about-text', {
+      scrollTrigger: {
+        trigger: '#about',
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 0,
+      x: 50,
+      duration: 1,
+      ease: 'power3.out'
+    });
+  }
+
+  // ===== CONTACT SECTION ANIMATIONS =====
+  const contactSection = document.querySelector('#contact');
+  if (contactSection) {
+    gsap.from('.contact-container', {
+      scrollTrigger: {
+        trigger: '#contact',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 0,
+      y: 50,
       duration: 0.8,
       ease: 'power3.out'
     });
-  });
+  }
+
+  // ===== SECTION TITLES ANIMATIONS =====
+  const sectionTitles = document.querySelectorAll('.section-title');
+  if (sectionTitles.length > 0) {
+    sectionTitles.forEach(title => {
+      gsap.from(title, {
+        scrollTrigger: {
+          trigger: title,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        },
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+    });
+  }
 
   // ===== MICRO-INTERACTIONS =====
   
@@ -165,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const projectCards = document.querySelectorAll('.project-box');
   
   projectCards.forEach(card => {
+    const cardImage = card.querySelector('.project-image img');
     card.addEventListener('mouseenter', () => {
       gsap.to(card, {
         y: -10,
@@ -173,11 +205,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ease: 'power2.out'
       });
       
-      gsap.to(card.querySelector('.project-image img'), {
-        scale: 1.05,
-        duration: 0.4,
-        ease: 'power2.out'
-      });
+      if (cardImage) {
+        gsap.to(cardImage, {
+          scale: 1.05,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      }
     });
 
     card.addEventListener('mouseleave', () => {
@@ -188,11 +222,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ease: 'power2.out'
       });
       
-      gsap.to(card.querySelector('.project-image img'), {
-        scale: 1,
-        duration: 0.4,
-        ease: 'power2.out'
-      });
+      if (cardImage) {
+        gsap.to(cardImage, {
+          scale: 1,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      }
     });
   });
 
@@ -241,16 +277,19 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ===== PARALLAX EFFECT =====
-  gsap.to('.hero-bg', {
-    scrollTrigger: {
-      trigger: '#home',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true
-    },
-    y: 100,
-    ease: 'none'
-  });
+  const heroBg = document.querySelector('.hero-bg');
+  if (heroBg) {
+    gsap.to('.hero-bg', {
+      scrollTrigger: {
+        trigger: '#home',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      },
+      y: 100,
+      ease: 'none'
+    });
+  }
 
   // ===== SMOOTH SCROLL FOR NAV LINKS =====
   const navLinks = document.querySelectorAll('.nav-link');
@@ -274,39 +313,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // ===== PROGRESS INDICATOR ANIMATION =====
-  gsap.to('.progress-bar', {
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.3
-    },
-    strokeDashoffset: 0,
-    ease: 'none'
-  });
-
   // ===== NAVBAR TRANSITION =====
   const navbar = document.querySelector('nav');
-  
-  ScrollTrigger.create({
-    start: 'top -50',
-    end: 99999,
-    toggleClass: { className: 'scrolled', targets: navbar }
-  });
+  if (navbar) {
+    ScrollTrigger.create({
+      start: 'top -50',
+      end: 99999,
+      toggleClass: { className: 'scrolled', targets: navbar }
+    });
+  }
 
   // ===== FOOTER ANIMATION =====
-  gsap.from('.footer', {
-    scrollTrigger: {
-      trigger: '.footer',
-      start: 'top 95%',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    y: 30,
-    duration: 0.8,
-    ease: 'power3.out'
-  });
+  const footer = document.querySelector('.footer');
+  if (footer) {
+    gsap.from('.footer', {
+      scrollTrigger: {
+        trigger: '.footer',
+        start: 'top 95%',
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      ease: 'power3.out'
+    });
+  }
 
   console.log('GSAP Animations loaded successfully!');
 });
