@@ -688,6 +688,7 @@ nav.scrolled {
   background: rgba(128, 128, 128, 0.7) !important;
   backdrop-filter: blur(10px) !important;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease;
 }
 
 body.dark-mode nav.scrolled {
@@ -2382,20 +2383,9 @@ body.dark-mode .search-highlight {
   50% { translate: 0 -6px 0; }
 }
 
-/* Project card entrance animation */
-.project-box.project-animate-in {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.project-box.project-in-view:hover {
+/* Hover state for project cards (GSAP handles entrance animation) */
+.project-box:hover {
   animation-play-state: running;
-}
-
-/* Hover state override for animated cards */
-.project-box.project-animate-in:hover {
-  transform: translateY(-8px) !important;
 }
 
 body.dark-mode .project-box {
