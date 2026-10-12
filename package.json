@@ -5,7 +5,17 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open",
+    "build": "echo 'Build step placeholder'"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -27,7 +37,12 @@
     "speakeasy": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.1",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "cypress": "^13.6.2"
   },
   "keywords": [
     "portfolio",
