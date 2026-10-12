@@ -297,30 +297,16 @@ body.dark-mode .skeleton {
   border-radius: 16px;
 }
 
-/* Image loading states */
+/* Image loading states - simplified for speed */
 img:not([src]),
-img[src=""],
-img[data-loading="true"] {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
+img[src=""] {
+  background: #f0f0f0;
   min-height: 100px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-img[src]:not([src=""]) {
-  opacity: 1;
 }
 
 body.dark-mode img:not([src]),
-body.dark-mode img[src=""],
-body.dark-mode img[data-loading="true"] {
-  background: linear-gradient(90deg, #2d1b4e 25%, #1a0a2e 50%, #2d1b4e 75%);
-}
-
-body.dark-mode img[src]:not([src=""]) {
-  opacity: 1;
+body.dark-mode img[src=""] {
+  background: #2d1b4e;
 }
 
 /* ===== TEXT GRADIENTS ===== */
@@ -4916,60 +4902,27 @@ body.dark-mode .contact-form input[type="file"] {
   width: 100%;
   height: auto;
   object-fit: contain;
-  image-rendering: auto;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
 .hero-bg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
 .about-container img {
   max-width: 100%;
   height: auto;
   object-fit: cover;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
-/* Hardware acceleration for smooth rendering */
-.project-box, .gallery-item, .hero-bg, .about-container {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-perspective: 1000;
-  perspective: 1000;
-}
-
-/* Improve image loading transition */
-img[loading="lazy"] {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-img[loading="lazy"].loaded {
+/* Simplified image loading - no heavy transitions */
+img {
   opacity: 1;
 }
