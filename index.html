@@ -899,7 +899,7 @@
     </button>
 
 <script>
-// Image error handling to prevent stuck images
+// Image error handling to prevent stuck images and icon animation
 document.addEventListener('DOMContentLoaded', function() {
   const images = document.querySelectorAll('img');
   images.forEach(img => {
@@ -917,17 +917,14 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.opacity = '1';
     });
   });
-});
-</script>
 
-<script>
-const icons = document.querySelectorAll('.icon-box');
-const section = document.querySelector('#expertise');
+  const icons = document.querySelectorAll('.icon-box');
+  const section = document.querySelector('#expertise');
 
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            icons.forEach(icon => {
+  const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+          if (entry.isIntersecting) {
+              icons.forEach(icon => {
                 icon.classList.add('show');
             });
         }
@@ -947,9 +944,7 @@ icons.forEach(iconBox => {
         this.classList.toggle('active');
     });
 });
-</script>
 
-<script>
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.icon-box')) {
         icons.forEach(box => {
@@ -957,6 +952,9 @@ document.addEventListener('click', function(e) {
         });
     }
 });
+</script>
+
+<script>
 
 // AI Video Modal
 const aiVideoBtn = document.getElementById('aiVideoBtn');
