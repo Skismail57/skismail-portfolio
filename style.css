@@ -305,12 +305,22 @@ img[data-loading="true"] {
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
   min-height: 100px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+img[src]:not([src=""]) {
+  opacity: 1;
 }
 
 body.dark-mode img:not([src]),
 body.dark-mode img[src=""],
 body.dark-mode img[data-loading="true"] {
   background: linear-gradient(90deg, #2d1b4e 25%, #1a0a2e 50%, #2d1b4e 75%);
+}
+
+body.dark-mode img[src]:not([src=""]) {
+  opacity: 1;
 }
 
 /* ===== TEXT GRADIENTS ===== */

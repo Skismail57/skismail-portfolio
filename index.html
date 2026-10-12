@@ -479,7 +479,7 @@
       <!-- Health-Stack-System -->
       <div class="project-box" data-category="Web Development" data-tech="python,django" data-type="web">
         <div class="project-image">
-          <img src="_images/hospital-project.png" loading="lazy" decoding="async" fetchpriority="low" fetchpriority="low" alt="Health-Stack-System" width="1672" height="941" />
+          <img src="_images/hospital-project.png" loading="eager" decoding="async" fetchpriority="high" alt="Health-Stack-System" width="1672" height="941" />
         </div>
         <div class="project-content">
           <h3>Health-Stack-System</h3>
@@ -497,7 +497,7 @@
       <!-- BLOCKELECT-BlockchainVoting-System -->
       <div class="project-box" data-category="Blockchain" data-tech="javascript,ethereum" data-type="web">
         <div class="project-image">
-          <img src="_images/voting-project.png" loading="lazy" decoding="async" fetchpriority="low" fetchpriority="low" alt="BLOCKELECT-BlockchainVoting-System" width="1672" height="941"  />
+          <img src="_images/voting-project.png" loading="eager" decoding="async" fetchpriority="high" alt="BLOCKELECT-BlockchainVoting-System" width="1672" height="941"  />
         </div>
         <div class="project-content">
           <h3>BLOCKELECT-BlockchainVoting-System</h3>
@@ -515,7 +515,7 @@
       <!-- Django-To-Do-List_with_User_Authentication -->
       <div class="project-box" data-category="Web Development" data-tech="python,django" data-type="web">
         <div class="project-image">
-          <img src="_images/Django-To-Do-List_with_User_Authentication.png" loading="lazy" decoding="async" fetchpriority="low" alt="Django-To-Do-List_with_User_Authentication" width="1672" height="941"  />
+          <img src="_images/Django-To-Do-List_with_User_Authentication.png" loading="eager" decoding="async" fetchpriority="high" alt="Django-To-Do-List_with_User_Authentication" width="1672" height="941"  />
         </div>
         <div class="project-content">
           <h3>Django-To-Do-List_with_User_Authentication</h3>
@@ -533,7 +533,7 @@
       <!-- NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform -->
       <div class="project-box" data-category="Web Development" data-tech="nextjs,java,spring" data-type="web">
         <div class="project-image">
-          <img src="_images/Nextcart Full-_Stack_AI-Powered_E-Commerce_Platform.png" loading="lazy" decoding="async" fetchpriority="low" alt="NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform" width="1672" height="941"  />
+          <img src="_images/Nextcart Full-_Stack_AI-Powered_E-Commerce_Platform.png" loading="eager" decoding="async" fetchpriority="high" alt="NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform" width="1672" height="941"  />
         </div>
         <div class="project-content">
           <h3>NEXTCART_Full-_Stack_AI-Powered_E-Commerce_Platform</h3>
@@ -552,7 +552,7 @@
       <!-- Jarvis-AI-Assistant -->
       <div class="project-box" data-category="AI/ML" data-tech="python,fastapi,react" data-type="ml,web">
         <div class="project-image">
-          <img src="_images/jarvis.png" loading="lazy" decoding="async" fetchpriority="low" alt="Jarvis-AI-Assistant" width="1672" height="941"  />
+          <img src="_images/jarvis.png" loading="eager" decoding="async" fetchpriority="high" alt="Jarvis-AI-Assistant" width="1672" height="941"  />
         </div>
         <div class="project-content">
           <h3>Jarvis-AI-Assistant</h3>
@@ -571,7 +571,7 @@
       <!-- E-Commerce-Intelligence-Decision-Analytics-Platform -->
       <div class="project-box" data-category="Data Science" data-tech="python,pandas,sklearn" data-type="ml,data">
         <div class="project-image">
-          <img src="_images/E-Commerce-Intelligence-Decision-Analytics-Platform.png" loading="lazy" decoding="async" fetchpriority="low" alt="E-Commerce-Intelligence-Decision-Analytics-Platform" width="1672" height="941"  />
+          <img src="_images/E-Commerce-Intelligence-Decision-Analytics-Platform.png" loading="eager" decoding="async" fetchpriority="high" alt="E-Commerce-Intelligence-Decision-Analytics-Platform" width="1672" height="941"  />
         </div>
         <div class="project-content">
           <h3>E-Commerce-Intelligence-Decision-Analytics-Platform</h3>
@@ -590,7 +590,7 @@
       <!-- Banking-Customer-Profitability-and-Risk-Analytics-Platform -->
       <div class="project-box" data-category="Data Science" data-tech="python,fastapi,postgresql" data-type="ml,data">
         <div class="project-image">
-          <img src="_images/Banking-Customer-Profitability-and-Risk-Analytics-Platform.png" loading="lazy" decoding="async" fetchpriority="low" alt="Banking-Customer-Profitability-and-Risk-Analytics-Platform" width="1672" height="941"  />
+          <img src="_images/Banking-Customer-Profitability-and-Risk-Analytics-Platform.png" loading="eager" decoding="async" fetchpriority="high" alt="Banking-Customer-Profitability-and-Risk-Analytics-Platform" width="1672" height="941"  />
         </div>
         <div class="project-content">
           <h3>Banking-Customer-Profitability-and-Risk-Analytics-Platform</h3>
@@ -842,14 +842,7 @@
 </footer>
 
 <!-- Scripts -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-<script>
-  AOS.init({
-    duration: 1200,
-    once: false
-  });
-</script>
 <script src="script.js?v=28" defer></script>
 <script src="simple-gallery.js" defer></script>
 <script src="gallery-slider.js" defer></script>
@@ -904,6 +897,28 @@
     <button id="backToTop" class="back-to-top">
       <i class="fas fa-arrow-up"></i>
     </button>
+
+<script>
+// Image error handling to prevent stuck images
+document.addEventListener('DOMContentLoaded', function() {
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    img.addEventListener('error', function() {
+      this.style.display = 'none';
+      this.alt = 'Image failed to load';
+      // Create fallback placeholder
+      const fallback = document.createElement('div');
+      fallback.style.cssText = 'width: 100%; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 14px;';
+      fallback.textContent = 'Image not available';
+      this.parentNode.insertBefore(fallback, this);
+    });
+    
+    img.addEventListener('load', function() {
+      this.style.opacity = '1';
+    });
+  });
+});
+</script>
 
 <script>
 const icons = document.querySelectorAll('.icon-box');
