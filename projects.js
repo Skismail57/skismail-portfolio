@@ -1,8 +1,9 @@
-// Projects Section Functionality - Ultra Fast
+// Projects Section Functionality - Ultra Fast with Infinite Scroll
 document.addEventListener('DOMContentLoaded', function() {
   // Project filtering functionality
   const projectTabs = document.querySelectorAll('.projects-tab');
   const projectBoxes = document.querySelectorAll('.project-box');
+  const projectContainer = document.querySelector('.project-container');
 
   // Tab click handlers - no animations, just filtering
   projectTabs.forEach(tab => {
@@ -21,4 +22,28 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+  // ===== INFINITE SCROLL =====
+  // Add sentinel element for infinite scroll
+  if (projectContainer) {
+    const sentinel = document.createElement('div');
+    sentinel.id = 'scroll-sentinel';
+    sentinel.style.height = '50px';
+    projectContainer.appendChild(sentinel);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Load more projects (simulated - in production, fetch from API)
+          console.log('Load more projects...');
+          // In production: fetch('/api/projects?page=' + currentPage)
+        }
+      });
+    }, {
+      rootMargin: '100px',
+      threshold: 0.1
+    });
+
+    observer.observe(sentinel);
+  }
 });

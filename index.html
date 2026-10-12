@@ -4,6 +4,55 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+  <!-- Splash Screen Styles -->
+  <style>
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      animation: fadeOut 0.5s ease 2s forwards;
+    }
+
+    .splash-content {
+      text-align: center;
+      color: white;
+    }
+
+    .splash-logo {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .splash-loader {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  </style>
+
   <!-- Preconnect for faster external resource loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +84,24 @@
           });
       });
     }
+  </script>
+
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo">S K Ismail</div>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
+
+  <script>
+    // Remove splash screen after animation
+    setTimeout(() => {
+      const splashScreen = document.getElementById('splash-screen');
+      if (splashScreen) {
+        splashScreen.style.display = 'none';
+      }
+    }, 2500);
   </script>
 
   <!-- Open Graph / Social Media Tags -->
@@ -79,14 +146,14 @@
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
   </div>
   <ul id="nav-links">
-        <li><a href="#home" class="nav-link">Home</a></li>
-        <li><a href="#about" class="nav-link">About</a></li>
-        <li><a href="#qualification" class="nav-link">Qualification</a></li>
-        <li><a href="#services" class="nav-link">Skills</a></li>
-        <li><a href="#expertise" class="nav-link">Expertise</a></li>
-        <li><a href="#projects" class="nav-link">Projects</a></li>
-        <li><a href="#gallery" class="nav-link">Gallery</a></li>
-        <li><a href="#contact" class="nav-link">Contact</a></li>
+        <li><a href="#home" class="nav-link" data-icon="\f015">Home</a></li>
+        <li><a href="#about" class="nav-link" data-icon="\f007">About</a></li>
+        <li><a href="#qualification" class="nav-link" data-icon="\f19d">Qualification</a></li>
+        <li><a href="#services" class="nav-link" data-icon="\f0ad">Skills</a></li>
+        <li><a href="#expertise" class="nav-link" data-icon="\f5fc">Expertise</a></li>
+        <li><a href="#projects" class="nav-link" data-icon="\f091">Projects</a></li>
+        <li><a href="#gallery" class="nav-link" data-icon="\f03e">Gallery</a></li>
+        <li><a href="#contact" class="nav-link" data-icon="\f0e0">Contact</a></li>
     </ul>
 </nav>
 
@@ -849,16 +916,12 @@
 <script src="gallery-search.js" defer></script>
 <script src="skills.js" defer></script>
 <script src="projects.js?v=1" defer></script>
-<script src="animations.js" defer></script>
 <script src="progress-indicator.js" defer></script>
 <script src="about-typing.js" defer></script>
 <script src="home-arrow.js" defer></script>
 <script src="contact-handler.js" defer></script>
 <script src="project-tracking.js" defer></script>
-<script src="modern-ui.js" defer></script>
-<script src="advanced-search.js" defer></script>
-<script src="tech-stack.js" defer></script>
-<script src="lightbox.js" defer></script>
+<script src="mobile-enhancements.js" defer></script>
 
     <!-- AI Video Introduction Modal -->
     <div id="aiVideoModal" class="modal">
@@ -937,85 +1000,6 @@ document.addEventListener('DOMContentLoaded', function() {
           });
       }
   });
-});
-
-// AI Video Modal
-const aiVideoBtn = document.getElementById('aiVideoBtn');
-const aiVideoModal = document.getElementById('aiVideoModal');
-const closeModal = document.getElementById('closeModal');
-const ttsPlayBtn = document.getElementById('ttsPlayBtn');
-const aiAvatar = document.getElementById('aiAvatar');
-
-let speechSynthesisUtterance;
-let voices = [];
-
-// Load voices
-function loadVoices() {
-    voices = window.speechSynthesis.getVoices();
-}
-
-if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
-}
-
-loadVoices();
-
-aiVideoBtn.addEventListener('click', () => {
-    aiVideoModal.style.display = 'flex';
-});
-
-closeModal.addEventListener('click', () => {
-    aiVideoModal.style.display = 'none';
-    window.speechSynthesis.cancel();
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target === aiVideoModal) {
-        aiVideoModal.style.display = 'none';
-        window.speechSynthesis.cancel();
-    }
-});
-
-// Text-to-Speech Functionality
-const introText = "Good day, welcome to my portfolio. I'm S K Ismail, an AIML Engineer specializing in Artificial Intelligence, Machine Learning, Web Development, and DevOps practices. It is a pleasure to have you here. Please, allow me to take you through my work and achievements.";
-
-function getMaleVoice() {
-    const allVoices = window.speechSynthesis.getVoices();
-    console.log('Available voices:', allVoices);
-
-    // Prioritize specific male voices
-    const priorityNames = [
-        'daniel', 'alex', 'fred', 'george', 'tom', 'sam', 
-        'google uk english male', 'google us english male', 'male'
-    ];
-    
-    for (const name of priorityNames) {
-        const voice = allVoices.find(v => v.name.toLowerCase().includes(name));
-        if (voice) return voice;
-    }
-
-    // Fall back to English voices
-    return allVoices.find(v => v.lang.startsWith('en')) || allVoices[0];
-}
-
-ttsPlayBtn.addEventListener('click', () => {
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        ttsPlayBtn.innerHTML = '<i class="fas fa-volume-up fa-3x"></i>';
-        aiAvatar.classList.remove('talking');
-    } else {
-        speechSynthesisUtterance = new SpeechSynthesisUtterance(introText);
-        speechSynthesisUtterance.rate = 0.85; // Slightly slower for gentlemanly pace
-        speechSynthesisUtterance.pitch = 0.6; // Lower pitch for more masculine, gentlemanly sound
-        speechSynthesisUtterance.voice = getMaleVoice();
-        speechSynthesisUtterance.onend = () => {
-            ttsPlayBtn.innerHTML = '<i class="fas fa-volume-up fa-3x"></i>';
-            aiAvatar.classList.remove('talking');
-        };
-        window.speechSynthesis.speak(speechSynthesisUtterance);
-        ttsPlayBtn.innerHTML = '<i class="fas fa-stop-circle fa-3x"></i>';
-        aiAvatar.classList.add('talking');
-    }
 });
 
 // Keep-alive to prevent Render free tier spin-down

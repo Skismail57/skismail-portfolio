@@ -670,6 +670,50 @@ nav {
   transition: all 0.3s ease;
 }
 
+/* Mobile Bottom Navigation */
+@media (max-width: 767px) {
+  nav {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    padding: 10px 5%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  nav .logo {
+    display: none;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  nav ul li a {
+    font-size: 0;
+    padding: 10px;
+  }
+
+  nav ul li a::before {
+    content: attr(data-icon);
+    font-family: 'Font Awesome 6 Free';
+    font-size: 20px;
+    display: block;
+  }
+
+  .nav-controls {
+    display: none;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+}
+
 nav.scrolled {
   background: rgba(128, 128, 128, 0.7) !important;
   backdrop-filter: blur(10px) !important;
