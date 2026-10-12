@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: portfolio-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: portfolio
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - portfolio-network
+
+  # Portfolio Application
+  app:
+    build: .
+    container_name: portfolio-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/portfolio?authSource=admin
+      NODE_ENV: production
+    depends_on:
+      - mongodb
+    networks:
+      - portfolio-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  portfolio-network:
+    driver: bridge
