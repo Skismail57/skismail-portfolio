@@ -277,6 +277,7 @@ app.use(async (req, res, next) => {
 
 // Serve static files (after admin routes and visitor tracking)
 app.use(express.static('.'));
+app.use('/public', express.static('public'));
 
 // Serve unplugged 404 page
 app.get('/unplugged-404', (req, res) => {
