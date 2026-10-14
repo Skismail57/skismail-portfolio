@@ -279,6 +279,9 @@ app.use(async (req, res, next) => {
 app.use(express.static('.'));
 app.use('/public', express.static('public'));
 
+// Explicit route for images folder to ensure they're served correctly
+app.use('/_images', express.static('_images'));
+
 // Serve unplugged 404 page
 app.get('/unplugged-404', (req, res) => {
   res.sendFile(__dirname + '/unplugged-404/index.html');
